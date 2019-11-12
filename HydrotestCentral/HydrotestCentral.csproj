@@ -132,8 +132,6 @@
       <DependentUpon>QuoteItemGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TextBoxAutoComplete.cs" />
-    <Compile Include="Infrastructure\NotificationClass.cs" />
-    <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\QuoteRepository.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

@@ -189,42 +189,7 @@ namespace HydrotestCentral
 
         public void GetQuoteItemsData(string jobno)
         {
-            /*
-            items_dt = new System.Data.DataTable();
 
-            jobno = this.jobno;
-            connection = new SQLiteConnection("DataSource=C:\\CentralDB.db");
-            connection.Open();
-            SQLiteCommand cmd = connection.CreateCommand();
-            cmd.Parameters.Add(new SQLiteParameter("@jobno", jobno));
-            cmd.CommandText = string.Format("SELECT * FROM QTE_ITEMS WHERE jobno = (@jobno)");
-            items_dataAdapter = new SQLiteDataAdapter(cmd);
-            items_dt.TableName = "QTE_ITEMS";
-            connection.Close();
-
-            if (this.QItems.HasItems)
-            {
-                QItems.ItemsSource = null;
-                items_dt.Columns.Clear();
-                items_dt.Clear();
-                QItems.Items.Refresh();
-            }
-            try
-            {
-                items_dataAdapter.Fill(items_dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            */
-
-            //QItems.ItemsSource = quote_items.getQuoteItemsByJob(this.jobno);
-
-            // Update the Projected Daily Total
-            //this.proj_daily_total = quote_items.getSumOfLineTotals(this.jobno);
-
-            UpdateCurrentQuoteDashboard();
         }
 
         public int GetNumberOfTabIndex(string jobno)
@@ -234,28 +199,10 @@ namespace HydrotestCentral
             return 3;
         }
 
-        public void UpdateCurrentQuoteDashboard()
-        { 
-            //txt_job.Text = this.jobno;
-            //txt_cust.Text = this.cust;
-            //txt_est_days.Text = this.est_days.ToString();
-
-
-            //proj_addn_chg = 0.00;
-            //proj_job_total = proj_daily_total * est_days;
-
-            //txt_proj_daily_total.Text = String.Format("{0:$#,##0.00;($#,##0.00);$0.00}", proj_daily_total);
-            //txt_proj_addn_chg.Text = String.Format("{0:$#,##0.00;($#,##0.00);$0.00}", proj_addn_chg);
-            //txt_proj_job_total.Text = String.Format("{0:$#,##0.00;($#,##0.00);$0.00}", proj_job_total);
-        }
-
         public void getTabItemGrid(TabItem tab, int tab_index)
         {
             //QuoteItemGrid grid = new QuoteItemGrid(quote_items, this.jobno, tab_index);
             QuoteItemGrid grid = new QuoteItemGrid(main_vm);
-
-            //grid.DataContext = this.FindResource("QuoteItems").ToString();
-            //quote_items.UpdateLineTotals();
             
             //MessageBox.Show("Getting Tab Index: " + TabIndex);
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
@@ -271,7 +218,7 @@ namespace HydrotestCentral
 
         public void deleteTabItemGrid(TabItem tab, int tab_index)
         {
-            //main_vm.DeleteQuoteItem(jobno, tab_index);
+            main_vm.DeleteQuoteItem(jobno, tab_index);
             Console.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
         }
 

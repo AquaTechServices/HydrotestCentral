@@ -54,38 +54,6 @@
                         </Button>
                         <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
                                   CurrentCellChanged="QHeader_CurrentCellChanged" CanUserAddRows="false"/>
-                        <!--<Grid x:Name="currentQuoteGrid" Grid.Row="2" Grid.ColumnSpan="3">
-                            <Grid.Background>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#FF33BCBA" Offset="0.006"/>
-                                    <GradientStop Color="#002EACAA" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Grid.Background>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Content="Job:" Grid.Column="0" Grid.Row="0" FontFamily="Segoe UI Semibold" FontSize="14"/>
-                            <Label Content="Customer:" Grid.Column="0" Grid.Row="1" FontFamily="Segoe UI Semibold" FontSize="14"/>
-                            <Label Content="Projected Daily Total" Grid.Column="2" Grid.Row="0" FontFamily="Segoe UI Semibold" FontSize="14"/>
-                            <Label Content="Estimated Number of Days" Grid.Column="2" Grid.Row="1" FontFamily="Segoe UI Semibold" FontSize="14"/>
-                            <Label Content="Projected Additional Charges" Grid.Column="2" Grid.Row="2" FontFamily="Segoe UI Semibold" FontSize="14"/>
-                            <Label Content="Projected Job Total" Grid.Column="2" Grid.Row="3" FontWeight="Bold" FontFamily="Segoe UI Semibold" FontSize="20"/>
-                            <TextBox x:Name="txt_job"  Grid.Column="1" Grid.Row="0" FontFamily="Segoe UI Semibold" FontSize="14" Margin="5" Text="{Binding Path=job}"/>
-                            <TextBox x:Name="txt_cust" Grid.Column="1" Grid.Row="1" FontFamily="Segoe UI Semibold" FontSize="14" Margin="5"/>
-                            <TextBox x:Name="txt_proj_daily_total" Grid.Column="3" Grid.Row="0" FontFamily="Segoe UI Semibold" FontSize="14" Margin="5"/>
-                            <TextBox x:Name="txt_est_days" Grid.Column="3" Grid.Row="1" FontFamily="Segoe UI Semibold" FontSize="14" Margin="5"/>
-                            <TextBox x:Name="txt_proj_addn_chg" Grid.Column="3" Grid.Row="2" Text="$0.00" FontFamily="Segoe UI Semibold" FontSize="14" Margin="5"/>
-                            <TextBox x:Name="txt_proj_job_total" Grid.Column="3" Grid.Row="3" FontWeight="ExtraBold" FontFamily="Segoe UI Semibold" FontSize="16" Text="$0.00" Margin="5"/>
-                        </Grid>-->
                         <Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
