@@ -15,6 +15,8 @@ namespace HydrotestCentral.Models
         public List<Model.QuoteHeader> quoteheaderRepository { get; set; }
         public List<Model.QuoteItem> quoteitemRepository { get; set; }
 
+        public static string connString {get; set; }
+
         public QuoteRepository()
         {
             quoteheaderRepository = GetQuoteHeaderRepo();

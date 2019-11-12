@@ -19,24 +19,6 @@
             <GradientStop Color="#FFE4E4E4" Offset="0.611"/>
         </LinearGradientBrush>
     </Controls:MetroWindow.Resources>
-    <!--<Window.Resources>
-        -->
-    <!--create an instance of QuoteHeaderDataProvider class -->
-    <!--
-        <ObjectDataProvider x:Key="QuoteHeaderDataProvider" ObjectType="{x:Type local:QuoteHeaderDataProvider}"/>
-        -->
-    <!--Define the method which is invoked to obtain our data -->
-    <!--
-        <ObjectDataProvider x:Key="QuoteHeaders" ObjectInstance="{StaticResource QuoteHeaderDataProvider}" MethodName="GetQuoteHeaders"/>
-        -->
-    <!--create an instance of QuoteItemsDataProvider class -->
-    <!--
-        <ObjectDataProvider x:Key="QuoteItemsDataProvider" ObjectType="{x:Type local:QuoteItemsDataProvider}"/>
-        -->
-    <!--Define the method which is invoked to obtain our data -->
-    <!--
-        <ObjectDataProvider x:Key="QuoteItems" ObjectInstance="{StaticResource QuoteItemsDataProvider}" MethodName="GetQuoteItems" />
-    </Window.Resources>-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
