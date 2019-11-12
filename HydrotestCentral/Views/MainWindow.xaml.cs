@@ -39,6 +39,8 @@ namespace HydrotestCentral
         private List<string> _tabNames;
         private TabItem _tabAdd;
 
+        private QuoteHeader quoteHeaderBeingEdited;
+
         public static MainWindowViewModel main_vm;
 
         public MainWindow()
@@ -223,9 +225,21 @@ namespace HydrotestCentral
             main_vm.UpdateHeaderItem(jobno);
         }
 
+        private void QHeader_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            quoteHeaderBeingEdited = e.Row.Item as QuoteHeader;
+
+            MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
+        }
+
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
         {
-
+            if(quoteHeaderBeingEdited != null)
+            {
+                MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
+                main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
+                quoteHeaderBeingEdited = null;
+            }
         }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
