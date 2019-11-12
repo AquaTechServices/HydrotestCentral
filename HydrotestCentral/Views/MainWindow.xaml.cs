@@ -48,11 +48,6 @@ namespace HydrotestCentral
             // Set the ViewModel
             main_vm = new MainWindowViewModel();
             DataContext = main_vm;
-            //GetQuoteHeaderData();
-            GetQuoteItemsData(this.jobno);
-
-            //quote_heads = main_vm.quote_headers;
-            //quote_items = new QuoteItemsDataProvider();
 
             // initialize tabItem array
             _tabItems = new List<TabItem>();
@@ -73,7 +68,7 @@ namespace HydrotestCentral
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //GetQuoteHeaderData();
+
         }
 
         private TabItem AddTabItemByName(string name)
@@ -155,41 +150,7 @@ namespace HydrotestCentral
 
         public void GetQuoteHeaderData()
         {
-            /*
-            head_dt = new System.Data.DataTable();
-            
-            connection = new SQLiteConnection("DataSource=C:\\CentralDB.db");
-            connection.Open();
-            SQLiteCommand cmd1 = connection.CreateCommand();
-            cmd1.CommandText = string.Format("SELECT * FROM QTE_HDR");
-            head_dataAdapter = new SQLiteDataAdapter(cmd1);
-            head_dt.TableName = "QTE_HEADER";
-            connection.Close();
-            
-            if (this.QHeader.HasItems)
-            {
-                QHeader.ItemsSource = null;
-                head_dt.Columns.Clear();
-                head_dt.Clear();
-                QHeader.Items.Refresh();
-            }
-
-            try
-            {
-                //head_dataAdapter.Fill(head_dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            QHeader.ItemsSource = head_dt.DefaultView;
-            */
             QHeader.ItemsSource = main_vm.quote_headers;
-        }
-
-        public void GetQuoteItemsData(string jobno)
-        {
-
         }
 
         public int GetNumberOfTabIndex(string jobno)
@@ -259,7 +220,7 @@ namespace HydrotestCentral
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
-            //Working on updating headerquote item
+            main_vm.UpdateHeaderItem(jobno);
         }
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)

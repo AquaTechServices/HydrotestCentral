@@ -67,7 +67,7 @@
                             </Grid.ColumnDefinitions>
                             <Button x:Name="btn1" Content="Button 1" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" Visibility="Hidden" />
                             <Button x:Name="btn2" Content="Button 2" Grid.Row="0" Grid.Column="1" Width="150" Margin="5" Visibility="Hidden" />
-                            <Button x:Name="btn3" Content="Button 3" Grid.Row="0" Grid.Column="2" Width="150" Margin="5" />
+                            <Button x:Name="btn3" Content="Button 3" Grid.Row="0" Grid.Column="2" Width="150" Margin="5" Visibility="Hidden"/>
                             <TabControl Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" x:Name="tabDynamic" ItemsSource="{Binding}" SelectionChanged="tabDynamic_SelectionChanged">
                                 <TabControl.Resources>
                                     <DataTemplate x:Key="TabHeader" DataType="TabItem">
