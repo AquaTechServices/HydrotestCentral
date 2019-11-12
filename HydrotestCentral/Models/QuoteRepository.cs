@@ -14,6 +14,7 @@ namespace HydrotestCentral.Models
     {
         public List<Model.QuoteHeader> quoteheaderRepository { get; set; }
         public List<Model.QuoteItem> quoteitemRepository { get; set; }
+        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
         public static string connString {get; set; }
 
@@ -27,7 +28,7 @@ namespace HydrotestCentral.Models
         {
             List<QuoteHeader> header_list = new List<QuoteHeader>();
 
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {
@@ -74,7 +75,7 @@ namespace HydrotestCentral.Models
         {
             List<QuoteItem> item_list = new List<QuoteItem>();
 
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {
@@ -113,7 +114,7 @@ namespace HydrotestCentral.Models
 
         public void addNewRecord(QuoteHeader quoteRecord)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {
@@ -187,7 +188,7 @@ namespace HydrotestCentral.Models
         }
         public void addNewRecord(QuoteItem quoteRecord)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {
@@ -247,7 +248,7 @@ namespace HydrotestCentral.Models
 
         public void deleteRecord(QuoteHeader quoteRecord)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {
@@ -267,7 +268,7 @@ namespace HydrotestCentral.Models
 
         public void deleteRecord(QuoteItem quoteRecord)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db"))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 if (conn == null)
                 {

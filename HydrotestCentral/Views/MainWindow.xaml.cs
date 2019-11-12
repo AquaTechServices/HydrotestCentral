@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Data;
 using System.Data.SQLite;
-using Excel = Microsoft.Office.Interop.Excel;
+//using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using HydrotestCentral.ViewModels;
 using HydrotestCentral.Model;
@@ -48,7 +48,7 @@ namespace HydrotestCentral
             // Set the ViewModel
             main_vm = new MainWindowViewModel();
             DataContext = main_vm;
-            GetQuoteHeaderData();
+            //GetQuoteHeaderData();
             GetQuoteItemsData(this.jobno);
 
             //quote_heads = main_vm.quote_headers;
@@ -73,7 +73,7 @@ namespace HydrotestCentral
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            GetQuoteHeaderData();
+            //GetQuoteHeaderData();
         }
 
         private TabItem AddTabItemByName(string name)
@@ -117,36 +117,39 @@ namespace HydrotestCentral
             // Get selected Row
             //DataRowView row = (DataRowView) QHeader.SelectedItem;
             //MessageBox.Show(row.Row["jobno"].ToString());
-            QuoteHeader temp = (QuoteHeader)QHeader.SelectedItem;
-            //MessageBox.Show("QHeader Selection Changed...JobNo now: " + temp.jobno);
-
-            // Get selected Row cell base on which the datagrid will be changed
-            try
+            if (QHeader.SelectedItem != null)
             {
-                this.jobno = temp.jobno;
-                this.cust = temp.cust;
-                this.est_days = temp.days_est;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+                QuoteHeader temp = (QuoteHeader)QHeader.SelectedItem;
+                //MessageBox.Show("QHeader Selection Changed...JobNo now: " + temp.jobno);
+
+                // Get selected Row cell base on which the datagrid will be changed
+                try
+                {
+                    this.jobno = temp.jobno;
+                    this.cust = temp.cust;
+                    this.est_days = temp.days_est;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
 
 
-            //Check if everything is OK
-            if (jobno == null || jobno == string.Empty)
-            {
-                return;
-            }
-            else
-            {
-                //Change QItems based on Row
-                // OUTDATED ---GetQuoteItemsData(this.jobno);
-                main_vm.updateQuoteItemsByJob(this.jobno);
+                //Check if everything is OK
+                if (jobno == null || jobno == string.Empty)
+                {
+                    return;
+                }
+                else
+                {
+                    //Change QItems based on Row
+                    // OUTDATED ---GetQuoteItemsData(this.jobno);
+                    main_vm.updateQuoteItemsByJob(this.jobno);
 
-                // Update tab child
-                //  MessageBox.Show(this.tabDynamic.GetChildObjects().ToString());
-                getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+                    // Update tab child
+                    //  MessageBox.Show(this.tabDynamic.GetChildObjects().ToString());
+                    getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+                }
             }
         }
 
@@ -268,6 +271,7 @@ namespace HydrotestCentral
 
         public void deleteTabItemGrid(TabItem tab, int tab_index)
         {
+            //main_vm.DeleteQuoteItem(jobno, tab_index);
             Console.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
         }
 
@@ -300,8 +304,24 @@ namespace HydrotestCentral
             }
         }
 
-        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
+
+        private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
+            main_vm.DeleteHeaderItem(jobno);
+        }
+
+        private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
+        {
+            //Working on updating headerquote item
+        }
+
+        private void QHeader_CurrentCellChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
+            {
             string job = this.jobno;
 
             try
@@ -376,7 +396,7 @@ namespace HydrotestCentral
 
         private void Btn_print_Click(object sender, RoutedEventArgs e)
         {
-            DataTable dt = new DataTable();
+           /* DataTable dt = new DataTable();
             int days_count = 0;
             int sheet_count = 0;
 
@@ -485,7 +505,7 @@ namespace HydrotestCentral
 
             excelApp.Quit();
             excelApp = null;
-            GC.Collect();
+            GC.Collect();*/
         }
 
         private void Btn_DeleteTab_Click(object sender, RoutedEventArgs e)

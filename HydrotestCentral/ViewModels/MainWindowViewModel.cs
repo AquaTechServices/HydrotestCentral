@@ -17,16 +17,37 @@ namespace HydrotestCentral.ViewModels
 {
     public partial class MainWindowViewModel: INotifyPropertyChanged
     {
-        static string connectionString = @"Data Source=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db";
+        //static string connectionString = Properties.Settings.Default.connString;
         SQLiteConnection connection;
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
         DataSet ds;
+        string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
-        public ObservableCollection<QuoteHeader> quote_headers { get; set; }
+
+        private ObservableCollection<QuoteHeader> quote_header_data = null;
+
+        public ObservableCollection<QuoteHeader> quote_headers
+        {
+            get
+            {
+                if (quote_header_data != null)
+                {
+                    return quote_header_data;
+                }
+                return null;
+            }
+            set
+            {
+                if (quote_header_data != value)
+                {
+                    quote_header_data = value;
+                    OnPropertyChanged("quote_headers");
+                }
+            }
+        }
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
-
 
         public MainWindowViewModel()
         {
@@ -44,7 +65,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db");
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
@@ -110,7 +131,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db");
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_ITEMS");
@@ -183,6 +204,49 @@ namespace HydrotestCentral.ViewModels
         public ObservableCollection<QuoteItem> getQuoteItems()
         {
             return quote_items;
+        }
+
+        public void DeleteQuoteItem(String jobno, int tab_index)
+        {
+            try
+            {
+                var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        public void DeleteHeaderItem(String jobno)
+        {
+            try
+            {
+                var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
+                cmd.ExecuteNonQuery();
+
+                quote_headers = LoadQuoteHeaderData();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
         }
 
         public void updateQuoteItemsByJob(string jobno)
