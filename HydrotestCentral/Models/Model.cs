@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SQLite;
 using System.ComponentModel;
+using HydrotestCentral.ViewModels;
+using System.Windows;
+using System.Collections.ObjectModel;
 //using HydrotestCentral.DatasetTableAdapters;
 
 namespace HydrotestCentral.Model
@@ -30,8 +33,8 @@ namespace HydrotestCentral.Model
         public string pressure { get; set; }
         public string endclient { get; set; }
         public string supervisor { get; set; }
-        public string est_startdate { get; set; }
-        public string est_enddate { get; set; }
+        public string est_start_date { get; set; }
+        public string est_end_date { get; set; }
         public double value { get; set; }
     }
 
@@ -61,18 +64,21 @@ namespace HydrotestCentral.Model
     }
 
     // A Source of Quote Header Data from SQLite Database
-    /*
+
     public class QuoteHeaderDataProvider
     {
         private SQLiteDataAdapter quoteheader_adapter;
         private SQLiteConnection connection;
-
+        public static MainWindowViewModel model_vm;
         private DataTable quoteheader_dt;
-
+        SQLiteCommand cmd;
+        SQLiteDataAdapter adapter;
+        DataSet ds;
+        string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
         public QuoteHeaderDataProvider()
         {
-            quoteheader_dt = new System.Data.DataTable(); 
-            connection = new SQLiteConnection("DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db");
+            quoteheader_dt = new System.Data.DataTable();
+            connection = new SQLiteConnection(connection_String);
             connection.Open();
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
@@ -105,8 +111,88 @@ namespace HydrotestCentral.Model
 
             return specific_dt;
         }
+
+        public void DeleteHeaderItem(String jobno)
+        {
+            try
+            {
+                //var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
+                cmd.ExecuteNonQuery();
+                //model_vm.quote_headers = model_vm.LoadQuoteHeaderData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+
+        }
+
+        public void UpdateHeaderItem(QuoteHeader quoteHeader, int rowIndex)
+        {
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
+                adapter = new SQLiteDataAdapter(cmd);
+
+                //System.Data.SQLite.SQLiteCommandBuilder cb;
+                //cb = new SQLiteCommandBuilder(adapter);
+
+                DataSet ds = new DataSet();
+                adapter.Fill(ds, "QTE_HDR");
+                //DataTable headerDataTable = ds.Tables["QTE_HDR"];
+                DataRow HeaderTableRow = ds.Tables["QTE_HDR"].Rows[rowIndex];
+                HeaderTableRow["jobno"] = quoteHeader.jobno;
+                HeaderTableRow["qt_date"] = quoteHeader.qt_date;
+                HeaderTableRow["cust"] = quoteHeader.cust;
+                HeaderTableRow["cust_contact"] = quoteHeader.cust_contact;
+                HeaderTableRow["cust_phone"] = quoteHeader.cust_phone;
+                HeaderTableRow["cust_email"] = quoteHeader.cust_email;
+                HeaderTableRow["loc"] = quoteHeader.loc;
+                HeaderTableRow["salesman"] = quoteHeader.salesman;
+                HeaderTableRow["days_est"] = quoteHeader.days_est;
+                HeaderTableRow["status"] = quoteHeader.status;
+                HeaderTableRow["jobtype"] = quoteHeader.jobtype;
+                HeaderTableRow["pipe_line_size"] = quoteHeader.pipe_line_size;
+                HeaderTableRow["pipe_length"] = quoteHeader.pipe_length;
+                HeaderTableRow["pressure"] = quoteHeader.pressure;
+                HeaderTableRow["endclient"] = quoteHeader.endclient;
+                HeaderTableRow["supervisor"] = quoteHeader.supervisor;
+                HeaderTableRow["est_start_date"] = quoteHeader.est_start_date;
+                HeaderTableRow["est_end_date"] = quoteHeader.est_end_date;
+                HeaderTableRow["value"] = quoteHeader.value;
+                //headerDataTable.Rows.Add(HeaderTableRow);
+                //HeaderTableRow.AcceptChanges();
+                adapter.UpdateCommand = new SQLiteCommandBuilder(adapter).GetUpdateCommand();
+                adapter.Update(ds, "QTE_HDR");
+                //ds.Clear();
+                //adapter.Fill(ds, "QTE_HDR");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                ds = null;
+                adapter.Dispose();
+                connection.Close();
+                connection.Dispose();
+            }
+        }
     }
-    */
+
 
     // Source of Quote Items Data From SQLite Database
     /*

@@ -24,7 +24,6 @@ namespace HydrotestCentral.ViewModels
         DataSet ds;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
-
         private ObservableCollection<QuoteHeader> quote_header_data = null;
 
         public ObservableCollection<QuoteHeader> quote_headers
@@ -103,8 +102,8 @@ namespace HydrotestCentral.ViewModels
                             pressure = dr[12].ToString(),
                             endclient = dr[13].ToString(),
                             supervisor = dr[14].ToString(),
-                            est_startdate = dr[15].ToString(),
-                            est_enddate = dr[16].ToString(),
+                            est_start_date = dr[15].ToString(),
+                            est_end_date = dr[16].ToString(),
                             value = cleaned_value
                     });
                      Console.WriteLine(dr[0].ToString() + " created in quote_headers");
@@ -206,49 +205,10 @@ namespace HydrotestCentral.ViewModels
             return quote_items;
         }
 
-        public void DeleteQuoteItem(String jobno, int tab_index)
+        public void updateQuoteHeader()
         {
-            try
-            {
-                var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(connection_String);
-                connection.Open();
-                cmd = connection.CreateCommand();
-                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
+            quote_headers= LoadQuoteHeaderData();
         }
-
-        public void DeleteHeaderItem(String jobno)
-        {
-            try
-            {
-                var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(connection_String);
-                connection.Open();
-                cmd = connection.CreateCommand();
-                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
-                cmd.ExecuteNonQuery();
-
-                quote_headers = LoadQuoteHeaderData();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-        }
-
         public void updateQuoteItemsByJob(string jobno)
         {
             //MessageBox.Show("updateQuoteItemsByJob called...");

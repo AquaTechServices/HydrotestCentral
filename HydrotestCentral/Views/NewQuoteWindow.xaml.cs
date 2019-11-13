@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SQLite;
+using HydrotestCentral.Model;
+using System.Collections.ObjectModel;
 
 namespace HydrotestCentral
 {
@@ -24,10 +26,13 @@ namespace HydrotestCentral
         public SQLiteConnection connection;
         public SQLiteDataAdapter dataAdapter;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
-
+        public static QuoteHeaderDataProvider main_Quoteheader;
         public NewQuoteWindow()
         {
             InitializeComponent();
+
+            //set the QuoteHeaderDataProvider
+            main_Quoteheader = new QuoteHeaderDataProvider();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -71,13 +76,28 @@ namespace HydrotestCentral
 
         private void Btn_AddQuote_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            connection = new SQLiteConnection("DataSource=C:\\CentralDB.db");
-            connection.Open();
-            SQLiteCommand cmd1 = connection.CreateCommand();
-            cmd1.CommandText = string.Format("SELECT * FROM QTE_HDR");
-            */
-            MessageBox.Show("Last Job Number is " + getLastJobNumber());
+            QuoteHeader headeritem = new QuoteHeader();
+            headeritem.jobno = txt_jobno.Text;
+            headeritem.qt_date = txt_qtdate.Text;
+            headeritem.cust = txt_cust.Text;
+            //headeritem.cust_contact = "NULL";
+            //headeritem.cust_phone = "NULL";
+            //headeritem.cust_email = "NULL";
+            headeritem.loc = txt_loc.Text;
+            headeritem.salesman = txt_salesman.Text;
+            headeritem.days_est = Int32.Parse(txt_daysest.Text);
+            headeritem.status = txt_status.Text;
+            headeritem.jobtype = txt_jobtype.Text;
+            headeritem.pipe_line_size = txt_pipelinesize.Text;
+            headeritem.pipe_length = txt_pipelength.Text;
+            headeritem.pressure = txt_pressure.Text;
+            headeritem.endclient = txt_endclient.Text;
+            headeritem.supervisor = txt_supervisor.Text;
+            //headeritem.est_start_date = "NULL";
+            //headeritem.est_end_date = "NULL";
+            headeritem.value = 0;
+            main_Quoteheader.AddNewHeaderItem(headeritem);
+            MessageBox.Show("Record Added");
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)

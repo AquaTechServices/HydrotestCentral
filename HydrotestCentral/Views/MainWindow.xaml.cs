@@ -40,6 +40,8 @@ namespace HydrotestCentral
         private TabItem _tabAdd;
 
         public static MainWindowViewModel main_vm;
+        public static QuoteHeaderDataProvider main_Quoteheader;
+        private QuoteHeader quoteHeaderBeingEdited;
 
         public MainWindow()
         {
@@ -48,6 +50,10 @@ namespace HydrotestCentral
             // Set the ViewModel
             main_vm = new MainWindowViewModel();
             DataContext = main_vm;
+
+            //set the QuoteHeaderDataProvider
+            main_Quoteheader = new QuoteHeaderDataProvider();
+
             //GetQuoteHeaderData();
             GetQuoteItemsData(this.jobno);
 
@@ -117,6 +123,10 @@ namespace HydrotestCentral
             // Get selected Row
             //DataRowView row = (DataRowView) QHeader.SelectedItem;
             //MessageBox.Show(row.Row["jobno"].ToString());
+
+            //Make the jobno column non editable
+            QHeader.Columns[1].IsReadOnly = true;
+
             if (QHeader.SelectedItem != null)
             {
                 QuoteHeader temp = (QuoteHeader)QHeader.SelectedItem;
@@ -307,17 +317,26 @@ namespace HydrotestCentral
 
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
-            main_vm.DeleteHeaderItem(jobno);
+            main_Quoteheader.DeleteHeaderItem(jobno);
+            main_vm.updateQuoteHeader();
         }
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
-            //Working on updating headerquote item
+           /* QuoteHeader quoteHeader = (QuoteHeader)QHeader.SelectedItem;
+            int rowIndex = QHeader.SelectedIndex;
+            main_Quoteheader.UpdateHeaderItem(quoteHeader, rowIndex);*/
+        }
+
+        private void QHeader_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            /*QuoteHeader quoteHeader = (QuoteHeader)QHeader.SelectedItem;
+            int rowIndex = QHeader.SelectedIndex;
+            main_Quoteheader.UpdateHeaderItem(quoteHeader, rowIndex);*/
         }
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
         {
-
         }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)

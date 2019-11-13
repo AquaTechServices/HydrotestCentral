@@ -57,8 +57,8 @@ namespace HydrotestCentral.Models
                     q.pressure = row["pressure"].ToString();
                     q.endclient = row["endclient"].ToString();
                     q.supervisor = row["supervisor"].ToString();
-                    q.est_startdate = row["est_start_date"].ToString();
-                    q.est_enddate = row["est_end_date"].ToString();
+                    q.est_start_date = row["est_start_date"].ToString();
+                    q.est_end_date = row["est_end_date"].ToString();
                     q.value = (double)row["value"];
 
                     header_list.Add(q);
@@ -158,8 +158,8 @@ namespace HydrotestCentral.Models
                 param13.Value = quoteRecord.pressure;
                 param14.Value = quoteRecord.endclient;
                 param15.Value = quoteRecord.supervisor;
-                param16.Value = quoteRecord.est_startdate;
-                param17.Value = quoteRecord.est_enddate;
+                param16.Value = quoteRecord.est_start_date;
+                param17.Value = quoteRecord.est_end_date;
                 param18.Value = quoteRecord.value;
 
                 query.Parameters.Add(param1);
