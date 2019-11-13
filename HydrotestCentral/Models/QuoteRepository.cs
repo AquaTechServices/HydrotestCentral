@@ -16,6 +16,8 @@ namespace HydrotestCentral.Models
         public List<Model.QuoteItem> quoteitemRepository { get; set; }
         static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
+        public static string connString {get; set; }
+
         public QuoteRepository()
         {
             quoteheaderRepository = GetQuoteHeaderRepo();

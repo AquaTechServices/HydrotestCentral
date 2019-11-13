@@ -1,5 +1,4 @@
-﻿using HydrotestCentral.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,7 +16,6 @@ namespace HydrotestCentral.ViewModels
 {
     public partial class MainWindowViewModel: INotifyPropertyChanged
     {
-        //static string connectionString = Properties.Settings.Default.connString;
         SQLiteConnection connection;
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
@@ -67,7 +65,7 @@ namespace HydrotestCentral.ViewModels
                 connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
-                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
+                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR ORDER BY jobno");
                 adapter = new SQLiteDataAdapter(cmd);
 
                 ds = new DataSet();
@@ -104,6 +102,14 @@ namespace HydrotestCentral.ViewModels
                             supervisor = dr[14].ToString(),
                             est_start_date = dr[15].ToString(),
                             est_end_date = dr[16].ToString(),
+                            jobtype = dr[10].ToString(),
+                            pipe_line_size = dr[11].ToString(),
+                            pipe_length = dr[12].ToString(),
+                            pressure = dr[13].ToString(),
+                            endclient = dr[14].ToString(),
+                            supervisor = dr[15].ToString(),
+                            est_startdate = dr[16].ToString(),
+                            est_enddate = dr[17].ToString(),
                             value = cleaned_value
                     });
                      Console.WriteLine(dr[0].ToString() + " created in quote_headers");
@@ -205,10 +211,77 @@ namespace HydrotestCentral.ViewModels
             return quote_items;
         }
 
-        public void updateQuoteHeader()
+        public void UpdateHeaderItem(string jobno)
         {
-            quote_headers= LoadQuoteHeaderData();
+            //Find QuoteHeader for that jobno
+            QuoteHeader qh = new QuoteHeader();
+
+            foreach(QuoteHeader header in quote_headers)
+            {
+                if(header.jobno == jobno)
+                {
+                    qh = header;
+                    break;
+                }
+            }
+
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+
+                cmd.Parameters.Add(new SQLiteParameter("@jobno", jobno));
+                cmd.Parameters.Add(new SQLiteParameter("@qt_date", qh.qt_date));
+                cmd.Parameters.Add(new SQLiteParameter("@cust", qh.cust));
+                cmd.Parameters.Add(new SQLiteParameter("@cust_contact", qh.cust_contact));
+                cmd.Parameters.Add(new SQLiteParameter("@cust_phone", qh.cust_phone));
+                cmd.Parameters.Add(new SQLiteParameter("@cust_email", qh.cust_email));
+                cmd.Parameters.Add(new SQLiteParameter("@loc", qh.loc));
+                cmd.Parameters.Add(new SQLiteParameter("@salesman", qh.salesman));
+                cmd.Parameters.Add(new SQLiteParameter("@days_est", qh.days_est));
+                cmd.Parameters.Add(new SQLiteParameter("@status", qh.status));
+                cmd.Parameters.Add(new SQLiteParameter("@pipe_line_size", qh.pipe_line_size));
+                cmd.Parameters.Add(new SQLiteParameter("@pipe_length", qh.pipe_length));
+                cmd.Parameters.Add(new SQLiteParameter("@pressure", qh.pressure));
+                cmd.Parameters.Add(new SQLiteParameter("@endclient", qh.endclient));
+                cmd.Parameters.Add(new SQLiteParameter("@supervisor", qh.supervisor));
+                cmd.Parameters.Add(new SQLiteParameter("@est_start_date", qh.est_startdate));
+                cmd.Parameters.Add(new SQLiteParameter("@est_stop_date", qh.est_enddate));
+
+                cmd.CommandText = String.Format("UPDATE QTE_HDR SET qt_date=(@qt_date), cust=(@cust), cust_contact=(@cust_contact), cust_phone=(@cust_phone),cust_email=(@cust_email), loc=(@loc), salesman=(@salesman), days_est=(@days_est), status=(@status), pipe_line_size=(@pipe_line_size), pipe_length=(@pipe_length), pressure=(@pressure), endclient=(@endclient), supervisor=(@supervisor), est_start_date=(@est_start_date), est_stop_date=(@est_stop_date) WHERE jobno=(@jobno)");
+                cmd.ExecuteNonQuery();
+                connection.Close();
+
+                quote_headers = LoadQuoteHeaderData();
+            }
+            catch (Exception Ex)
+            {
+                System.Windows.MessageBox.Show(Ex.Message);
+            }
         }
+
+        public void DeleteHeaderItem(String jobno)
+        {
+            try
+            {
+                //var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
+                cmd.ExecuteNonQuery();
+
+                quote_headers = LoadQuoteHeaderData();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+        }
+
         public void updateQuoteItemsByJob(string jobno)
         {
             //MessageBox.Show("updateQuoteItemsByJob called...");
@@ -241,6 +314,28 @@ namespace HydrotestCentral.ViewModels
             }
 
             quote_items = new_collection;
+        }
+
+        public void DeleteQuoteItem(String jobno, int tab_index)
+        {
+            try
+            {
+                var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
         }
 
         #region INotifyPropertyChanged Members
