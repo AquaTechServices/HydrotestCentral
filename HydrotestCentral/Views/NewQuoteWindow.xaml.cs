@@ -61,13 +61,18 @@ namespace HydrotestCentral
         public string getNextJobNumber(string lastJobNo)
         {
             char[] remChars = { 'A', 'T', 'H', 'S', '-' };
+
             string returnString = lastJobNo.TrimStart(remChars);
+            if(returnString.StartsWith("C2019-"))
+            {
+                returnString = returnString.Remove(0, 6);
+            }
             Console.WriteLine("removed chars from lastJobNo: " + lastJobNo);
             int num = 0;
             if(Int32.TryParse(returnString, out num))
             {
                 num += 1;
-                returnString = "ATHS-" + num.ToString();
+                returnString = "C2019-" + num.ToString();
             }
             else
             {
