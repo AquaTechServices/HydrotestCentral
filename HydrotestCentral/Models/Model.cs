@@ -136,60 +136,6 @@ namespace HydrotestCentral.Model
 
         }
 
-        public void AddNewHeaderItem(QuoteHeader NewquoteHeaderItem)
-        {
-            try
-            {
-                connection = new SQLiteConnection(connection_String);
-                connection.Open();
-                cmd = connection.CreateCommand();
-                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
-                adapter = new SQLiteDataAdapter(cmd);
-                //System.Data.SQLite.SQLiteCommandBuilder cb;
-                //System.Data.SQLite.SQLiteCommandBuilder cb = new SQLiteCommandBuilder(adapter);
-
-                DataSet ds = new DataSet();
-                adapter.Fill(ds, "QTE_HDR");
-                //DataTable headerDataTable = ds.Tables["QTE_HDR"];
-                DataRow HeaderTableRow = ds.Tables["QTE_HDR"].NewRow();
-                HeaderTableRow["jobno"] = NewquoteHeaderItem.jobno;
-                HeaderTableRow["qt_date"] = NewquoteHeaderItem.qt_date;
-                HeaderTableRow["cust"] = NewquoteHeaderItem.cust;
-                HeaderTableRow["cust_contact"] = NewquoteHeaderItem.cust_contact;
-                HeaderTableRow["cust_phone"] = NewquoteHeaderItem.cust_phone;
-                HeaderTableRow["cust_email"] = NewquoteHeaderItem.cust_email;
-                HeaderTableRow["loc"] = NewquoteHeaderItem.loc;
-                HeaderTableRow["salesman"] = NewquoteHeaderItem.salesman;
-                HeaderTableRow["days_est"] = NewquoteHeaderItem.days_est;
-                HeaderTableRow["status"] = NewquoteHeaderItem.status;
-                HeaderTableRow["jobtype"] = NewquoteHeaderItem.jobtype;
-                HeaderTableRow["pipe_line_size"] = NewquoteHeaderItem.pipe_line_size;
-                HeaderTableRow["pipe_length"] = NewquoteHeaderItem.pipe_length;
-                HeaderTableRow["pressure"] = NewquoteHeaderItem.pressure;
-                HeaderTableRow["endclient"] = NewquoteHeaderItem.endclient;
-                HeaderTableRow["supervisor"] = NewquoteHeaderItem.supervisor;
-                HeaderTableRow["est_start_date"] = NewquoteHeaderItem.est_start_date;
-                HeaderTableRow["est_end_date"] = NewquoteHeaderItem.est_end_date;
-                HeaderTableRow["value"] = NewquoteHeaderItem.value;
-                //headerDataTable.Rows.Add(HeaderTableRow);
-                //HeaderTableRow.AcceptChanges();
-                adapter.InsertCommand = new SQLiteCommandBuilder(adapter).GetInsertCommand();
-                ds.Tables["QTE_HDR"].Rows.Add(HeaderTableRow);
-                adapter.Update(ds, "QTE_HDR");
-                //ds.Clear();
-                //adapter.Fill(ds, "QTE_HDR");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
-        }
-
     }
 
 

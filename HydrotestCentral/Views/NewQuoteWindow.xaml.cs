@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Data;
 using System.Data.SQLite;
 using HydrotestCentral.Model;
+using HydrotestCentral.Models;
 using System.Collections.ObjectModel;
 
 namespace HydrotestCentral
@@ -27,12 +28,15 @@ namespace HydrotestCentral
         public SQLiteDataAdapter dataAdapter;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
         public static QuoteHeaderDataProvider main_Quoteheader;
+        public static QuoteRepository main_QuoteRepository;
+
         public NewQuoteWindow()
         {
             InitializeComponent();
 
             //set the QuoteHeaderDataProvider
             main_Quoteheader = new QuoteHeaderDataProvider();
+            main_QuoteRepository = new QuoteRepository();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -96,7 +100,7 @@ namespace HydrotestCentral
             //headeritem.est_start_date = "NULL";
             //headeritem.est_end_date = "NULL";
             headeritem.value = 0;
-            main_Quoteheader.AddNewHeaderItem(headeritem);
+            main_QuoteRepository.AddNewHeaderItem(headeritem);
             MessageBox.Show("Record Added");
         }
 

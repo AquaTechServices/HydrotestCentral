@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.ComponentModel;
 using HydrotestCentral.Model;
+using System.Windows;
 
 namespace HydrotestCentral.Models
 {
@@ -17,6 +18,10 @@ namespace HydrotestCentral.Models
         static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
         public static string connString {get; set; }
+        SQLiteCommand cmd;
+        SQLiteDataAdapter adapter;
+        DataSet ds;
+        private SQLiteConnection connection;
 
         public QuoteRepository()
         {
@@ -45,14 +50,14 @@ namespace HydrotestCentral.Models
                 {
                     QuoteHeader q = new QuoteHeader();
                     q.jobno = row["jobno"].ToString();
-                    q.qt_date = row["item"].ToString();
-                    q.cust = row["rate"].ToString();
+                    q.qt_date = row["qt_date"].ToString();
+                    q.cust = row["cust"].ToString();
                     q.cust_contact = row["cust_contact"].ToString();
                     q.cust_phone = row["cust_phone"].ToString();
                     q.cust_email = row["cust_email"].ToString();
                     q.loc = row["loc"].ToString();
                     q.salesman = row["salesman"].ToString();
-                    q.days_est = (int)row["days_est"];
+                    q.days_est = row["days_est"] is DBNull ? 0 : Convert.ToInt32(row["days_est"]);
                     q.status = row["status"].ToString();
                     q.pipe_line_size = row["pipe_line_size"].ToString();
                     q.pipe_length = row["pipe_length"].ToString();
@@ -61,7 +66,7 @@ namespace HydrotestCentral.Models
                     q.supervisor = row["supervisor"].ToString();
                     q.est_start_date = row["est_start_date"].ToString();
                     q.est_end_date = row["est_end_date"].ToString();
-                    q.value = (double)row["value"];
+                    q.value = row["value"] is DBNull ? 0 : Convert.ToDouble(row["value"]);
 
                     header_list.Add(q);
                 }
@@ -91,19 +96,19 @@ namespace HydrotestCentral.Models
                 foreach (DataRow row in dt.Rows)
                 {
                     QuoteItem q = new QuoteItem();
-                    q.qty = (int)row["qty"];
+                    q.qty = Convert.ToInt32(row["qty"]);
                     q.item = row["item"].ToString();
                     q.rate = (double)row["rate"];
                     q.descr = row["descr"].ToString();
-                    q.group = (int)row["group"];
-                    q.taxable = (bool)row["taxable"];
-                    q.discountable = (bool)row["discountable"];
-                    q.printable = (bool)row["printable"];
+                    q.group = Convert.ToInt32(row["group"]);
+                    q.taxable = Convert.ToBoolean(row["taxable"]);
+                    q.discountable = Convert.ToBoolean(row["discountable"]);
+                    q.printable = Convert.ToBoolean(row["printable"]);
                     q.jobno = row["jobno"].ToString();
                     q.line_total = (double)row["line_total"];
                     q.tax_total = (double)row["tax_total"];
-                    q.tab_index = (int)row["tab_index"];
-                    q.row_index = (int)row["row_index"];
+                    q.tab_index = Convert.ToInt32(row["tab_index"]);
+                    q.row_index = Convert.ToInt32(row["row_index"]);
 
                     item_list.Add(q);
                 }
@@ -294,6 +299,53 @@ namespace HydrotestCentral.Models
         public void updateRecord(QuoteItem quoteRecord)
         {
 
+        }
+
+
+        public void AddNewHeaderItem(QuoteHeader NewquoteHeaderItem)
+        {
+            try
+            {
+                connection = new SQLiteConnection(connectionString);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
+                adapter = new SQLiteDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds, "QTE_HDR");
+                DataRow HeaderTableRow = ds.Tables["QTE_HDR"].NewRow();
+                HeaderTableRow["jobno"] = NewquoteHeaderItem.jobno;
+                HeaderTableRow["qt_date"] = NewquoteHeaderItem.qt_date;
+                HeaderTableRow["cust"] = NewquoteHeaderItem.cust;
+                HeaderTableRow["cust_contact"] = NewquoteHeaderItem.cust_contact;
+                HeaderTableRow["cust_phone"] = NewquoteHeaderItem.cust_phone;
+                HeaderTableRow["cust_email"] = NewquoteHeaderItem.cust_email;
+                HeaderTableRow["loc"] = NewquoteHeaderItem.loc;
+                HeaderTableRow["salesman"] = NewquoteHeaderItem.salesman;
+                HeaderTableRow["days_est"] = NewquoteHeaderItem.days_est;
+                HeaderTableRow["status"] = NewquoteHeaderItem.status;
+                HeaderTableRow["jobtype"] = NewquoteHeaderItem.jobtype;
+                HeaderTableRow["pipe_line_size"] = NewquoteHeaderItem.pipe_line_size;
+                HeaderTableRow["pipe_length"] = NewquoteHeaderItem.pipe_length;
+                HeaderTableRow["pressure"] = NewquoteHeaderItem.pressure;
+                HeaderTableRow["endclient"] = NewquoteHeaderItem.endclient;
+                HeaderTableRow["supervisor"] = NewquoteHeaderItem.supervisor;
+                HeaderTableRow["est_start_date"] = NewquoteHeaderItem.est_start_date;
+                HeaderTableRow["est_end_date"] = NewquoteHeaderItem.est_end_date;
+                HeaderTableRow["value"] = NewquoteHeaderItem.value;
+                adapter.InsertCommand = new SQLiteCommandBuilder(adapter).GetInsertCommand();
+                ds.Tables["QTE_HDR"].Rows.Add(HeaderTableRow);
+                adapter.Update(ds, "QTE_HDR");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
         }
     }
 }

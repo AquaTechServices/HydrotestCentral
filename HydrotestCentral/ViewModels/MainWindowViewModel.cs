@@ -254,27 +254,6 @@ namespace HydrotestCentral.ViewModels
             }
         }
 
-        public void DeleteHeaderItem(String jobno)
-        {
-            try
-            {
-                //var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(connection_String);
-                connection.Open();
-                cmd = connection.CreateCommand();
-                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
-                cmd.ExecuteNonQuery();
-
-                quote_headers = LoadQuoteHeaderData();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-        }
-
         public void updateQuoteItemsByJob(string jobno)
         {
             //MessageBox.Show("updateQuoteItemsByJob called...");
