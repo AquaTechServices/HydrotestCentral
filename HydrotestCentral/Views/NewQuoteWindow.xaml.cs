@@ -98,7 +98,7 @@ namespace HydrotestCentral
             headeritem.endclient = txt_endclient.Text;
             headeritem.supervisor = txt_supervisor.Text;
             //headeritem.est_start_date = "NULL";
-            //headeritem.est_end_date = "NULL";
+            //headeritem.est_stop_date = "NULL";
             headeritem.value = 0;
             main_QuoteRepository.AddNewHeaderItem(headeritem);
             MessageBox.Show("Record Added");

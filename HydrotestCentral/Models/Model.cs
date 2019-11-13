@@ -34,7 +34,7 @@ namespace HydrotestCentral.Model
         public string endclient { get; set; }
         public string supervisor { get; set; }
         public string est_start_date { get; set; }
-        public string est_end_date { get; set; }
+        public string est_stop_date { get; set; }
         public double value { get; set; }
     }
 

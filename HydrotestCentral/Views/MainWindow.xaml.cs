@@ -239,14 +239,14 @@ namespace HydrotestCentral
         {
             quoteHeaderBeingEdited = e.Row.Item as QuoteHeader;
 
-            MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
+            //MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
         }
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
         {
             if(quoteHeaderBeingEdited != null)
             {
-                MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
+                //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
                 main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
                 quoteHeaderBeingEdited = null;
             }

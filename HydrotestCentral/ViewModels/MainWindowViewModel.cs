@@ -102,7 +102,7 @@ namespace HydrotestCentral.ViewModels
                             endclient = dr[14].ToString(),
                             supervisor = dr[15].ToString(),
                             est_start_date = dr[16].ToString(),
-                            est_end_date = dr[17].ToString(),
+                            est_stop_date = dr[17].ToString(),
                             value = cleaned_value
                     });
                      Console.WriteLine(dr[0].ToString() + " created in quote_headers");
@@ -240,9 +240,9 @@ namespace HydrotestCentral.ViewModels
                 cmd.Parameters.Add(new SQLiteParameter("@endclient", qh.endclient));
                 cmd.Parameters.Add(new SQLiteParameter("@supervisor", qh.supervisor));
                 cmd.Parameters.Add(new SQLiteParameter("@est_start_date", qh.est_start_date));
-                cmd.Parameters.Add(new SQLiteParameter("@est_stop_date", qh.est_end_date));
+                cmd.Parameters.Add(new SQLiteParameter("@est_stop_date", qh.est_stop_date));
 
-                cmd.CommandText = String.Format("UPDATE QTE_HDR SET qt_date=(@qt_date), cust=(@cust), cust_contact=(@cust_contact), cust_phone=(@cust_phone),cust_email=(@cust_email), loc=(@loc), salesman=(@salesman), days_est=(@days_est), status=(@status), pipe_line_size=(@pipe_line_size), pipe_length=(@pipe_length), pressure=(@pressure), endclient=(@endclient), supervisor=(@supervisor), est_start_date=(@est_start_date), est_end_date=(@est_stop_date) WHERE jobno=(@jobno)");
+                cmd.CommandText = String.Format("UPDATE QTE_HDR SET qt_date=(@qt_date), cust=(@cust), cust_contact=(@cust_contact), cust_phone=(@cust_phone),cust_email=(@cust_email), loc=(@loc), salesman=(@salesman), days_est=(@days_est), status=(@status), pipe_line_size=(@pipe_line_size), pipe_length=(@pipe_length), pressure=(@pressure), endclient=(@endclient), supervisor=(@supervisor), est_start_date=(@est_start_date), est_stop_date=(@est_stop_date) WHERE jobno=(@jobno)");
                 cmd.ExecuteNonQuery();
                 connection.Close();
 

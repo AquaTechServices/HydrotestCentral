@@ -65,7 +65,7 @@ namespace HydrotestCentral.Models
                     q.endclient = row["endclient"].ToString();
                     q.supervisor = row["supervisor"].ToString();
                     q.est_start_date = row["est_start_date"].ToString();
-                    q.est_end_date = row["est_end_date"].ToString();
+                    q.est_stop_date = row["est_stop_date"].ToString();
                     q.value = row["value"] is DBNull ? 0 : Convert.ToDouble(row["value"]);
 
                     header_list.Add(q);
@@ -147,7 +147,7 @@ namespace HydrotestCentral.Models
                 SQLiteParameter param14 = new SQLiteParameter("endclient", SqlDbType.VarChar);
                 SQLiteParameter param15 = new SQLiteParameter("supervisor", SqlDbType.VarChar);
                 SQLiteParameter param16 = new SQLiteParameter("est_start_date", SqlDbType.VarChar);
-                SQLiteParameter param17 = new SQLiteParameter("est_end_date", SqlDbType.VarChar);
+                SQLiteParameter param17 = new SQLiteParameter("est_stop_date", SqlDbType.VarChar);
                 SQLiteParameter param18 = new SQLiteParameter("value", SqlDbType.Real);
 
                 param1.Value = quoteRecord.jobno;
@@ -166,7 +166,7 @@ namespace HydrotestCentral.Models
                 param14.Value = quoteRecord.endclient;
                 param15.Value = quoteRecord.supervisor;
                 param16.Value = quoteRecord.est_start_date;
-                param17.Value = quoteRecord.est_end_date;
+                param17.Value = quoteRecord.est_stop_date;
                 param18.Value = quoteRecord.value;
 
                 query.Parameters.Add(param1);
@@ -331,7 +331,7 @@ namespace HydrotestCentral.Models
                 HeaderTableRow["endclient"] = NewquoteHeaderItem.endclient;
                 HeaderTableRow["supervisor"] = NewquoteHeaderItem.supervisor;
                 HeaderTableRow["est_start_date"] = NewquoteHeaderItem.est_start_date;
-                HeaderTableRow["est_end_date"] = NewquoteHeaderItem.est_end_date;
+                HeaderTableRow["est_stop_date"] = NewquoteHeaderItem.est_stop_date;
                 HeaderTableRow["value"] = NewquoteHeaderItem.value;
                 adapter.InsertCommand = new SQLiteCommandBuilder(adapter).GetInsertCommand();
                 ds.Tables["QTE_HDR"].Rows.Add(HeaderTableRow);
