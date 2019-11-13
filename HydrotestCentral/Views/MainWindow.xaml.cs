@@ -39,8 +39,6 @@ namespace HydrotestCentral
         private List<string> _tabNames;
         private TabItem _tabAdd;
 
-        private QuoteHeader quoteHeaderBeingEdited;
-
         public static MainWindowViewModel main_vm;
         public static QuoteHeaderDataProvider main_Quoteheader;
         private QuoteHeader quoteHeaderBeingEdited;
@@ -230,7 +228,6 @@ namespace HydrotestCentral
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
             main_Quoteheader.DeleteHeaderItem(jobno);
-            main_vm.updateQuoteHeader();
         }
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
