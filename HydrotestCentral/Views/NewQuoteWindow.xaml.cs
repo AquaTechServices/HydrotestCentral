@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -28,7 +29,7 @@ namespace HydrotestCentral
         public SQLiteConnection connection;
         public SQLiteDataAdapter dataAdapter;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
-        public static QuoteHeaderDataProvider main_Quoteheader;
+
         public static QuoteRepository main_QuoteRepository;
         public static MainWindowViewModel main_vm;
 
@@ -37,7 +38,7 @@ namespace HydrotestCentral
             InitializeComponent();
 
             //set the QuoteHeaderDataProvider
-            main_Quoteheader = new QuoteHeaderDataProvider();
+            //main_Quoteheader = new QuoteHeaderDataProvider();
             main_QuoteRepository = new QuoteRepository();
             main_vm = new MainWindowViewModel();
             main_vm = incoming_vm;
@@ -72,7 +73,7 @@ namespace HydrotestCentral
             {
                 returnString = returnString.Remove(0, 6);
             }
-            Console.WriteLine("removed chars from lastJobNo: " + lastJobNo);
+            Trace.WriteLine("removed chars from lastJobNo: " + lastJobNo);
             int num = 0;
             if(Int32.TryParse(returnString, out num))
             {
@@ -83,7 +84,7 @@ namespace HydrotestCentral
             {
                 MessageBox.Show("Error Getting Job Number!");
             }
-            Console.WriteLine("new job no created: " + returnString);
+            Trace.WriteLine("new job no created: " + returnString);
 
             return returnString;
         }
@@ -111,10 +112,8 @@ namespace HydrotestCentral
             //headeritem.est_stop_date = "NULL";
             headeritem.value = 0;
             main_QuoteRepository.AddNewHeaderItem(headeritem);
-            
-            MessageBox.Show("Record Added");
-
             main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
+            MessageBox.Show("Quote Added");
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)

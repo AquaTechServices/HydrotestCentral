@@ -20,7 +20,7 @@ namespace HydrotestCentral.Models
         public static string connString {get; set; }
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
-        DataSet ds;
+
         private SQLiteConnection connection;
 
         public QuoteRepository()
@@ -28,6 +28,8 @@ namespace HydrotestCentral.Models
             quoteheaderRepository = GetQuoteHeaderRepo();
             quoteitemRepository = GetQuoteItemRepo();
         }
+
+        #region QuoteHeader
 
         public List<QuoteHeader> GetQuoteHeaderRepo()
         {
@@ -76,6 +78,80 @@ namespace HydrotestCentral.Models
 
         }
 
+        public void AddNewHeaderItem(QuoteHeader NewquoteHeaderItem)
+        {
+            try
+            {
+                connection = new SQLiteConnection(connectionString);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
+                adapter = new SQLiteDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds, "QTE_HDR");
+                DataRow HeaderTableRow = ds.Tables["QTE_HDR"].NewRow();
+                HeaderTableRow["jobno"] = NewquoteHeaderItem.jobno;
+                HeaderTableRow["qt_date"] = NewquoteHeaderItem.qt_date;
+                HeaderTableRow["cust"] = NewquoteHeaderItem.cust;
+                HeaderTableRow["cust_contact"] = NewquoteHeaderItem.cust_contact;
+                HeaderTableRow["cust_phone"] = NewquoteHeaderItem.cust_phone;
+                HeaderTableRow["cust_email"] = NewquoteHeaderItem.cust_email;
+                HeaderTableRow["loc"] = NewquoteHeaderItem.loc;
+                HeaderTableRow["salesman"] = NewquoteHeaderItem.salesman;
+                HeaderTableRow["days_est"] = NewquoteHeaderItem.days_est;
+                HeaderTableRow["status"] = NewquoteHeaderItem.status;
+                HeaderTableRow["jobtype"] = NewquoteHeaderItem.jobtype;
+                HeaderTableRow["pipe_line_size"] = NewquoteHeaderItem.pipe_line_size;
+                HeaderTableRow["pipe_length"] = NewquoteHeaderItem.pipe_length;
+                HeaderTableRow["pressure"] = NewquoteHeaderItem.pressure;
+                HeaderTableRow["endclient"] = NewquoteHeaderItem.endclient;
+                HeaderTableRow["supervisor"] = NewquoteHeaderItem.supervisor;
+                HeaderTableRow["est_start_date"] = NewquoteHeaderItem.est_start_date;
+                HeaderTableRow["est_stop_date"] = NewquoteHeaderItem.est_stop_date;
+                HeaderTableRow["value"] = NewquoteHeaderItem.value;
+                adapter.InsertCommand = new SQLiteCommandBuilder(adapter).GetInsertCommand();
+                ds.Tables["QTE_HDR"].Rows.Add(HeaderTableRow);
+                adapter.Update(ds, "QTE_HDR");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        public void updateRecord(QuoteHeader quoteRecord)
+        {
+
+        }
+
+        public void deleteRecord(QuoteHeader quoteRecord)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                if (conn == null)
+                {
+                    throw new Exception("Connection String is Null.");
+                }
+
+                SQLiteCommand query = new SQLiteCommand("deleteRecord", conn);
+                conn.Open();
+                query.CommandType = CommandType.StoredProcedure;
+                SQLiteParameter param1 = new SQLiteParameter("jobno", SqlDbType.VarChar);
+                param1.Value = quoteRecord.jobno;
+                query.Parameters.Add(param1);
+
+                query.ExecuteNonQuery();
+            }
+        }
+        
+        #endregion
+        #region QuoteItem
+
         public List<QuoteItem> GetQuoteItemRepo()
         {
             List<QuoteItem> item_list = new List<QuoteItem>();
@@ -117,81 +193,7 @@ namespace HydrotestCentral.Models
             }
         }
 
-        public void addNewRecord(QuoteHeader quoteRecord)
-        {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
-            {
-                if (conn == null)
-                {
-                    throw new Exception("Connection String is Null. Set the value of Connection String in MovieCatalog->Properties-?Settings.settings");
-                }
-                else if (quoteRecord == null)
-                    throw new Exception("The passed argument 'movieRecord' is null");
-
-                SQLiteCommand query = new SQLiteCommand("addRecord", conn);
-                conn.Open();
-                query.CommandType = CommandType.StoredProcedure;
-                SQLiteParameter param1 = new SQLiteParameter("jobno", SqlDbType.VarChar);
-                SQLiteParameter param2 = new SQLiteParameter("qt_date", SqlDbType.VarChar);
-                SQLiteParameter param3 = new SQLiteParameter("cust", SqlDbType.VarChar);
-                SQLiteParameter param4 = new SQLiteParameter("cust_contact", SqlDbType.VarChar);
-                SQLiteParameter param5 = new SQLiteParameter("cust_phone", SqlDbType.VarChar);
-                SQLiteParameter param6 = new SQLiteParameter("cust_email", SqlDbType.VarChar);
-                SQLiteParameter param7 = new SQLiteParameter("loc", SqlDbType.VarChar);
-                SQLiteParameter param8 = new SQLiteParameter("salesman", SqlDbType.VarChar);
-                SQLiteParameter param9 = new SQLiteParameter("days_est", SqlDbType.Int);
-                SQLiteParameter param10 = new SQLiteParameter("status", SqlDbType.VarChar);
-                SQLiteParameter param11 = new SQLiteParameter("pipe_line_size", SqlDbType.VarChar);
-                SQLiteParameter param12 = new SQLiteParameter("pipe_length", SqlDbType.VarChar);
-                SQLiteParameter param13 = new SQLiteParameter("pressure", SqlDbType.VarChar);
-                SQLiteParameter param14 = new SQLiteParameter("endclient", SqlDbType.VarChar);
-                SQLiteParameter param15 = new SQLiteParameter("supervisor", SqlDbType.VarChar);
-                SQLiteParameter param16 = new SQLiteParameter("est_start_date", SqlDbType.VarChar);
-                SQLiteParameter param17 = new SQLiteParameter("est_stop_date", SqlDbType.VarChar);
-                SQLiteParameter param18 = new SQLiteParameter("value", SqlDbType.Real);
-
-                param1.Value = quoteRecord.jobno;
-                param2.Value = quoteRecord.qt_date;
-                param3.Value = quoteRecord.cust;
-                param4.Value = quoteRecord.cust_contact;
-                param5.Value = quoteRecord.cust_phone;
-                param6.Value = quoteRecord.cust_email;
-                param7.Value = quoteRecord.loc;
-                param8.Value = quoteRecord.salesman;
-                param9.Value = quoteRecord.days_est;
-                param10.Value = quoteRecord.status;
-                param11.Value = quoteRecord.pipe_line_size;
-                param12.Value = quoteRecord.pipe_length;
-                param13.Value = quoteRecord.pressure;
-                param14.Value = quoteRecord.endclient;
-                param15.Value = quoteRecord.supervisor;
-                param16.Value = quoteRecord.est_start_date;
-                param17.Value = quoteRecord.est_stop_date;
-                param18.Value = quoteRecord.value;
-
-                query.Parameters.Add(param1);
-                query.Parameters.Add(param2);
-                query.Parameters.Add(param3);
-                query.Parameters.Add(param4);
-                query.Parameters.Add(param5);
-                query.Parameters.Add(param6);
-                query.Parameters.Add(param7);
-                query.Parameters.Add(param8);
-                query.Parameters.Add(param9);
-                query.Parameters.Add(param10);
-                query.Parameters.Add(param11);
-                query.Parameters.Add(param12);
-                query.Parameters.Add(param13);
-                query.Parameters.Add(param14);
-                query.Parameters.Add(param15);
-                query.Parameters.Add(param16);
-                query.Parameters.Add(param17);
-                query.Parameters.Add(param18);
-
-                query.ExecuteNonQuery();
-            }
-        }
-        public void addNewRecord(QuoteItem quoteRecord)
+        public void AddNewQuoteItem(QuoteItem quoteRecord)
         {
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
@@ -251,24 +253,9 @@ namespace HydrotestCentral.Models
             }
         }
 
-        public void deleteRecord(QuoteHeader quoteRecord)
+        public void updateRecord(QuoteItem quoteRecord)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
-            {
-                if (conn == null)
-                {
-                    throw new Exception("Connection String is Null.");
-                }
 
-                SQLiteCommand query = new SQLiteCommand("deleteRecord", conn);
-                conn.Open();
-                query.CommandType = CommandType.StoredProcedure;
-                SQLiteParameter param1 = new SQLiteParameter("jobno", SqlDbType.VarChar);
-                param1.Value = quoteRecord.jobno;
-                query.Parameters.Add(param1);
-
-                query.ExecuteNonQuery();
-            }
         }
 
         public void deleteRecord(QuoteItem quoteRecord)
@@ -291,61 +278,6 @@ namespace HydrotestCentral.Models
             }
         }
 
-        public void updateRecord(QuoteHeader quoteRecord)
-        {
-
-        }
-
-        public void updateRecord(QuoteItem quoteRecord)
-        {
-
-        }
-
-
-        public void AddNewHeaderItem(QuoteHeader NewquoteHeaderItem)
-        {
-            try
-            {
-                connection = new SQLiteConnection(connectionString);
-                connection.Open();
-                cmd = connection.CreateCommand();
-                cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
-                adapter = new SQLiteDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                adapter.Fill(ds, "QTE_HDR");
-                DataRow HeaderTableRow = ds.Tables["QTE_HDR"].NewRow();
-                HeaderTableRow["jobno"] = NewquoteHeaderItem.jobno;
-                HeaderTableRow["qt_date"] = NewquoteHeaderItem.qt_date;
-                HeaderTableRow["cust"] = NewquoteHeaderItem.cust;
-                HeaderTableRow["cust_contact"] = NewquoteHeaderItem.cust_contact;
-                HeaderTableRow["cust_phone"] = NewquoteHeaderItem.cust_phone;
-                HeaderTableRow["cust_email"] = NewquoteHeaderItem.cust_email;
-                HeaderTableRow["loc"] = NewquoteHeaderItem.loc;
-                HeaderTableRow["salesman"] = NewquoteHeaderItem.salesman;
-                HeaderTableRow["days_est"] = NewquoteHeaderItem.days_est;
-                HeaderTableRow["status"] = NewquoteHeaderItem.status;
-                HeaderTableRow["jobtype"] = NewquoteHeaderItem.jobtype;
-                HeaderTableRow["pipe_line_size"] = NewquoteHeaderItem.pipe_line_size;
-                HeaderTableRow["pipe_length"] = NewquoteHeaderItem.pipe_length;
-                HeaderTableRow["pressure"] = NewquoteHeaderItem.pressure;
-                HeaderTableRow["endclient"] = NewquoteHeaderItem.endclient;
-                HeaderTableRow["supervisor"] = NewquoteHeaderItem.supervisor;
-                HeaderTableRow["est_start_date"] = NewquoteHeaderItem.est_start_date;
-                HeaderTableRow["est_stop_date"] = NewquoteHeaderItem.est_stop_date;
-                HeaderTableRow["value"] = NewquoteHeaderItem.value;
-                adapter.InsertCommand = new SQLiteCommandBuilder(adapter).GetInsertCommand();
-                ds.Tables["QTE_HDR"].Rows.Add(HeaderTableRow);
-                adapter.Update(ds, "QTE_HDR");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
-        }
+        #endregion
     }
 }
