@@ -16,6 +16,7 @@ using System.Data.SQLite;
 using HydrotestCentral.Model;
 using HydrotestCentral.Models;
 using System.Collections.ObjectModel;
+using HydrotestCentral.ViewModels;
 
 namespace HydrotestCentral
 {
@@ -29,21 +30,25 @@ namespace HydrotestCentral
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
         public static QuoteHeaderDataProvider main_Quoteheader;
         public static QuoteRepository main_QuoteRepository;
+        public static MainWindowViewModel main_vm;
 
-        public NewQuoteWindow()
+        public NewQuoteWindow(MainWindowViewModel incoming_vm)
         {
             InitializeComponent();
 
             //set the QuoteHeaderDataProvider
             main_Quoteheader = new QuoteHeaderDataProvider();
             main_QuoteRepository = new QuoteRepository();
+            main_vm = new MainWindowViewModel();
+            main_vm = incoming_vm;
+            DataContext = main_vm;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             txt_jobno.Text = getNextJobNumber(getLastJobNumber());
             txt_qtdate.Text = DateTime.Now.ToString("MM/dd/yyyy");
-            txt_status.Text = "QUOTE";
+            txt_status.Text = "";
         }
 
         public string getLastJobNumber()
@@ -106,7 +111,10 @@ namespace HydrotestCentral
             //headeritem.est_stop_date = "NULL";
             headeritem.value = 0;
             main_QuoteRepository.AddNewHeaderItem(headeritem);
+            
             MessageBox.Show("Record Added");
+
+            main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)

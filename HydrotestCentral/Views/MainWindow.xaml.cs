@@ -228,6 +228,7 @@ namespace HydrotestCentral
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
             main_Quoteheader.DeleteHeaderItem(jobno);
+            main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
         }
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
@@ -322,7 +323,7 @@ namespace HydrotestCentral
 
         private void Btn_NewQuote_Click(object sender, RoutedEventArgs e)
         {
-            NewQuoteWindow NQ_Win = new NewQuoteWindow();
+            NewQuoteWindow NQ_Win = new NewQuoteWindow(main_vm);
             NQ_Win.Show();
         }
 
