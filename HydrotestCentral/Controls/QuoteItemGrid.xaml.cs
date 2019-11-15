@@ -18,6 +18,7 @@ using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using HydrotestCentral.ViewModels;
 using HydrotestCentral.Model;
+using System.Diagnostics;
 
 namespace HydrotestCentral
 {
@@ -26,49 +27,31 @@ namespace HydrotestCentral
     /// </summary>
     public partial class QuoteItemGrid: UserControl
     {
-        public SQLiteConnection connection;
-        public SQLiteDataAdapter dataAdapter;
-        public string item_placeholder;
-        //public QuoteItemsDataProvider quote_items;
         public static string jobno;
         public static int tab_index;
-        public MainWindowViewModel other_vm;
 
-        public QuoteItemGrid(MainWindowViewModel vm)
-        {
-            InitializeComponent();
-            
-            //this.DataContext = vm;
-            this.QItems.ItemsSource = vm.quote_items;
-
-            foreach(QuoteItem x in vm.quote_items)
-            {
-                Console.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
-            }
-        }
-
-        public QuoteItemGrid(string jobno_in, int tab_index_in)
+        public QuoteItemGrid(string jobno_in, int tab_index_in, MainWindowViewModel vm)
         {
             InitializeComponent();
 
             jobno = jobno_in;
             tab_index = tab_index_in;
-        }
 
-        public void RefreshGrid()
-        {
-            this.QItems.Items.Refresh();
-        }
+            this.DataContext = vm;
+            //MessageBox.Show(vm.ToString());
+            //this.QItems.ItemsSource = vm.quote_items;
 
-        private void UpdateQuoteItemGrid()
-        {
-            Console.WriteLine("Cell edit\n");
+            foreach(QuoteItem x in vm.quote_items)
+            {
+                //MessageBox.Show(x.ToString());
+                Trace.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
+            }
         }
 
         private void QItems_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //e.Row.Item.Text.ToString();
-            Console.WriteLine("CELL EDIT - Row: " + e.Row.GetIndex() + " edited\n");
+            Trace.WriteLine("CELL EDIT - Row: " + e.Row.GetIndex() + " edited\n");
 
             try
             {
@@ -83,6 +66,8 @@ namespace HydrotestCentral
         }
     }
 
+
+    // 11/14/19 - Currently this is not being used
     public class DataGridComboBoxColumnWithBindingHack : DataGridComboBoxColumn
     {
         protected override FrameworkElement GenerateEditingElement(DataGridCell cell, object dataItem)
@@ -106,76 +91,4 @@ namespace HydrotestCentral
         }
     }
 
-    public class Item: INotifyPropertyChanged
-    {
-        string _itemname;
-        string _descr;
-        double _rate;
-
-        public Item(string name, string descr, double rate)
-        {
-            _itemname = name;
-            _descr = descr;
-            _rate = rate;
-        }
-
-        public string Itemname
-        {
-            get
-            {
-                return _itemname;
-            }
-            set
-            {
-                if(_itemname != value)
-                {
-                    _itemname = value;
-                    NotifyPropertyChanged("Itemname");
-                }
-            }
-        }
-
-        public string Descr
-        {
-            get
-            {
-                return _descr;
-            }
-            set
-            {
-                if (_descr != value)
-                {
-                    _descr = value;
-                    NotifyPropertyChanged("Descr");
-                }
-            }
-        }
-
-        public double Rate
-        {
-            get
-            {
-                return _rate;
-            }
-            set
-            {
-                if(_rate != value)
-                {
-                    _rate = value;
-                    NotifyPropertyChanged("Rate");
-                }
-            }
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String property)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
-    }
 }

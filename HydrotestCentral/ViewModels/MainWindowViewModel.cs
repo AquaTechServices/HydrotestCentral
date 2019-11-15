@@ -102,10 +102,10 @@ namespace HydrotestCentral.ViewModels
                             endclient = dr[14].ToString(),
                             supervisor = dr[15].ToString(),
                             est_start_date = dr[16].ToString(),
-                            est_end_date = dr[17].ToString(),
+                            est_stop_date = dr[17].ToString(),
                             value = cleaned_value
                     });
-                     Console.WriteLine(dr[0].ToString() + " created in quote_headers");
+                    //Trace.WriteLine(dr[0].ToString() + " created in quote_headers");
                 }
             }
             catch (Exception ex)
@@ -180,7 +180,7 @@ namespace HydrotestCentral.ViewModels
                             tab_index = cleaned_tab_index,
                             row_index = cleaned_row_index
                         });
-                        //Console.WriteLine(dr[1].ToString() + " created in quote_items");
+                        //Trace.WriteLine(dr[1].ToString() + " created in quote_items");
                     }
                 
             }
@@ -199,9 +199,11 @@ namespace HydrotestCentral.ViewModels
             return items;
         }
 
-        public ObservableCollection<QuoteItem> getQuoteItems()
+        public int getCountOfTabItems(string incoming_jobno)
         {
-            return quote_items;
+            Trace.WriteLine("QuoteItems.Count(): " + quote_items.Count());
+            Trace.WriteLine("Linq query: " + quote_items.Where(item => item.jobno == incoming_jobno).Count());
+            return quote_items.Where(item => item.jobno == incoming_jobno).Count();   
         }
 
         public void UpdateHeaderItem(string jobno)
@@ -240,9 +242,9 @@ namespace HydrotestCentral.ViewModels
                 cmd.Parameters.Add(new SQLiteParameter("@endclient", qh.endclient));
                 cmd.Parameters.Add(new SQLiteParameter("@supervisor", qh.supervisor));
                 cmd.Parameters.Add(new SQLiteParameter("@est_start_date", qh.est_start_date));
-                cmd.Parameters.Add(new SQLiteParameter("@est_stop_date", qh.est_end_date));
+                cmd.Parameters.Add(new SQLiteParameter("@est_stop_date", qh.est_stop_date));
 
-                cmd.CommandText = String.Format("UPDATE QTE_HDR SET qt_date=(@qt_date), cust=(@cust), cust_contact=(@cust_contact), cust_phone=(@cust_phone),cust_email=(@cust_email), loc=(@loc), salesman=(@salesman), days_est=(@days_est), status=(@status), pipe_line_size=(@pipe_line_size), pipe_length=(@pipe_length), pressure=(@pressure), endclient=(@endclient), supervisor=(@supervisor), est_start_date=(@est_start_date), est_end_date=(@est_stop_date) WHERE jobno=(@jobno)");
+                cmd.CommandText = String.Format("UPDATE QTE_HDR SET qt_date=(@qt_date), cust=(@cust), cust_contact=(@cust_contact), cust_phone=(@cust_phone),cust_email=(@cust_email), loc=(@loc), salesman=(@salesman), days_est=(@days_est), status=(@status), pipe_line_size=(@pipe_line_size), pipe_length=(@pipe_length), pressure=(@pressure), endclient=(@endclient), supervisor=(@supervisor), est_start_date=(@est_start_date), est_stop_date=(@est_stop_date) WHERE jobno=(@jobno)");
                 cmd.ExecuteNonQuery();
                 connection.Close();
 
@@ -254,6 +256,30 @@ namespace HydrotestCentral.ViewModels
             }
         }
 
+        public void DeleteHeaderItem(String jobno)
+        {
+            try
+            {
+                //var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
+                cmd.ExecuteNonQuery();
+                //model_vm.quote_headers = model_vm.LoadQuoteHeaderData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+
+        }
+
         public void updateQuoteItemsByJob(string jobno)
         {
             //MessageBox.Show("updateQuoteItemsByJob called...");
@@ -262,11 +288,11 @@ namespace HydrotestCentral.ViewModels
             start_collection = LoadQuoteItemData();
 
             IEnumerable<QuoteItem> items = start_collection.Where(c => c.jobno == jobno);
-            Console.WriteLine("Adding New Collection for Quote Items updated to only show Job: " + jobno);
+            Trace.WriteLine("Adding New Collection for Quote Items updated to only show Job: " + jobno);
             foreach (QuoteItem i in items)
             {
                 new_collection.Add(i);
-                Console.WriteLine("--->" + i.jobno + " | " + i.item);
+                Trace.WriteLine("--->" + i.jobno + " | " + i.item);
             }
 
             quote_items = new_collection;

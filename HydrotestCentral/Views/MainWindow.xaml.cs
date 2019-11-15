@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using System.Diagnostics;
 using System.Data;
 using System.Data.SQLite;
 //using Excel = Microsoft.Office.Interop.Excel;
@@ -36,11 +37,11 @@ namespace HydrotestCentral
         //public QuoteHeaderDataProvider quote_heads;
         //public QuoteItemsDataProvider quote_items;
         private List<TabItem> _tabItems;
-        private List<string> _tabNames;
-        private TabItem _tabAdd;
+        //private List<string> _tabNames;
+        //private TabItem _tabAdd;
 
         public static MainWindowViewModel main_vm;
-        public static QuoteHeaderDataProvider main_Quoteheader;
+        //public static QuoteHeaderDataProvider main_Quoteheader;
         private QuoteHeader quoteHeaderBeingEdited;
 
         public MainWindow()
@@ -52,10 +53,7 @@ namespace HydrotestCentral
             DataContext = main_vm;
 
             //set the QuoteHeaderDataProvider
-            main_Quoteheader = new QuoteHeaderDataProvider();
-
-            //GetQuoteHeaderData();
-            //GetQuoteItemsData(this.jobno);
+            //main_Quoteheader = new QuoteHeaderDataProvider();
 
             // initialize tabItem array
             _tabItems = new List<TabItem>();
@@ -65,7 +63,7 @@ namespace HydrotestCentral
             tabAdd.Header = "+";
             _tabItems.Add(tabAdd);
 
-            //Find how many day tabs there should be
+
             this.AddTabItem();
 
             // bind tab control
@@ -117,13 +115,10 @@ namespace HydrotestCentral
 
         private void QHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Get selected Row
-            //DataRowView row = (DataRowView) QHeader.SelectedItem;
-            //MessageBox.Show(row.Row["jobno"].ToString());
-
             //Make the jobno column non editable
             QHeader.Columns[1].IsReadOnly = true;
 
+            // Get selected Row
             if (QHeader.SelectedItem != null)
             {
                 QuoteHeader temp = (QuoteHeader)QHeader.SelectedItem;
@@ -149,12 +144,25 @@ namespace HydrotestCentral
                 }
                 else
                 {
+                    /*
+                    //Get the number of Tab Items in the database
+                    int tab_count_fromDB = main_vm.getCountOfTabItems(temp.jobno);
+                    //MessageBox.Show("DB Tab Count: " + main_vm.getCountOfTabItems(temp.jobno));
+                    //Remove all tabs except Day 1 and + Tab
+                    if(tab_count_fromDB > 2)
+                    {
+                        MessageBox.Show("Tab Matching" + tab_count_fromDB + " | " + (_tabItems.Count - 1));
+                        while((_tabItems.Count - 1) < tab_count_fromDB)
+                        {
+                            AddTabItem();
+                        }
+                    }
+                    */
+
                     //Change QItems based on Row
-                    // OUTDATED ---GetQuoteItemsData(this.jobno);
                     main_vm.updateQuoteItemsByJob(this.jobno);
 
-                    // Update tab child
-                    //  MessageBox.Show(this.tabDynamic.GetChildObjects().ToString());
+                    // Update selected tab child
                     //getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
 
                     //Added this to display new grid with populating values
@@ -170,17 +178,9 @@ namespace HydrotestCentral
             QHeader.ItemsSource = main_vm.quote_headers;
         }
 
-        public int GetNumberOfTabIndex(string jobno)
-        {
-            //return quote_items.getCountOfTabItems(jobno);
-
-            return 3;
-        }
-
         public void getTabItemGrid(TabItem tab, int tab_index)
         {
-            //QuoteItemGrid grid = new QuoteItemGrid(quote_items, this.jobno, tab_index);
-            QuoteItemGrid grid = new QuoteItemGrid(main_vm);
+            QuoteItemGrid grid = new QuoteItemGrid(jobno, tab_index, main_vm);
             
             //MessageBox.Show("Getting Tab Index: " + TabIndex);
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
@@ -191,13 +191,13 @@ namespace HydrotestCentral
 
         public void updateTabItemGrid(TabItem tab, int tab_index)
         {
-            Console.WriteLine("update tab item grid");
+            Trace.WriteLine("update tab item grid");
         }
 
         public void deleteTabItemGrid(TabItem tab, int tab_index)
         {
             main_vm.DeleteQuoteItem(jobno, tab_index);
-            Console.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
+            Trace.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
         }
 
         private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -229,10 +229,12 @@ namespace HydrotestCentral
             }
         }
 
-
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
-            main_Quoteheader.DeleteHeaderItem(jobno);
+            //main_Quoteheader.DeleteHeaderItem(jobno);
+
+            main_vm.DeleteHeaderItem(jobno);
+            main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
         }
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
@@ -244,14 +246,14 @@ namespace HydrotestCentral
         {
             quoteHeaderBeingEdited = e.Row.Item as QuoteHeader;
 
-            MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
+            //MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
         }
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
         {
             if(quoteHeaderBeingEdited != null)
             {
-                MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
+                //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
                 main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
                 quoteHeaderBeingEdited = null;
             }
@@ -264,7 +266,7 @@ namespace HydrotestCentral
             try
             {
                 connection.Open();
-                Console.WriteLine("Connection String:" + connection.ConnectionString.ToString());
+                Trace.WriteLine("Connection String:" + connection.ConnectionString.ToString());
                 SQLiteCommand cmd = connection.CreateCommand();
                 cmd.Parameters.Add(new SQLiteParameter("@jobno", jobno));
                 cmd.Parameters.Add(new SQLiteParameter("@tabindex", tab_index));
@@ -288,9 +290,9 @@ namespace HydrotestCentral
                 cmd.CommandText = string.Format("UPDATE QTE_ITEMS, SET WHERE jobno=(@jobno) AND tab_index=(@tabindex) AND row_index=(@rowindex)");
                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
                 SQLiteCommandBuilder builder = new SQLiteCommandBuilder(adapter);
-                Console.WriteLine("Unedited:" + items_dt.Rows.Count.ToString());
+                Trace.WriteLine("Unedited:" + items_dt.Rows.Count.ToString());
                 adapter.Update(items_dt);
-                Console.WriteLine("Edited:" + items_dt.Rows.Count.ToString());
+                Trace.WriteLine("Edited:" + items_dt.Rows.Count.ToString());
                 connection.Close();
             }
             catch (Exception Ex)
@@ -302,7 +304,7 @@ namespace HydrotestCentral
         public void QItems_EditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //e.Row.Item.Text.ToString();
-            Console.WriteLine("Row: " + e.Row.GetIndex() + " edited\n");
+            Trace.WriteLine("Row: " + e.Row.GetIndex() + " edited\n");
 
             try
             {
@@ -327,7 +329,7 @@ namespace HydrotestCentral
 
         private void Btn_NewQuote_Click(object sender, RoutedEventArgs e)
         {
-            NewQuoteWindow NQ_Win = new NewQuoteWindow();
+            NewQuoteWindow NQ_Win = new NewQuoteWindow(main_vm);
             NQ_Win.Show();
         }
 
@@ -340,7 +342,7 @@ namespace HydrotestCentral
             //dt = quote_heads.getQuoteHeaderTableByJob(jobno);
             dt = new DataTable();
 
-            Console.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
+            Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
 
             var excelApp = new Excel.Application();
             var excelWB = excelApp.ActiveWorkbook;
@@ -356,7 +358,7 @@ namespace HydrotestCentral
                 excelWB = excelApp.Workbooks.Open(quote_form);
                 // Get a Total Count of tabs in worksheet
                 sheet_count = excelWB.Sheets.Count;
-                Console.WriteLine("Sheet Count: " + sheet_count.ToString());
+                Trace.WriteLine("Sheet Count: " + sheet_count.ToString());
             }
             catch (Exception ex)
             {
@@ -365,11 +367,11 @@ namespace HydrotestCentral
 
             // Get a Total Count of Days tabs in DataCentral
             days_count = _tabItems.Count - 4;
-            Console.WriteLine("Days Count: " + days_count.ToString());
+            Trace.WriteLine("Days Count: " + days_count.ToString());
 
             // If there are more days in DataCentral than in the worksheet, clone the days tab that many times
             int tabs_to_add = days_count - (sheet_count - 11);
-            Console.WriteLine("Need to add " + tabs_to_add + " days...");
+            Trace.WriteLine("Need to add " + tabs_to_add + " days...");
 
             while (tabs_to_add > 0)
             {
@@ -423,13 +425,13 @@ namespace HydrotestCentral
             if (checkFilename(xl_path, ".xlsx"))
             {
                 excelWB.SaveAs(xl_path + ".xlsx");
-                Console.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
+                Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
             }
 
             if (checkFilename(pdf_path, ".pdf"))
             {
                 excelWB.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdf_path + ".pdf", From: 1, To: (sheet_count - 3));
-                Console.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
+                Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
             }
 
             Boolean savechanges = false;

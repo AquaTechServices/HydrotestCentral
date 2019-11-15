@@ -108,14 +108,6 @@
                                             <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" DockPanel.Dock="Left" Width="80"/>
                                             <Button Width="25" Name="btnDelete" DockPanel.Dock="Right" Margin="12, 0, 0, 0" Click="Btn_DeleteTab_Click" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}">
                                                 <Image Source="/HydrotestCentral;component/Assets/btn_x.gif" RenderTransformOrigin="0.5,0.5">
-                                                    <Image.RenderTransform>
-                                                        <TransformGroup>
-                                                            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                                                            <SkewTransform/>
-                                                            <RotateTransform/>
-                                                            <TranslateTransform/>
-                                                        </TransformGroup>
-                                                    </Image.RenderTransform>
                                                 </Image>
                                             </Button>
                                         </DockPanel>

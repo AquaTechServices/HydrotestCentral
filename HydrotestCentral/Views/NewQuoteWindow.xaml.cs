@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +17,7 @@ using System.Data.SQLite;
 using HydrotestCentral.Model;
 using HydrotestCentral.Models;
 using System.Collections.ObjectModel;
+using HydrotestCentral.ViewModels;
 
 namespace HydrotestCentral
 {
@@ -27,23 +29,27 @@ namespace HydrotestCentral
         public SQLiteConnection connection;
         public SQLiteDataAdapter dataAdapter;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
-        public static QuoteHeaderDataProvider main_Quoteheader;
-        public static QuoteRepository main_QuoteRepository;
 
-        public NewQuoteWindow()
+        public static QuoteRepository main_QuoteRepository;
+        public static MainWindowViewModel main_vm;
+
+        public NewQuoteWindow(MainWindowViewModel incoming_vm)
         {
             InitializeComponent();
 
             //set the QuoteHeaderDataProvider
-            main_Quoteheader = new QuoteHeaderDataProvider();
+            //main_Quoteheader = new QuoteHeaderDataProvider();
             main_QuoteRepository = new QuoteRepository();
+            main_vm = new MainWindowViewModel();
+            main_vm = incoming_vm;
+            DataContext = main_vm;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             txt_jobno.Text = getNextJobNumber(getLastJobNumber());
             txt_qtdate.Text = DateTime.Now.ToString("MM/dd/yyyy");
-            txt_status.Text = "QUOTE";
+            txt_status.Text = "";
         }
 
         public string getLastJobNumber()
@@ -61,19 +67,24 @@ namespace HydrotestCentral
         public string getNextJobNumber(string lastJobNo)
         {
             char[] remChars = { 'A', 'T', 'H', 'S', '-' };
+
             string returnString = lastJobNo.TrimStart(remChars);
-            Console.WriteLine("removed chars from lastJobNo: " + lastJobNo);
+            if(returnString.StartsWith("C2019-"))
+            {
+                returnString = returnString.Remove(0, 6);
+            }
+            Trace.WriteLine("removed chars from lastJobNo: " + lastJobNo);
             int num = 0;
             if(Int32.TryParse(returnString, out num))
             {
                 num += 1;
-                returnString = "ATHS-" + num.ToString();
+                returnString = "C2019-" + num.ToString();
             }
             else
             {
                 MessageBox.Show("Error Getting Job Number!");
             }
-            Console.WriteLine("new job no created: " + returnString);
+            Trace.WriteLine("new job no created: " + returnString);
 
             return returnString;
         }
@@ -98,10 +109,11 @@ namespace HydrotestCentral
             headeritem.endclient = txt_endclient.Text;
             headeritem.supervisor = txt_supervisor.Text;
             //headeritem.est_start_date = "NULL";
-            //headeritem.est_end_date = "NULL";
+            //headeritem.est_stop_date = "NULL";
             headeritem.value = 0;
             main_QuoteRepository.AddNewHeaderItem(headeritem);
-            MessageBox.Show("Record Added");
+            main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
+            MessageBox.Show("Quote Added");
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
