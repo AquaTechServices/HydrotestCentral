@@ -155,7 +155,12 @@ namespace HydrotestCentral
 
                     // Update tab child
                     //  MessageBox.Show(this.tabDynamic.GetChildObjects().ToString());
-                    getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+                    //getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+
+                    //Added this to display new grid with populating values
+                    main_vm.updateQuoteItemsByJob_And_Tab(jobno, 0);
+                    datagridTest.ItemsSource = main_vm.quote_items;
+
                 }
             }
         }
@@ -181,7 +186,7 @@ namespace HydrotestCentral
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
             grid.QItems.ItemsSource = main_vm.quote_items;
 
-            tab.Content = grid;
+             tab.Content = grid;
         }
 
         public void updateTabItemGrid(TabItem tab, int tab_index)

@@ -54,7 +54,40 @@
                         </Button>
                         <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
                                   CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" CanUserAddRows="false"/>
-                        <Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="3">
+                        <TabControl Grid.ColumnSpan="3" Grid.Row="2" x:Name="tabDynamic" SelectionChanged="tabDynamic_SelectionChanged">
+                            <TabControl.Resources>
+                                <DataTemplate x:Key="TabHeader" DataType="TabItem">
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" DockPanel.Dock="Left" Width="80"/>
+                                        <Button Width="25" Name="btnDelete" DockPanel.Dock="Right" Margin="12, 0, 0, 0" Click="Btn_DeleteTab_Click" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}">
+                                            <Image Source="/HydrotestCentral;component/Assets/btn_x.gif" RenderTransformOrigin="0.5,0.5">
+                                                <Image.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                                        <SkewTransform/>
+                                                        <RotateTransform/>
+                                                        <TranslateTransform/>
+                                                    </TransformGroup>
+                                                </Image.RenderTransform>
+                                            </Image>
+                                        </Button>
+                                    </DockPanel>
+                                </DataTemplate>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="AcceptsReturn" Value="True"></Setter>
+                                    <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
+                                    <Setter Property="MaxLines" Value="5000"></Setter>
+                                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
+                                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                                </Style>
+                            </TabControl.Resources>
+                            <DataGrid x:Name="datagridTest" ItemsSource="{Binding quote_items, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="436" Margin="88,197,0,-1.667" 
+                                      VerticalAlignment="Stretch" Width="2270" IsReadOnly="False">
+                            </DataGrid>
+                        </TabControl>
+                        <!--<Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="9*"/>
@@ -98,7 +131,7 @@
                                     </Style>
                                 </TabControl.Resources>
                             </TabControl>
-                        </Grid>
+                        </Grid>-->
                         <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Stretch" Margin="10"/>
                         <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="5" Width="250" HorizontalAlignment="Right" Margin="10" Click="Btn_print_Click"/>
                         <Button x:Name="btn_exit" Content="Exit" Grid.Column="2" Grid.Row="5" Width="250" HorizontalAlignment="Right" Click="Btn_exit_Click" Margin="10" />
