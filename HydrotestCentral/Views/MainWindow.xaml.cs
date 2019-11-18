@@ -144,30 +144,31 @@ namespace HydrotestCentral
                 }
                 else
                 {
-                    /*
+                    //Change QItems based on Row
+                    //main_vm.updateQuoteItemsByJob(this.jobno);
+
                     //Get the number of Tab Items in the database
                     int tab_count_fromDB = main_vm.getCountOfTabItems(temp.jobno);
                     //MessageBox.Show("DB Tab Count: " + main_vm.getCountOfTabItems(temp.jobno));
                     //Remove all tabs except Day 1 and + Tab
-                    if(tab_count_fromDB > 2)
+                    if (tab_count_fromDB > 2)
                     {
-                        MessageBox.Show("Tab Matching" + tab_count_fromDB + " | " + (_tabItems.Count - 1));
-                        while((_tabItems.Count - 1) < tab_count_fromDB)
+                        //MessageBox.Show("Tab Matching" + tab_count_fromDB + " | " + (_tabItems.Count - 1));
+                        while ((_tabItems.Count - 1) < tab_count_fromDB)
                         {
-                            AddTabItem();
+                            this.AddTabItem();
                         }
+                        // bind tab control
+                        //tabDynamic.DataContext = _tabItems;
+
                     }
-                    */
+
 
                     //Change QItems based on Row
                     main_vm.updateQuoteItemsByJob(this.jobno);
 
                     // Update selected tab child
-                    //getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
-
-                    //Added this to display new grid with populating values
-                    main_vm.updateQuoteItemsByJob_And_Tab(jobno, 0);
-                    datagridTest.ItemsSource = main_vm.quote_items;
+                    getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
 
                 }
             }
@@ -181,12 +182,12 @@ namespace HydrotestCentral
         public void getTabItemGrid(TabItem tab, int tab_index)
         {
             QuoteItemGrid grid = new QuoteItemGrid(jobno, tab_index, main_vm);
-            
+
             //MessageBox.Show("Getting Tab Index: " + TabIndex);
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
             grid.QItems.ItemsSource = main_vm.quote_items;
-
-             tab.Content = grid;
+            tab.Content = grid;
+            //datagridTest.ItemsSource = main_vm.quote_items;
         }
 
         public void updateTabItemGrid(TabItem tab, int tab_index)
@@ -251,7 +252,7 @@ namespace HydrotestCentral
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
         {
-            if(quoteHeaderBeingEdited != null)
+            if (quoteHeaderBeingEdited != null)
             {
                 //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
                 main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
@@ -259,8 +260,37 @@ namespace HydrotestCentral
             }
         }
 
-        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
+        private void tabDynamic_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TabItem tab = tabDynamic.SelectedItem as TabItem;
+
+            if (tab != null && tab.Header != null)
             {
+                if (tab.Header.Equals("+"))
+                {
+                    // clear tab control binding
+                    tabDynamic.DataContext = null;
+
+                    // add new tab
+                    TabItem newTab = this.AddTabItem();
+
+                    // bind tab control
+                    tabDynamic.DataContext = _tabItems;
+
+
+                    // select newly added tab item
+                    tabDynamic.SelectedItem = newTab;
+                }
+                else
+                {
+                    //MessageBox.Show("Selected Tab Index: " + tabDynamic.SelectedIndex.ToString());
+                    getTabItemGrid(tab, tabDynamic.SelectedIndex);
+                }
+            }
+        }
+
+        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
+        {
             string job = this.jobno;
 
             try
@@ -335,116 +365,116 @@ namespace HydrotestCentral
 
         private void Btn_print_Click(object sender, RoutedEventArgs e)
         {
-           /* DataTable dt = new DataTable();
-            int days_count = 0;
-            int sheet_count = 0;
+            /* DataTable dt = new DataTable();
+             int days_count = 0;
+             int sheet_count = 0;
 
-            //dt = quote_heads.getQuoteHeaderTableByJob(jobno);
-            dt = new DataTable();
+             //dt = quote_heads.getQuoteHeaderTableByJob(jobno);
+             dt = new DataTable();
 
-            Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
+             Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
 
-            var excelApp = new Excel.Application();
-            var excelWB = excelApp.ActiveWorkbook;
-            string xl_path = txt_path.Text;
-            string pdf_path = txt_path.Text;
-            string quote_form = string.Format("C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.7 Projects\\HydrotestCentral\\BlankQuoteFormV2.xlsx");
+             var excelApp = new Excel.Application();
+             var excelWB = excelApp.ActiveWorkbook;
+             string xl_path = txt_path.Text;
+             string pdf_path = txt_path.Text;
+             string quote_form = string.Format("C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.7 Projects\\HydrotestCentral\\BlankQuoteFormV2.xlsx");
 
-            // Make the object visible
-            excelApp.Visible = false;
+             // Make the object visible
+             excelApp.Visible = false;
 
-            try
-            {
-                excelWB = excelApp.Workbooks.Open(quote_form);
-                // Get a Total Count of tabs in worksheet
-                sheet_count = excelWB.Sheets.Count;
-                Trace.WriteLine("Sheet Count: " + sheet_count.ToString());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+             try
+             {
+                 excelWB = excelApp.Workbooks.Open(quote_form);
+                 // Get a Total Count of tabs in worksheet
+                 sheet_count = excelWB.Sheets.Count;
+                 Trace.WriteLine("Sheet Count: " + sheet_count.ToString());
+             }
+             catch (Exception ex)
+             {
+                 MessageBox.Show(ex.ToString());
+             }
 
-            // Get a Total Count of Days tabs in DataCentral
-            days_count = _tabItems.Count - 4;
-            Trace.WriteLine("Days Count: " + days_count.ToString());
+             // Get a Total Count of Days tabs in DataCentral
+             days_count = _tabItems.Count - 4;
+             Trace.WriteLine("Days Count: " + days_count.ToString());
 
-            // If there are more days in DataCentral than in the worksheet, clone the days tab that many times
-            int tabs_to_add = days_count - (sheet_count - 11);
-            Trace.WriteLine("Need to add " + tabs_to_add + " days...");
+             // If there are more days in DataCentral than in the worksheet, clone the days tab that many times
+             int tabs_to_add = days_count - (sheet_count - 11);
+             Trace.WriteLine("Need to add " + tabs_to_add + " days...");
 
-            while (tabs_to_add > 0)
-            {
-                Excel._Worksheet day1 = excelWB.Sheets["Day 1"];
-                // Create new worksheet after day1
-                Excel.Worksheet newWS;
-                day1.Copy(Type.Missing, day1);
-                newWS = excelWB.Sheets[day1.Index + 1];
-                newWS.Name = "Test";
+             while (tabs_to_add > 0)
+             {
+                 Excel._Worksheet day1 = excelWB.Sheets["Day 1"];
+                 // Create new worksheet after day1
+                 Excel.Worksheet newWS;
+                 day1.Copy(Type.Missing, day1);
+                 newWS = excelWB.Sheets[day1.Index + 1];
+                 newWS.Name = "Test";
 
-                tabs_to_add -= 1;
-            }
+                 tabs_to_add -= 1;
+             }
 
-            Excel._Worksheet coverWS = excelWB.Sheets["Cover"];
-            Excel._Worksheet contactWS = excelWB.Sheets["Contact"];
-            Excel._Worksheet totalWS = excelWB.Sheets["Total"];
-            Excel._Worksheet propWS = excelWB.Sheets["Prop. Accept."];
+             Excel._Worksheet coverWS = excelWB.Sheets["Cover"];
+             Excel._Worksheet contactWS = excelWB.Sheets["Contact"];
+             Excel._Worksheet totalWS = excelWB.Sheets["Total"];
+             Excel._Worksheet propWS = excelWB.Sheets["Prop. Accept."];
 
-            if (dt.IsInitialized & !dt.HasErrors)
-            {
-                #region COVER SHEET
-                coverWS.Cells[25, "A"] = dt.Rows[0]["cust"].ToString();
-                coverWS.Cells[27, "A"] = dt.Rows[0]["jobtype"].ToString();
-                coverWS.Cells[29, "A"] = string.Format("Proposal No: {0}", dt.Rows[0]["jobno"].ToString());
-                coverWS.Cells[31, "A"] = string.Format("Proposal Date: {0}", dt.Rows[0]["qt_date"].ToString());
-                #endregion
-                #region CONTACT SHEET
-                contactWS.Cells[8, "A"] = "Sales Representative:   " + dt.Rows[0]["salesman"].ToString();
-                contactWS.Cells[11, "A"] = "Contact Number:   " + "(337) 999-1001";
-                contactWS.Cells[14, "A"] = "Customer:   " + dt.Rows[0]["cust"].ToString();
-                contactWS.Cells[17, "A"] = "Customer Contact:   " + dt.Rows[0]["cust_email"].ToString();
-                contactWS.Cells[20, "A"] = "Contact Number:   " + dt.Rows[0]["cust_phone"].ToString();
-                contactWS.Cells[23, "A"] = "Job Location:   " + dt.Rows[0]["loc"].ToString();
+             if (dt.IsInitialized & !dt.HasErrors)
+             {
+                 #region COVER SHEET
+                 coverWS.Cells[25, "A"] = dt.Rows[0]["cust"].ToString();
+                 coverWS.Cells[27, "A"] = dt.Rows[0]["jobtype"].ToString();
+                 coverWS.Cells[29, "A"] = string.Format("Proposal No: {0}", dt.Rows[0]["jobno"].ToString());
+                 coverWS.Cells[31, "A"] = string.Format("Proposal Date: {0}", dt.Rows[0]["qt_date"].ToString());
+                 #endregion
+                 #region CONTACT SHEET
+                 contactWS.Cells[8, "A"] = "Sales Representative:   " + dt.Rows[0]["salesman"].ToString();
+                 contactWS.Cells[11, "A"] = "Contact Number:   " + "(337) 999-1001";
+                 contactWS.Cells[14, "A"] = "Customer:   " + dt.Rows[0]["cust"].ToString();
+                 contactWS.Cells[17, "A"] = "Customer Contact:   " + dt.Rows[0]["cust_email"].ToString();
+                 contactWS.Cells[20, "A"] = "Contact Number:   " + dt.Rows[0]["cust_phone"].ToString();
+                 contactWS.Cells[23, "A"] = "Job Location:   " + dt.Rows[0]["loc"].ToString();
 
-                //Generate Project Description
-                string project = dt.Rows[0]["jobtype"].ToString() + " for " + dt.Rows[0]["endclient"].ToString();
-                contactWS.Cells[26, "A"] = "Project:   " + dt.Rows[0]["jobtype"].ToString();
+                 //Generate Project Description
+                 string project = dt.Rows[0]["jobtype"].ToString() + " for " + dt.Rows[0]["endclient"].ToString();
+                 contactWS.Cells[26, "A"] = "Project:   " + dt.Rows[0]["jobtype"].ToString();
 
-                #endregion
-                #region TOTAL SHEET
-                //totalWS.Cells[10, "A"] = dt.Rows[0]["jobtype"].ToString();
-                #endregion
+                 #endregion
+                 #region TOTAL SHEET
+                 //totalWS.Cells[10, "A"] = dt.Rows[0]["jobtype"].ToString();
+                 #endregion
 
-                #region PROPOSAL SHEET
-                propWS.Cells[8, "A"] = string.Format("To Accept Proposal No. {0} please complete, sign, and return this page:", dt.Rows[0]["jobno"].ToString());
-                #endregion
-            }
+                 #region PROPOSAL SHEET
+                 propWS.Cells[8, "A"] = string.Format("To Accept Proposal No. {0} please complete, sign, and return this page:", dt.Rows[0]["jobno"].ToString());
+                 #endregion
+             }
 
-            #region PrintFileToXL_and_PDF
+             #region PrintFileToXL_and_PDF
 
-            if (checkFilename(xl_path, ".xlsx"))
-            {
-                excelWB.SaveAs(xl_path + ".xlsx");
-                Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
-            }
+             if (checkFilename(xl_path, ".xlsx"))
+             {
+                 excelWB.SaveAs(xl_path + ".xlsx");
+                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
+             }
 
-            if (checkFilename(pdf_path, ".pdf"))
-            {
-                excelWB.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdf_path + ".pdf", From: 1, To: (sheet_count - 3));
-                Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
-            }
+             if (checkFilename(pdf_path, ".pdf"))
+             {
+                 excelWB.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdf_path + ".pdf", From: 1, To: (sheet_count - 3));
+                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
+             }
 
-            Boolean savechanges = false;
+             Boolean savechanges = false;
 
-            #endregion
+             #endregion
 
-            excelWB.Close(savechanges, Type.Missing, Type.Missing);
-            //excelWB.Worksheets.Application.Quit();
-            excelWB = null;
+             excelWB.Close(savechanges, Type.Missing, Type.Missing);
+             //excelWB.Worksheets.Application.Quit();
+             excelWB = null;
 
-            excelApp.Quit();
-            excelApp = null;
-            GC.Collect();*/
+             excelApp.Quit();
+             excelApp = null;
+             GC.Collect();*/
         }
 
         private void Btn_DeleteTab_Click(object sender, RoutedEventArgs e)
