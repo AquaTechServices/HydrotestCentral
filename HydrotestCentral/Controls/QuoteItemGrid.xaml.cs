@@ -64,6 +64,11 @@ namespace HydrotestCentral
                 MessageBox.Show(Ex.ToString());
             }
         }
+
+        private void QItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 
 

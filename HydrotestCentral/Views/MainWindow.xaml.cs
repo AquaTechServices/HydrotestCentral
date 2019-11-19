@@ -260,34 +260,6 @@ namespace HydrotestCentral
             }
         }
 
-        private void tabDynamic_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            TabItem tab = tabDynamic.SelectedItem as TabItem;
-
-            if (tab != null && tab.Header != null)
-            {
-                if (tab.Header.Equals("+"))
-                {
-                    // clear tab control binding
-                    tabDynamic.DataContext = null;
-
-                    // add new tab
-                    TabItem newTab = this.AddTabItem();
-
-                    // bind tab control
-                    tabDynamic.DataContext = _tabItems;
-
-
-                    // select newly added tab item
-                    tabDynamic.SelectedItem = newTab;
-                }
-                else
-                {
-                    //MessageBox.Show("Selected Tab Index: " + tabDynamic.SelectedIndex.ToString());
-                    getTabItemGrid(tab, tabDynamic.SelectedIndex);
-                }
-            }
-        }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
         {
