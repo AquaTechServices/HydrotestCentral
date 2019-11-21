@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"><?define HydrotestCentral_TargetDir=$(var.HydrotestCentral.TargetDir)?>
+	<Product Id="*" Name="DataCentral_Installer" Language="1033" Version="1.0.0.0" Manufacturer="VI Smart Solutions" UpgradeCode="6db4675a-165b-4e96-a325-9320fd1a9ce8">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="DataCentral_Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="DataCentral_Installer" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+			<Component Id="HydrotestCentral.exe" Guid="3b537262-8ad7-41fa-80a1-cf3c23f3185b">
+			  <File Id="HydrotestCentral.exe" Name="HydrotestCentral.exe" Source="$(var.HydrotestCentral_TargetDir)HydrotestCentral.exe" />
+			</Component>
+			<Component Id="HydrotestCentral.exe.config" Guid="6eb77fee-63ab-4385-8148-730eadd541e7">
+			  <File Id="HydrotestCentral.exe.config" Name="HydrotestCentral.exe.config" Source="$(var.HydrotestCentral_TargetDir)HydrotestCentral.exe.config" />
+			</Component>
+			<Component Id="MahApps.Metro.dll" Guid="d71c4f33-2efb-4314-9274-a2f9175626b8">
+			  <File Id="MahApps.Metro.dll" Name="MahApps.Metro.dll" Source="$(var.HydrotestCentral_TargetDir)MahApps.Metro.dll" />
+			</Component>
+			<Component Id="System.Data.SQLite.dll" Guid="09169cad-39e6-4c3f-98a3-1b11154b19a3">
+			  <File Id="System.Data.SQLite.dll" Name="System.Data.SQLite.dll" Source="$(var.HydrotestCentral_TargetDir)System.Data.SQLite.dll" />
+			</Component>
+			<Component Id="System.Windows.Interactivity.dll" Guid="bd1cb014-800f-40f2-866d-f09262141883">
+			  <File Id="System.Windows.Interactivity.dll" Name="System.Windows.Interactivity.dll" Source="$(var.HydrotestCentral_TargetDir)System.Windows.Interactivity.dll" />
+			</Component>
+			<Component Id="ControlzEx.dll" Guid="f13af460-172f-45d5-b07b-e956af18a340">
+			  <File Id="ControlzEx.dll" Name="ControlzEx.dll" Source="$(var.HydrotestCentral_TargetDir)ControlzEx.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

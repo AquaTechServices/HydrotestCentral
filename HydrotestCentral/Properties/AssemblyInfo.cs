@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("HydrotestCentral")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Hydrotest Pros")]
 [assembly: AssemblyProduct("HydrotestCentral")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
