@@ -202,12 +202,6 @@ namespace HydrotestCentral
             Trace.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
         }
 
-        public void deleteTabItemRow(string jobno, int tab_index, int row_index)
-        {
-            main_vm.DeleteQuoteItemRow(jobno, tab_index, row_index);
-            Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
-        }
-
         private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabItem tab = tabDynamic.SelectedItem as TabItem;
@@ -232,6 +226,7 @@ namespace HydrotestCentral
                 else
                 {
                     //MessageBox.Show("Selected Tab Index: " + tabDynamic.SelectedIndex.ToString());
+                    main_vm.selected_tab_index = tabDynamic.SelectedIndex;
                     getTabItemGrid(tab, tabDynamic.SelectedIndex);
                 }
             }
@@ -253,8 +248,6 @@ namespace HydrotestCentral
         private void QHeader_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             quoteHeaderBeingEdited = e.Row.Item as QuoteHeader;
-
-            //MessageBox.Show(quoteHeaderBeingEdited.jobno + " has changes to be saved!");
         }
 
         private void QHeader_CurrentCellChanged(object sender, EventArgs e)
@@ -270,6 +263,15 @@ namespace HydrotestCentral
         private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
         {
             saveTabItemGrid(jobno, tabDynamic.SelectedIndex);
+        }
+
+        private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
+        {
+            int row_index = main_vm.selected_row_index;
+
+            main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
+            Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
+            main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
         }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)

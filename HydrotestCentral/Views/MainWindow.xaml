@@ -71,9 +71,9 @@
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="btn_SaveItems" Content="Save Items" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" Click="Btn_SaveItems_Click"/>
+                                <Button x:Name="btn_SaveItems" Content="Save Items" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" MouseDown="Btn_SaveItems_Click"/>
                                 <Button x:Name="btn_AddItemRow" Content="Add New Item Row" Grid.Row="0" Grid.Column="1" Width="150" Margin="5"/>
-                                <Button x:Name="btn_DeleteItemRow" Content="Delete Item Row" Grid.Row="0" Grid.Column="2" Width="150" Margin="5"/>
+                                <Button x:Name="btn_DeleteItemRow" Content="Delete Item Row" Grid.Row="0" Grid.Column="2" Width="150" Margin="5" MouseDown="Btn_DeleteItemRow_Click" />
                             </Grid>
                             <TabControl Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" x:Name="tabDynamic" ItemsSource="{Binding}" SelectionChanged="tabDynamic_SelectionChanged"  >
                                 <TabControl.Resources>

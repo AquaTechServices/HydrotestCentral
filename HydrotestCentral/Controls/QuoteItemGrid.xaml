@@ -21,6 +21,8 @@
             <DataGridTextColumn Header="jobno" Binding="{Binding Path=jobno}" Visibility="Hidden"/>
             <DataGridTextColumn Header="tax_total" Binding="{Binding Path=tax_total, UpdateSourceTrigger=PropertyChanged}"/>
             <DataGridTextColumn Header="line_total" Binding="{Binding Path=line_total, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="SemiBold" Width="200"/>
+            <DataGridTextColumn Header="tab_index" Binding="{Binding Path=tab_index}" Visibility="Hidden"/>
+            <DataGridTextColumn Header="row_index" Binding="{Binding Path=row_index}" Visibility="Hidden"/>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>

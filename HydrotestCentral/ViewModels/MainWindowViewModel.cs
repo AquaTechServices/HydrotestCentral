@@ -47,9 +47,29 @@ namespace HydrotestCentral.ViewModels
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
 
+        public int selected_tab_index;
+        public int selected_row_index;
+
+        public QuoteItem quoteItemToAdd;
+
         public MainWindowViewModel()
         {
             InitializeComponent();
+
+            //Set default QuoteItem to add
+            quoteItemToAdd = new QuoteItem();
+            quoteItemToAdd.item = "TESTITEM";
+            quoteItemToAdd.rate = 100.00;
+            quoteItemToAdd.qty = 1;
+            quoteItemToAdd.descr = "Test Item";
+            quoteItemToAdd.grouping = 1;
+            quoteItemToAdd.taxable = false;
+            quoteItemToAdd.discountable = false;
+            quoteItemToAdd.printable = false;
+            quoteItemToAdd.jobno = "C2019-1212";
+            quoteItemToAdd.tab_index = 0;
+            quoteItemToAdd.row_index = 0;
+
 
             quote_headers = new ObservableCollection<QuoteHeader>();
             quote_headers = LoadQuoteHeaderData();
@@ -123,6 +143,7 @@ namespace HydrotestCentral.ViewModels
 
             return headers;
         }
+
 
         public ObservableCollection<QuoteItem> LoadQuoteItemData()
         {
@@ -411,6 +432,52 @@ namespace HydrotestCentral.ViewModels
                 connection.Dispose();
             }
         }
+
+        public void InsertQuoteItem(QuoteItem qi)
+        {
+            // Calculate Line Total and Tax Total
+            if (qi.taxable)
+            {
+                qi.tax_total = 0.10 * (qi.qty * qi.rate);
+            }
+            else
+            {
+                qi.tax_total = 0.00;
+            }
+
+            qi.line_total = (qi.qty * qi.rate) + qi.tax_total;
+
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+
+                cmd.Parameters.Add(new SQLiteParameter("@jobno", qi.jobno));
+                cmd.Parameters.Add(new SQLiteParameter("@qty", qi.qty));
+                cmd.Parameters.Add(new SQLiteParameter("@item", qi.item));
+                cmd.Parameters.Add(new SQLiteParameter("@rate", qi.rate));
+                cmd.Parameters.Add(new SQLiteParameter("@descr", qi.descr));
+                cmd.Parameters.Add(new SQLiteParameter("@grouping", qi.grouping));
+                cmd.Parameters.Add(new SQLiteParameter("@taxable", qi.taxable));
+                cmd.Parameters.Add(new SQLiteParameter("@discountable", qi.discountable));
+                cmd.Parameters.Add(new SQLiteParameter("@printable", qi.printable));
+                cmd.Parameters.Add(new SQLiteParameter("@line_total", qi.line_total));
+                cmd.Parameters.Add(new SQLiteParameter("@tax_total", qi.tax_total));
+                cmd.Parameters.Add(new SQLiteParameter("@tab_index", qi.tab_index));
+                cmd.Parameters.Add(new SQLiteParameter("@row_index", qi.row_index));
+
+                cmd.CommandText = String.Format("INSERT into QTE_ITEMS VALUES (@qty, @item, @rate, @descr, @grouping, @taxable,@discountable,@printable,@jobno,@line_total,@tax_total,@tab_index,@row_index)");
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

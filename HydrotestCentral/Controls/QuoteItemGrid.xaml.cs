@@ -66,15 +66,18 @@ namespace HydrotestCentral
             {
                 //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
                 main_vm.saveTabItemGrid(jobno, tab_index);
-                QItems.Items.Refresh();
                 Trace.WriteLine("saved in MainWindowViewModel");
                 quoteItemBeingEdited = null;
+
+                QItems.Items.Refresh();
             }
         }
 
         private void QItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             e.Handled = true;
+            main_vm.selected_row_index = QItems.SelectedIndex;
+            //main_vm.quoteItemToAdd = (QuoteItem)QItems.SelectedItem;
         }
     }
 
