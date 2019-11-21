@@ -8,9 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Collections.ObjectModel;
-using HydrotestCentral.Model;
+using HydrotestCentral.Models;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace HydrotestCentral.ViewModels
 {
@@ -144,7 +145,7 @@ namespace HydrotestCentral.ViewModels
                     {
                         int cleaned_qty = 0;
                         double cleaned_rate = 0.00;
-                        int cleaned_group = 1;
+                        int cleaned_grouping = 1;
                         bool cleaned_taxable = false;
                         bool cleaned_discountable = false;
                         bool cleaned_printable = false;
@@ -155,7 +156,7 @@ namespace HydrotestCentral.ViewModels
 
                         if (Int32.TryParse(dr[0].ToString(), out cleaned_qty)) { }
                         if (Double.TryParse(dr[2].ToString(), out cleaned_rate)) { }
-                        if (Int32.TryParse(dr[4].ToString(), out cleaned_group)) { }
+                        if (Int32.TryParse(dr[4].ToString(), out cleaned_grouping)) { }
                         if (Boolean.TryParse(dr[5].ToString(), out cleaned_taxable)) { }
                         if (Boolean.TryParse(dr[6].ToString(), out cleaned_discountable)) { }
                         if (Boolean.TryParse(dr[7].ToString(), out cleaned_printable)) { }
@@ -170,7 +171,7 @@ namespace HydrotestCentral.ViewModels
                             item = dr[1].ToString(),
                             rate = cleaned_rate,
                             descr = dr[3].ToString(),
-                            group = cleaned_group,
+                            grouping = cleaned_grouping,
                             taxable = cleaned_taxable,
                             discountable = cleaned_discountable,
                             printable = cleaned_printable,
@@ -314,15 +315,90 @@ namespace HydrotestCentral.ViewModels
             quote_items = new_collection;
         }
 
-        public void DeleteQuoteItem(String jobno, int tab_index)
+        public void saveTabItemGrid(string jobno, int tab_index)
+        {
+            //Find QuoteItems for that jobno
+            QuoteItem qi = new QuoteItem();
+
+            foreach (QuoteItem item in quote_items)
+            {
+                if (item.jobno == jobno && item.tab_index == tab_index)
+                {
+                    qi = item;
+
+                    // Calculate Line Total and Tax Total
+                    if (qi.taxable)
+                    {
+                        qi.tax_total = 0.10 * (qi.qty * qi.rate);
+                    }
+                    else
+                    {
+                        qi.tax_total = 0.00;
+                    }
+
+                    qi.line_total = (qi.qty * qi.rate) + qi.tax_total;
+
+                    try
+                    {
+                        connection = new SQLiteConnection(connection_String);
+                        connection.Open();
+                        cmd = connection.CreateCommand();
+
+                        cmd.Parameters.Add(new SQLiteParameter("@jobno", qi.jobno));
+                        cmd.Parameters.Add(new SQLiteParameter("@qty", qi.qty));
+                        cmd.Parameters.Add(new SQLiteParameter("@item", qi.item));
+                        cmd.Parameters.Add(new SQLiteParameter("@rate", qi.rate));
+                        cmd.Parameters.Add(new SQLiteParameter("@descr", qi.descr));
+                        cmd.Parameters.Add(new SQLiteParameter("@grouping", qi.grouping));
+                        cmd.Parameters.Add(new SQLiteParameter("@taxable", qi.taxable));
+                        cmd.Parameters.Add(new SQLiteParameter("@discountable", qi.discountable));
+                        cmd.Parameters.Add(new SQLiteParameter("@printable", qi.printable));
+                        cmd.Parameters.Add(new SQLiteParameter("@line_total", qi.line_total));
+                        cmd.Parameters.Add(new SQLiteParameter("@tax_total", qi.tax_total));
+                        cmd.Parameters.Add(new SQLiteParameter("@tab_index", qi.tab_index));
+                        cmd.Parameters.Add(new SQLiteParameter("@row_index", qi.row_index));
+
+                        cmd.CommandText = String.Format("UPDATE QTE_ITEMS SET qty=(@qty), item=(@item), rate=(@rate), descr=(@descr), taxable=(@taxable), discountable=(@discountable), printable=(@printable), grouping=(@grouping), line_total=(@line_total), tax_total=(@tax_total), row_index=(@row_index) WHERE jobno=(@jobno) AND tab_index=(@tab_index)");
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+        }
+
+        public void DeleteQuoteItemGrid(string jobno, int tab_index)
         {
             try
             {
-                var start_collection = new ObservableCollection<QuoteItem>();
                 connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        public void DeleteQuoteItemRow(String jobno, int tab_index, int row_index)
+        {
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index, row_index);
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)

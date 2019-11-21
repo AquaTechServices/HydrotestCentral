@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SQLite;
 using System.ComponentModel;
-using HydrotestCentral.Model;
+using HydrotestCentral.Models;
 using System.Windows;
 
 namespace HydrotestCentral.Models
 {
     public class QuoteRepository
     {
-        public List<Model.QuoteHeader> quoteheaderRepository { get; set; }
-        public List<Model.QuoteItem> quoteitemRepository { get; set; }
+        public List<Models.QuoteHeader> quoteheaderRepository { get; set; }
+        public List<Models.QuoteItem> quoteitemRepository { get; set; }
         static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
         public static string connString {get; set; }
@@ -176,7 +176,7 @@ namespace HydrotestCentral.Models
                     q.item = row["item"].ToString();
                     q.rate = (double)row["rate"];
                     q.descr = row["descr"].ToString();
-                    q.group = Convert.ToInt32(row["group"]);
+                    q.grouping = Convert.ToInt32(row["grouping"]);
                     q.taxable = Convert.ToBoolean(row["taxable"]);
                     q.discountable = Convert.ToBoolean(row["discountable"]);
                     q.printable = Convert.ToBoolean(row["printable"]);
@@ -211,7 +211,7 @@ namespace HydrotestCentral.Models
                 SQLiteParameter param2 = new SQLiteParameter("item", SqlDbType.VarChar);
                 SQLiteParameter param3 = new SQLiteParameter("rate", SqlDbType.Real);
                 SQLiteParameter param4 = new SQLiteParameter("descr", SqlDbType.VarChar);
-                SQLiteParameter param5 = new SQLiteParameter("group", SqlDbType.Int);
+                SQLiteParameter param5 = new SQLiteParameter("grouping", SqlDbType.Int);
                 SQLiteParameter param6 = new SQLiteParameter("taxable", SqlDbType.Bit);
                 SQLiteParameter param7 = new SQLiteParameter("discountable", SqlDbType.Bit);
                 SQLiteParameter param8 = new SQLiteParameter("printable", SqlDbType.Bit);
@@ -225,7 +225,7 @@ namespace HydrotestCentral.Models
                 param2.Value = quoteRecord.item;
                 param3.Value = quoteRecord.rate;
                 param4.Value = quoteRecord.descr;
-                param5.Value = quoteRecord.group;
+                param5.Value = quoteRecord.grouping;
                 param6.Value = quoteRecord.taxable;
                 param7.Value = quoteRecord.discountable;
                 param8.Value = quoteRecord.printable;

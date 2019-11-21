@@ -19,7 +19,7 @@ using System.Data.SQLite;
 //using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using HydrotestCentral.ViewModels;
-using HydrotestCentral.Model;
+using HydrotestCentral.Models;
 
 namespace HydrotestCentral
 {
@@ -32,7 +32,7 @@ namespace HydrotestCentral
         public SQLiteDataAdapter head_dataAdapter, items_dataAdapter;
         public System.Data.DataTable head_dt, items_dt;
         public SQLiteCommandBuilder head_builder, items_builder;
-        public string jobno, cust;
+        public string jobno;
         public double proj_daily_total, proj_addn_chg, proj_job_total, est_days;
         //public QuoteHeaderDataProvider quote_heads;
         //public QuoteItemsDataProvider quote_items;
@@ -128,7 +128,6 @@ namespace HydrotestCentral
                 try
                 {
                     this.jobno = temp.jobno;
-                    this.cust = temp.cust;
                     this.est_days = temp.days_est;
                 }
                 catch (Exception ex)
@@ -190,15 +189,23 @@ namespace HydrotestCentral
             //datagridTest.ItemsSource = main_vm.quote_items;
         }
 
-        public void updateTabItemGrid(TabItem tab, int tab_index)
+        public void saveTabItemGrid(string jobno, int tab_index)
         {
-            Trace.WriteLine("update tab item grid");
+            main_vm.saveTabItemGrid(jobno, tab_index);
+            Trace.WriteLine("save tab item grid to database");
+            main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
         }
 
         public void deleteTabItemGrid(TabItem tab, int tab_index)
         {
-            main_vm.DeleteQuoteItem(jobno, tab_index);
+            main_vm.DeleteQuoteItemGrid(jobno, tab_index);
             Trace.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
+        }
+
+        public void deleteTabItemRow(string jobno, int tab_index, int row_index)
+        {
+            main_vm.DeleteQuoteItemRow(jobno, tab_index, row_index);
+            Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
         }
 
         private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -260,6 +267,10 @@ namespace HydrotestCentral
             }
         }
 
+        private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
+        {
+            saveTabItemGrid(jobno, tabDynamic.SelectedIndex);
+        }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
         {
@@ -300,23 +311,6 @@ namespace HydrotestCentral
             catch (Exception Ex)
             {
                 System.Windows.MessageBox.Show(Ex.Message);
-            }
-        }
-
-        public void QItems_EditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            //e.Row.Item.Text.ToString();
-            Trace.WriteLine("Row: " + e.Row.GetIndex() + " edited\n");
-
-            try
-            {
-                //quote_items.UpdateLineTotals();
-                //quote_items.saveItemsToDB();
-                //UpdateCurrentQuoteDashboard();
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(Ex.ToString());
             }
         }
 

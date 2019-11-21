@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SQLite;
-using HydrotestCentral.Model;
 using HydrotestCentral.Models;
 using System.Collections.ObjectModel;
 using HydrotestCentral.ViewModels;
@@ -72,6 +71,10 @@ namespace HydrotestCentral
             if(returnString.StartsWith("C2019-"))
             {
                 returnString = returnString.Remove(0, 6);
+            }
+            else if(returnString.StartsWith("19-"))
+            {
+                returnString = returnString.Remove(0, 3);
             }
             Trace.WriteLine("removed chars from lastJobNo: " + lastJobNo);
             int num = 0;

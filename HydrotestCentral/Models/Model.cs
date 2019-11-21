@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 //using HydrotestCentral.DatasetTableAdapters;
 
-namespace HydrotestCentral.Model
+namespace HydrotestCentral.Models
 {
     // Data object classes
     public class QuoteHeader
@@ -45,7 +45,7 @@ namespace HydrotestCentral.Model
         public string item { get; set; }
         public double rate { get; set; }
         public string descr { get; set; }
-        public int group { get; set; }
+        public int grouping { get; set; }
         public bool taxable { get; set; }
         public bool discountable { get; set; }
         public bool printable { get; set; }

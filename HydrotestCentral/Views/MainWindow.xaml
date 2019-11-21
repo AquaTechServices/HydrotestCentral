@@ -65,9 +65,16 @@
                                 <ColumnDefinition Width="811.333"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="btn1" Content="Button 1" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" Visibility="Hidden" />
-                            <Button x:Name="btn2" Content="Button 2" Grid.Row="0" Grid.Column="1" Width="150" Margin="5" Visibility="Hidden" />
-                            <Button x:Name="btn3" Content="Button 3" Grid.Row="0" Grid.Column="2" Width="150" Margin="5" Visibility="Hidden"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="btn_SaveItems" Content="Save Items" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" Click="Btn_SaveItems_Click"/>
+                                <Button x:Name="btn_AddItemRow" Content="Add New Item Row" Grid.Row="0" Grid.Column="1" Width="150" Margin="5"/>
+                                <Button x:Name="btn_DeleteItemRow" Content="Delete Item Row" Grid.Row="0" Grid.Column="2" Width="150" Margin="5"/>
+                            </Grid>
                             <TabControl Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" x:Name="tabDynamic" ItemsSource="{Binding}" SelectionChanged="tabDynamic_SelectionChanged"  >
                                 <TabControl.Resources>
                                     <DataTemplate x:Key="TabHeader" DataType="TabItem">
@@ -87,8 +94,7 @@
                         <Button x:Name="btn_exit" Content="Exit" Grid.Column="2" Grid.Row="5" Width="250" HorizontalAlignment="Right" Click="Btn_exit_Click" Margin="10" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="Job" MinWidth="400">
-                </TabItem>
+                <TabItem Header="Job" MinWidth="400"/>
                 <TabItem Header="Invoice" MinWidth="400"/>
                 <TabItem Header="Dashboard" MinWidth="400"/>
             </TabControl>

@@ -17,7 +17,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using HydrotestCentral.ViewModels;
-using HydrotestCentral.Model;
+using HydrotestCentral.Models;
 using System.Diagnostics;
 
 namespace HydrotestCentral
@@ -29,6 +29,9 @@ namespace HydrotestCentral
     {
         public static string jobno;
         public static int tab_index;
+        public static MainWindowViewModel main_vm;
+
+        private QuoteItem quoteItemBeingEdited;
 
         public QuoteItemGrid(string jobno_in, int tab_index_in, MainWindowViewModel vm)
         {
@@ -37,7 +40,9 @@ namespace HydrotestCentral
             jobno = jobno_in;
             tab_index = tab_index_in;
 
-            this.DataContext = vm;
+            main_vm = vm;
+            this.DataContext = main_vm;
+            
             //MessageBox.Show(vm.ToString());
             //this.QItems.ItemsSource = vm.quote_items;
 
@@ -50,18 +55,20 @@ namespace HydrotestCentral
 
         private void QItems_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //e.Row.Item.Text.ToString();
             Trace.WriteLine("CELL EDIT - Row: " + e.Row.GetIndex() + " edited\n");
+            quoteItemBeingEdited = e.Row.Item as QuoteItem;
+        }
 
-            try
+
+        private void QItems_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (quoteItemBeingEdited != null)
             {
-                //
-                //quote_items.saveItemsToDB();
-                //UpdateCurrentQuoteDashboard();
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(Ex.ToString());
+                //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
+                main_vm.saveTabItemGrid(jobno, tab_index);
+                QItems.Items.Refresh();
+                Trace.WriteLine("saved in MainWindowViewModel");
+                quoteItemBeingEdited = null;
             }
         }
 
