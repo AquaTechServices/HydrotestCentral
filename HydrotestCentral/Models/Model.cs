@@ -65,7 +65,50 @@ namespace HydrotestCentral.Models
         public double rate { get; set; }
     }
 
-    // A Source of Quote Header Data from SQLite Database
+    public class InvoiceHeader
+    {
+        public string jobno { get; set; }
+        public string invno { get; set; }
+        public string invdate { get; set; }
+        public string cust { get; set; }
+        public int cust_id { get; set; }
+        public string loc { get; set; }
+        public string salesman { get; set; }
+        public string jobtype { get; set; }
+        public string supervisor { get; set; }
+        public string po { get; set; }
+        public double tax_rate { get; set; }
+        public string tax_descr { get; set; }
+
+    }
+
+    public class InvoiceItem
+    {
+        public int qty { get; set; }
+        public string item { get; set; }
+        public double rate { get; set; }
+        public string descr { get; set; }
+        public string type { get; set; }
+        public int grouping { get; set; }
+        public bool taxable { get; set; }
+        public bool discountable { get; set; }
+        public bool printable { get; set; }
+        public string jobno { get; set; }
+        public double line_total { get; set; }
+        public double tax_total { get; set; }
+    }
+
+    public class Customer
+    {
+        public string name { get; set; }
+        public string address { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string zip { get; set; }
+        public string terms { get; set; }
+        public bool active { get; set; }
+        public int cust_id { get; set; }
+    }
 
 
 

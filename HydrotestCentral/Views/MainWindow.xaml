@@ -95,7 +95,103 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Job" MinWidth="400"/>
-                <TabItem Header="Invoice" MinWidth="400"/>
+                <TabItem Header="Invoice" MinWidth="400">
+                    <Grid x:Name="Invoice_MainGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="25*"/>
+                            <RowDefinition Height="5*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid x:Name="Invoice_TopGrid" Grid.Row="0" Visibility="Visible">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.75*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1.5*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="txtBlk_companyName" Text="Aqua-Tech Hydro Services, LLC" Grid.Row="1" Grid.Column="0" FontSize="14" Margin="10,0"/>
+                            <TextBlock x:Name="txtBlk_companyName2" Text="dba HydroTest Pros" Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10,0"/>
+                            <TextBlock x:Name="txtBlk_companyAddress" Text="1048 Carlton Rd, Broussard, LA 70518" Grid.Row="3" Grid.Column="0" FontSize="14" Margin="10,0,0,0"/>
+                            <TextBlock x:Name="txtBlk_ar_email" Text="accounting@hydrotestpros.com" Grid.Row="4" Grid.Column="0" Margin="10,0,0,0"/>
+                            <Label x:Name="lbl_BillTo" Content="Bill To:" Grid.Row="5" Grid.Column="0" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_custName" Text="Dean Services" Grid.Row="6" Grid.Column="0" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_custAddress" Text="P.O. Box 62245" Grid.Row="7" Grid.Column="0" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_custCityStateZip" Text="Midland, TX 79707" Grid.Row="8" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                            <Image x:Name="img_CompanyLogo" Source="C:\Users\SFWMD\Source\Repos\TylerTrahan\HydrotestCentral\HydrotestCentral\Assets\hydrotestpros_logo.jpg" Grid.Column="1" Grid.Row="0" Grid.RowSpan="7"/>
+
+                            <Label x:Name="lbl_INVOICE" Content="Invoice" FontWeight="Bold" FontSize="20" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_InvoiceNo" Content="Invoice #" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_InvNo" Text="19-204" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_Date" Content="Date" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_Date" Text="11/25/2019" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_Terms" Content="Terms" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_Terms" Text="Net 30" Grid.Column="3" Grid.Row="3" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_DueDate" Content="Due Date" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_DueDate" Text="12/25/2019" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_Phone" Content="Phone #" Grid.Column="2" Grid.Row="5" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_Phone" Text="337-999-1001" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
+                            <Label x:Name="lbl_Fax" Content="Fax #" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBlk_Fax" Text="337-999-1002" Grid.Column="3" Grid.Row="6" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid x:Name="Invoice_MiddleGrid" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="23*"/>
+                            </Grid.RowDefinitions>
+                                <Label x:Name="lbl_PONumber" Content="P.O. Number" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
+                                <TextBlock x:Name="txtBlk_PONumber" Text="4849-9093" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="30"/>
+                                <Label x:Name="lbl_Salesman" Content="Rep" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
+                                <TextBlock x:Name="txtBlk_Salesman" Text="CP" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="30"/>
+                                <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" ItemsSource="{Binding quote_items}" Margin="50,10,50,0"/>
+                        </Grid>
+                        <Grid x:Name="Invoice_Footer" Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="REMIT TO: " Grid.Column="0" Grid.Row="0" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtBlk_remitCompanyName" Text="AquaTech Hydro Services LLC" Grid.Column="0" Grid.Row="1" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtBlk_remitCompanyAddress" Text="1048 Carlton Rd" Grid.Column="0" Grid.Row="2" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtBlk_remitCompanyAddress2" Text="Broussard, LA 70518" Grid.Column="0" Grid.Row="3" FontWeight="Bold"/>
+                            <Label Content="Past due balances subject to 1.5% finance charge per month" Grid.Column="1" Grid.Row="1" FontWeight="Bold" FontStyle="Italic"/>
+                            <Label Content="Total" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
+                            <TextBlock x:Name="txtBlk_InvoiceTotal" Text="$3,763.48" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
+                        </Grid>
+                    </Grid>
+                </TabItem>
                 <TabItem Header="Dashboard" MinWidth="400"/>
             </TabControl>
         </Grid>

@@ -46,6 +46,9 @@ namespace HydrotestCentral.ViewModels
         }
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
+        public ObservableCollection<InvoiceHeader> invoice_headers { get; set; }
+        public ObservableCollection<InvoiceItem> invoice_items { get; set; }
+        public ObservableCollection<Customer> customers {  get; set; }
 
         public int selected_tab_index;
         public int selected_row_index;
@@ -143,7 +146,6 @@ namespace HydrotestCentral.ViewModels
 
             return headers;
         }
-
 
         public ObservableCollection<QuoteItem> LoadQuoteItemData()
         {
@@ -476,8 +478,6 @@ namespace HydrotestCentral.ViewModels
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
-
-
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

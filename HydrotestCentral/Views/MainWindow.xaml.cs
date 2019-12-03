@@ -52,9 +52,6 @@ namespace HydrotestCentral
             main_vm = new MainWindowViewModel();
             DataContext = main_vm;
 
-            //set the QuoteHeaderDataProvider
-            //main_Quoteheader = new QuoteHeaderDataProvider();
-
             // initialize tabItem array
             _tabItems = new List<TabItem>();
 
@@ -62,7 +59,6 @@ namespace HydrotestCentral
             TabItem tabAdd = new TabItem();
             tabAdd.Header = "+";
             _tabItems.Add(tabAdd);
-
 
             this.AddTabItem();
 
