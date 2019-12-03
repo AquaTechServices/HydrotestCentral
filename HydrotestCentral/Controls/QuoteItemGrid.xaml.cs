@@ -69,7 +69,7 @@ namespace HydrotestCentral
                 Trace.WriteLine("saved in MainWindowViewModel");
                 quoteItemBeingEdited = null;
 
-                QItems.Items.Refresh();
+                //QItems.Items.Refresh();
             }
         }
 
