@@ -95,7 +95,7 @@
                     <ImageBrush ImageSource="..\Assets\0[1].jpg" Stretch="UniformToFill"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <TextBlock Text="Tyler Trahan" Foreground="White" FontSize="28" FontFamily="Nirmala UI Semilight" Margin="128,-100,92,-100" VerticalAlignment="Top"/>
+            <TextBlock Text="Tyler Trahan" Foreground="White" FontSize="28" FontFamily="Nirmala UI Semilight" Margin="120,-100,92,-100" VerticalAlignment="Top"/>
             <TextBlock TextWrapping="Wrap" Margin="115,35,5,80" Foreground="#FFFBFBFB" FontSize="14" RenderTransformOrigin="0.519,0.028" Height="336"><Run Text="VI Smart Solutions applies the latest in artificial intelligence to solve complex problems in oil  gas, pipeline, agriculture, fisheries, and related industries. Our current platform, VINet is a deep-learning software technology we use to capture human intelligence to make automated decisions using complex data."/></TextBlock>
 
         </StackPanel>
