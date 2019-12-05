@@ -169,6 +169,21 @@ namespace HydrotestCentral
             }
         }
 
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Collapsed;
+            ButtonCloseMenu.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Visible;
+            ButtonCloseMenu.Visibility = Visibility.Collapsed;
+        }
+        private void ButtonClose_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        } 
         public void GetQuoteHeaderData()
         {
             QHeader.ItemsSource = main_vm.quote_headers;
@@ -268,6 +283,38 @@ namespace HydrotestCentral
             main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
             Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+        }
+
+        private void listViewItem_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Visible;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void listViewItem1_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Visible;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void listViewItem2_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Visible;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void listViewItem3_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Visible;
         }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)

@@ -7,193 +7,723 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:HydrotestCentral"
         mc:Ignorable="d"
-        Title="Hydrotest Central" Height="1247.118" Width="2446.422"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Title="Hydrotest Central" Height="1247.118" Width="2446.422"
         WindowState="Maximized"
         WindowStyle="None"
         x:Name="MainWin"
         Loaded="Window_Loaded">
-    <Controls:MetroWindow.Resources>
+    <Window.Resources>
+        <Storyboard x:Key="OpenMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="GridMain">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="250"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="GridMain">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="50"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="StackPanelMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="250"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="listViewItem">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="listViewItem1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="listViewItem2">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.1" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="listViewItem3">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="GridMain">
+                <EasingDoubleKeyFrame KeyTime="0" Value="250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="GridMain">
+                <EasingDoubleKeyFrame KeyTime="0" Value="50"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="StackPanelMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard x:Name="CloseMenu_BeginStoryboard" Storyboard="{StaticResource CloseMenu}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <!--<Controls:MetroWindow.Resources>
         <LinearGradientBrush x:Key="ButtonGradient1" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFC1C1C1" Offset="1"/>
             <GradientStop Color="#FFF3F3F3"/>
             <GradientStop Color="#FFE4E4E4" Offset="0.611"/>
         </LinearGradientBrush>
-    </Controls:MetroWindow.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2">
-            <TabControl>
-                <TabItem Header="Quote" MinWidth="400" BorderBrush="Black">
-                    <Grid x:Name="Quote_MainGrid">
+    </Controls:MetroWindow.Resources>-->
+    <Grid Background="#FF3580BF">
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"  />
+        <StackPanel x:Name="StackPanelMenu" Width="358" HorizontalAlignment="Left" Margin="-363,0,0,0" RenderTransformOrigin="0.,0.5">
+            <StackPanel.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </StackPanel.RenderTransform>
+            <Image Height="116" VerticalAlignment="Top" Source="..\Assets\back.jpg" Stretch="UniformToFill"/>
+            <Ellipse Height="100" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20 -70" Stroke="White">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="..\Assets\0[1].jpg" Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <TextBlock Text="Tyler Trahan" Foreground="White" FontSize="28" FontFamily="Nirmala UI Semilight" Margin="128,-100,92,-100" VerticalAlignment="Top"/>
+            <TextBlock TextWrapping="Wrap" Margin="115,35,5,80" Foreground="#FFFBFBFB" FontSize="14" RenderTransformOrigin="0.519,0.028" Height="336"><Run Text="VI Smart Solutions applies the latest in artificial intelligence to solve complex problems in oil  gas, pipeline, agriculture, fisheries, and related industries. Our current platform, VINet is a deep-learning software technology we use to capture human intelligence to make automated decisions using complex data."/></TextBlock>
+
+        </StackPanel>
+        <Grid x:Name="GridMain" Background="#FFFBFBFB" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220"/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="#FF3580BF" Grid.Column="1">
+                <StackPanel Margin="0 50">
+
+                    <ListView>
+                        <ListViewItem x:Name="listViewItem" Height="60" RenderTransformOrigin="0.5,0.5" Selected="listViewItem_Selected">
+                            <ListViewItem.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </ListViewItem.RenderTransform>
+                            <StackPanel Orientation="Horizontal" Margin="10 0">
+                                <materialDesign:PackIcon Kind="ViewDashboard" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Dashboard" Margin="10" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem x:Name="listViewItem1" Height="60" RenderTransformOrigin="0.5,0.5" Selected="listViewItem1_Selected" >
+                            <ListViewItem.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </ListViewItem.RenderTransform>
+                            <StackPanel Orientation="Horizontal" Margin="10 0">
+                                <materialDesign:PackIcon Kind="FormatQuoteOpen" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Quote" Margin="10" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem x:Name="listViewItem2" Height="60" RenderTransformOrigin="0.5,0.5" Selected="listViewItem2_Selected">
+                            <ListViewItem.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </ListViewItem.RenderTransform>
+                            <StackPanel Orientation="Horizontal" Margin="10 0">
+                                <materialDesign:PackIcon Kind="Cash" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Invoice" Margin="10" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem x:Name="listViewItem3" Height="64" RenderTransformOrigin="0.5,0.5" Selected="listViewItem3_Selected">
+                            <ListViewItem.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </ListViewItem.RenderTransform>
+                            <StackPanel Orientation="Horizontal" Margin="10 0">
+                                <materialDesign:PackIcon Kind="Office" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Job" Margin="10" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+                </StackPanel>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.ColumnSpan="2">
+                    <Grid>
+                        <Button x:Name="ButtonCloseMenu"  Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0" Click="ButtonCloseMenu_Click" Visibility="Collapsed">
+                            <materialDesign:PackIcon Kind="Menu" Foreground="#FF3580BF"/>
+                        </Button>
+                        <Button x:Name="ButtonOpenMenu"  Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0" Click="ButtonOpenMenu_Click">
+                            <materialDesign:PackIcon Kind="Menu" Foreground="#FF3580BF"/>
+                        </Button>
+                    </Grid>
+                    <Grid x:Name="Dashboard_MainGrid">
+                        <Label Content="Dashboard" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                    </Grid>
+                    <Grid x:Name="Quote_MainGrid" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="739*"/>
+                            <ColumnDefinition Width="1479*"/>
+                            <ColumnDefinition Width="0*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="169*"/>
+                            <RowDefinition Height="308*"/>
                             <!--<RowDefinition Height="2*"/>-->
-                            <RowDefinition Height="7*"/>
-                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="623*"/>
+                            <RowDefinition Height="139*"/>
                         </Grid.RowDefinitions>
-                        <!--<Button Content="+" Grid.Column="0" Margin="42.093,16.763,0,22.096" Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="60" Padding="0,-19,0,0" BorderThickness="2" FontFamily="Agency FB" Background="White" Foreground="Lime" BorderBrush="{DynamicResource ButtonGradient1}" Width="38.964"/>-->
-                        <Button Content="+" Grid.Column="0" Grid.Row="0" Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="2" FontFamily="Arial Black" Background="White" 
-                                Foreground="Lime" BorderBrush="{DynamicResource ButtonGradient1}"
-                                Width="50" Margin="10,0,10,0"
-                                Padding="0,0,0,0"/>
-                        <Button x:Name="btnDeleteQuoteHeader" Grid.Column="0" Grid.Row="0" Content="x" Margin="70,0,10,0" FontSize="30" 
-                                FontFamily="Arial Black" BorderThickness="2" Padding="0,0,0,0" Foreground="Red" BorderBrush="{DynamicResource ButtonGradient1}" HorizontalAlignment="Left" 
-                                Width="50" Click="Btn_DeleteQuoteHeader_Click"/>
 
-                        <Button x:Name="btn_SaveQuoteHeader" Grid.Column="0" Grid.Row="0" Margin="130,0,10,0" HorizontalAlignment="Left" BorderThickness="2" BorderBrush="{DynamicResource ButtonGradient1}" Click="Btn_SaveQuoteHeader_Click" Width="50">
-                            <Path Data="M7.4590002,16.856308 C6.3770743,16.856308 5.5000001,17.733381 5.5000001,18.815308 L5.5000001,33.377308 C5.5000001,34.459232 6.3770743,35.336308 7.4590002,35.336308 L28.375,35.336308 C29.456926,35.336308 30.334,34.459232 30.334,33.377308 L30.334,18.815308 C30.334,17.733381 29.456926,16.856308 28.375,16.856308 z M18.584019,4.487381 L20.416071,4.487381 C20.772856,4.487381 21.062088,4.7766075 21.062088,5.1333857 L21.062088,10.508735 C21.062088,10.865514 20.772856,11.154741 20.416071,11.154741 L18.584019,11.154741 C18.227234,11.154741 17.938,10.865514 17.938,10.508735 L17.938,5.1333857 C17.938,4.7766075 18.227234,4.487381 18.584019,4.487381 z M6.2086731,3.5703743 C5.080876,3.5703743 4.1666165,4.4846158 4.166616,5.612391 L4.166616,10.041732 C4.1666165,11.169507 5.080876,12.083749 6.2086731,12.083749 L22.221121,12.083749 C23.348915,12.083749 24.263178,11.169507 24.263178,10.041732 L24.263178,5.612391 C24.263178,4.4846158 23.348915,3.5703743 22.221121,3.5703743 z M3.500099,0 L25.500877,0.15368047 35.584492,8.6954145 35.834,35.942581 C35.834,38.091366 34.266953,39.833309 32.333901,39.833309 L3.500099,39.833309 C1.5670471,39.833309 7.786133E-08,38.091366 0,35.942581 L0,3.8907325 C7.786133E-08,1.7419404 1.5670471,4.7684085E-07 3.500099,0 z" Fill="#FF0097FF" Stretch="Fill" Width="19.212" Height="21.358"/>
+                        <Button  Grid.Column="0" Foreground="White"  Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
+                                
+                                Width="50" Margin="61,44,0,20"
+                                Padding="0,0,0,0" Height="Auto">
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock FontWeight="Bold">
+                                        New Quote
+                                    </TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                            <materialDesign:PackIcon Kind="Plus" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
                         </Button>
-                        <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
-                                  CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" CanUserAddRows="false" AlternatingRowBackground="Silver"/>
-                        <Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="3">
+                        <Button x:Name="btnDeleteQuoteHeader" Grid.Column="0"  Margin="121,44,0,20" FontSize="30" 
+                                BorderThickness="0" Padding="0,0,0,0"   HorizontalAlignment="Left" 
+                                Width="50" Click="Btn_DeleteQuoteHeader_Click" Background="#FF3580BF" Height="Auto">
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock FontWeight="Bold">
+                                    Delete Quote
+                                    </TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                            <materialDesign:PackIcon Kind="Delete" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
+                        </Button>
+
+                        <Button x:Name="btn_SaveQuoteHeader"  Grid.Column="0" Margin="181,44,0,20" HorizontalAlignment="Left" BorderThickness="0" Click="Btn_SaveQuoteHeader_Click" Width="50" Background="#FF3580BF" Height="Auto">
+
+                            <Path Data="M7.4590002,16.856308 C6.3770743,16.856308 5.5000001,17.733381 5.5000001,18.815308 L5.5000001,33.377308 C5.5000001,34.459232 6.3770743,35.336308 7.4590002,35.336308 L28.375,35.336308 C29.456926,35.336308 30.334,34.459232 30.334,33.377308 L30.334,18.815308 C30.334,17.733381 29.456926,16.856308 28.375,16.856308 z M18.584019,4.487381 L20.416071,4.487381 C20.772856,4.487381 21.062088,4.7766075 21.062088,5.1333857 L21.062088,10.508735 C21.062088,10.865514 20.772856,11.154741 20.416071,11.154741 L18.584019,11.154741 C18.227234,11.154741 17.938,10.865514 17.938,10.508735 L17.938,5.1333857 C17.938,4.7766075 18.227234,4.487381 18.584019,4.487381 z M6.2086731,3.5703743 C5.080876,3.5703743 4.1666165,4.4846158 4.166616,5.612391 L4.166616,10.041732 C4.1666165,11.169507 5.080876,12.083749 6.2086731,12.083749 L22.221121,12.083749 C23.348915,12.083749 24.263178,11.169507 24.263178,10.041732 L24.263178,5.612391 C24.263178,4.4846158 23.348915,3.5703743 22.221121,3.5703743 z M3.500099,0 L25.500877,0.15368047 35.584492,8.6954145 35.834,35.942581 C35.834,38.091366 34.266953,39.833309 32.333901,39.833309 L3.500099,39.833309 C1.5670471,39.833309 7.786133E-08,38.091366 0,35.942581 L0,3.8907325 C7.786133E-08,1.7419404 1.5670471,4.7684085E-07 3.500099,0 z" Fill="White" Stretch="Fill" Width="19.212" Height="21.358"/>
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock FontWeight="Bold">
+                                    Save Quote
+                                    </TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+
+                        </Button>
+                        <Label Content="Quote" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="65" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <!--<DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" x:FieldModifier="public" CanUserDeleteRows="True" CanUserAddRows="False" AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
+                                  CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" AlternatingRowBackground="Silver"/>-->
+                        <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" x:FieldModifier="public" 
+                          CanUserDeleteRows="True" VerticalAlignment="Bottom" CanUserAddRows="False" AutoGenerateColumns="False"  Margin="24,0,0,0" 
+                          Grid.ColumnSpan="2" IsManipulationEnabled="True" FontSize="13"  ScrollViewer.CanContentScroll="True" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                          ScrollViewer.IsDeferredScrollingEnabled="True" CurrentCellChanged="QHeader_CurrentCellChanged" BorderThickness="0.5" CellEditEnding="QHeader_CellEditEnding" AreRowDetailsFrozen="True" IsReadOnly="false"  SelectionChanged="QHeader_SelectionChanged" FontWeight="Bold" Background="White" HeadersVisibility="Column" HorizontalAlignment="Left" Width="1101" Height="171" Grid.Row="1" BorderBrush="#FF141415">
+
+
+                            <DataGrid.Columns>
+
+                                <DataGridTextColumn Header="QUOTENO" Foreground="Black" Binding="{Binding quoteno }" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="JOBNO" Foreground="Black" Binding="{Binding jobno}"  MinWidth="100">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="QTDATE" Foreground="Black" Binding="{Binding qt_date}"  MinWidth="100">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="CUST" Foreground="Black" Binding="{Binding cust}" MinWidth="60" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="CUSTCONTACT" Foreground="Black" Binding="{Binding custcontact}" MinWidth="130" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="CUSTPHONE" Foreground="Black" Binding="{Binding custphone}"  MinWidth="120">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="CUSTEMAIL" Foreground="Black" Binding="{Binding custemail}"  MinWidth="150">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="LOC" Foreground="Black" Binding="{Binding loc}" MinWidth="100">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="SALESMAN" Foreground="Black" Binding="{Binding salesman}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="DAYSEST" Foreground="Black" Binding="{Binding days_est}" MinWidth="100">
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="STATUS" Foreground="Black" Binding="{Binding status}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="JOBTYPE" Foreground="Black" Binding="{Binding jobtype}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="PIPELINE_SIZE" Foreground="Black" Binding="{Binding pipe_line_size}" MinWidth="150" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="PIPELENGTH" Foreground="Black" Binding="{Binding pipe_length}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="PRESSURE" Foreground="Black" Binding="{Binding pressure}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="ENDCLIENT" Foreground="Black" Binding="{Binding endclient}" MinWidth="100" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="SUPERVISOR" Foreground="Black" Binding="{Binding supervisor}" MinWidth="150" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="ESTSTART_DATE" Foreground="Black" Binding="{Binding est_start_date}" MinWidth="130" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="ESTSTOP_DATE" Foreground="Black" Binding="{Binding est_end_date}" MinWidth="130" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="VALUE" Foreground="Black" Binding="{Binding value}" MinWidth="130" >
+                                    <DataGridColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="#FF3580BF"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                        </Style>
+                                    </DataGridColumn.HeaderStyle>
+                                </DataGridTextColumn>
+
+
+                            </DataGrid.Columns>
+
+
+
+                        </DataGrid>
+
+
+                        <Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="9*"/>
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="811.333"/>
-                                <ColumnDefinition/>
+
+                                <ColumnDefinition Width="184*"/>
+                                <ColumnDefinition Width="625"/>
+                                <ColumnDefinition Width="171*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid>
+                            <Grid Grid.ColumnSpan="3" Margin="0,15,741,-20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="btn_SaveItems" Content="Save Items" Grid.Row="0" Grid.Column="0" Width="150" Margin="5" MouseDown="Btn_SaveItems_Click"/>
-                                <Button x:Name="btn_AddItemRow" Content="Add New Item Row" Grid.Row="0" Grid.Column="1" Width="150" Margin="5"/>
-                                <Button x:Name="btn_DeleteItemRow" Content="Delete Item Row" Grid.Row="0" Grid.Column="2" Width="150" Margin="5" MouseDown="Btn_DeleteItemRow_Click" />
+                                <!--<Button x:Name="btn_SaveItems" Content="Save" Grid.Row="0" BorderThickness="0" Grid.Column="0" Background="#FF3580BF" Width="80" Margin="5" MouseDown="Btn_SaveItems_Click">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Save Iteam
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>-->
+                                <Button x:Name="btn_SaveItems" Grid.Column="0" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" MouseDown="Btn_SaveItems_Click"
+                                Width="50" Margin="61,1,0,3"
+                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="-1"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                            Save Item
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <materialDesign:PackIcon Kind="ContentSave" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
+                                        <materialDesign:PackIcon.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="179.248"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </materialDesign:PackIcon.RenderTransform>
+                                    </materialDesign:PackIcon>
+                                </Button>
+
+                                <!--<Button x:Name="btn_AddItemRow" Content="Add" Grid.Row="0" BorderThickness="0" Grid.Column="1" Background="#FF3580BF" Width="80" Margin="5">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Add New Item Row
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>-->
+                                <Button x:Name="btn_AddItemRow" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
+                                Width="50" Margin="-15,1,0,3"
+                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="-1"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                            Add New Item Row
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <materialDesign:PackIcon Kind="Add" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
+                                        <materialDesign:PackIcon.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="179.248"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </materialDesign:PackIcon.RenderTransform>
+                                    </materialDesign:PackIcon>
+                                </Button>
+
+
+                                <!--<Button x:Name="btn_DeleteItemRow" Content="Delete" Grid.Row="0" Grid.Column="2" BorderThickness="0" Width="80" Background="#FF3580BF" Margin="5" MouseDown="Btn_DeleteItemRow_Click" >
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Delete Item Row
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>-->
+                                <Button x:Name="btn_DeleteItemRow" Grid.Column="2" Foreground="White" MouseDown="Btn_DeleteItemRow_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
+                                Width="50" Margin="-90
+                                         ,1,0,3"
+                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="-1"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                Delete Item Row
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <materialDesign:PackIcon Kind="Delete" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
+                                        <materialDesign:PackIcon.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="179.248"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </materialDesign:PackIcon.RenderTransform>
+                                    </materialDesign:PackIcon>
+                                </Button>
+
                             </Grid>
-                            <TabControl Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" x:Name="tabDynamic" ItemsSource="{Binding}" SelectionChanged="tabDynamic_SelectionChanged"  >
+                            <TabControl Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" x:Name="tabDynamic" BorderThickness="0.5" ItemsSource="{Binding}" SelectionChanged="tabDynamic_SelectionChanged" Margin="10,61,10,0" BorderBrush="#FF040000"  >
                                 <TabControl.Resources>
                                     <DataTemplate x:Key="TabHeader" DataType="TabItem">
                                         <DockPanel>
-                                            <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" DockPanel.Dock="Left" Width="80"/>
-                                            <Button Width="25" Name="btnDelete" DockPanel.Dock="Right" Margin="12, 0, 0, 0" Click="Btn_DeleteTab_Click" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}">
-                                                <Image Source="/HydrotestCentral;component/Assets/btn_x.gif" RenderTransformOrigin="0.5,0.5">
-                                                </Image>
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" FontWeight="Bold"  FontSize="20" DockPanel.Dock="Left" Foreground="#FF3580BF" Width="80"/>
+                                            <Button x:Name="btnDelete" DockPanel.Dock="Right" Width="30" BorderThickness="0" Height="30" Padding="0" Background="#FF3580BF" Click="Btn_DeleteTab_Click" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}" >
+                                                <materialDesign:PackIcon Kind="Delete"/>
                                             </Button>
+
+
                                         </DockPanel>
                                     </DataTemplate>
                                 </TabControl.Resources>
                             </TabControl>
                         </Grid>
-                        <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Stretch" Margin="10"/>
-                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="5" Width="250" HorizontalAlignment="Right" Margin="10" Click="Btn_print_Click"/>
-                        <Button x:Name="btn_exit" Content="Exit" Grid.Column="2" Grid.Row="5" Width="250" HorizontalAlignment="Right" Click="Btn_exit_Click" Margin="10" />
+                        <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,10,174,10"/>
+                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="3" Width="250" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="Auto">
+
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock FontWeight="Bold">
+                                    Print
+                                    </TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                     </Grid>
-                </TabItem>
-                <TabItem Header="Job" MinWidth="400"/>
-                <TabItem Header="Invoice" MinWidth="400">
-                    <Grid x:Name="Invoice_MainGrid">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="10*"/>
-                            <RowDefinition Height="25*"/>
-                            <RowDefinition Height="5*"/>
-                        </Grid.RowDefinitions>
+                    <Grid x:Name="Invoice_MainGrid" Visibility="Hidden">
+                        <Label Content="Invoice" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
 
-                        <Grid x:Name="Invoice_TopGrid" Grid.Row="0" Visibility="Visible">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.75*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                            </Grid.ColumnDefinitions>
+                        <Grid x:Name="Invoice_MainGrid1">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="1.5*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="10*"/>
+                                <RowDefinition Height="25*"/>
+                                <RowDefinition Height="5*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="txtBlk_companyName" Text="Aqua-Tech Hydro Services, LLC" Grid.Row="1" Grid.Column="0" FontSize="14" Margin="10,0"/>
-                            <TextBlock x:Name="txtBlk_companyName2" Text="dba HydroTest Pros" Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10,0"/>
-                            <TextBlock x:Name="txtBlk_companyAddress" Text="1048 Carlton Rd, Broussard, LA 70518" Grid.Row="3" Grid.Column="0" FontSize="14" Margin="10,0,0,0"/>
-                            <TextBlock x:Name="txtBlk_ar_email" Text="accounting@hydrotestpros.com" Grid.Row="4" Grid.Column="0" Margin="10,0,0,0"/>
-                            <Label x:Name="lbl_BillTo" Content="Bill To:" Grid.Row="5" Grid.Column="0" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_custName" Text="Dean Services" Grid.Row="6" Grid.Column="0" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_custAddress" Text="P.O. Box 62245" Grid.Row="7" Grid.Column="0" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_custCityStateZip" Text="Midland, TX 79707" Grid.Row="8" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-                            <Image x:Name="img_CompanyLogo" Source="C:\Users\SFWMD\Source\Repos\TylerTrahan\HydrotestCentral\HydrotestCentral\Assets\hydrotestpros_logo.jpg" Grid.Column="1" Grid.Row="0" Grid.RowSpan="7"/>
+                            <Grid x:Name="Invoice_TopGrid" Grid.Row="0" Visibility="Visible">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.75*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1.5*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="txtBlk_companyName" Text="Aqua-Tech Hydro Services, LLC" Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10,0"/>
+                                <TextBlock x:Name="txtBlk_companyName2" Text="dba HydroTest Pros" Grid.Row="3" Grid.Column="0" FontSize="14" Margin="10,0"/>
+                                <TextBlock x:Name="txtBlk_companyAddress" Text="1048 Carlton Rd, Broussard, LA 70518" Grid.Row="4" Grid.Column="0" FontSize="14" Margin="10,0,0,0"/>
+                                <TextBlock x:Name="txtBlk_ar_email" Text="accounting@hydrotestpros.com" Grid.Row="5" Grid.Column="0" Margin="15,0,0,0"/>
+                                <Label x:Name="lbl_BillTo" Content="Bill To:" Grid.Row="6" Grid.Column="0" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_custName" Text="Dean Services" Grid.Row="7" Grid.Column="0" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_custAddress" Text="P.O. Box 62245" Grid.Row="8" Grid.Column="0" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_custCityStateZip" Text="Midland, TX 79707" Grid.Row="9" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-                            <Label x:Name="lbl_INVOICE" Content="Invoice" FontWeight="Bold" FontSize="20" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_InvoiceNo" Content="Invoice #" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_InvNo" Text="19-204" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_Date" Content="Date" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_Date" Text="11/25/2019" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_Terms" Content="Terms" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_Terms" Text="Net 30" Grid.Column="3" Grid.Row="3" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_DueDate" Content="Due Date" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_DueDate" Text="12/25/2019" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_Phone" Content="Phone #" Grid.Column="2" Grid.Row="5" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_Phone" Text="337-999-1001" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
-                            <Label x:Name="lbl_Fax" Content="Fax #" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtBlk_Fax" Text="337-999-1002" Grid.Column="3" Grid.Row="6" VerticalAlignment="Center" />
-                        </Grid>
-                        <Grid x:Name="Invoice_MiddleGrid" Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="23*"/>
-                            </Grid.RowDefinitions>
+                                <Image x:Name="img_CompanyLogo" Source="..\Assets\hydrotestpros_logo.jpg" Grid.Column="1" Grid.Row="0" Grid.RowSpan="7"/>
+
+                                <Label x:Name="lbl_INVOICE" Content="Invoice" FontWeight="Bold" FontSize="20" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_InvoiceNo" Content="Invoice #" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_InvNo" Text="19-204" Grid.Column="3" Grid.Row="3" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_Date" Content="Date" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_Date" Text="11/25/2019" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_Terms" Content="Terms" Grid.Column="2" Grid.Row="5" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_Terms" Text="Net 30" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_DueDate" Content="Due Date" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_DueDate" Text="12/25/2019" Grid.Column="3" Grid.Row="6" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_Phone" Content="Phone #" Grid.Column="2" Grid.Row="7" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_Phone" Text="337-999-1001" Grid.Column="3" Grid.Row="7" VerticalAlignment="Center"/>
+                                <Label x:Name="lbl_Fax" Content="Fax #" Grid.Column="2" Grid.Row="8" HorizontalAlignment="Right" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBlk_Fax" Text="337-999-1002" Grid.Column="3" Grid.Row="8" VerticalAlignment="Center" />
+                            </Grid>
+                            <Grid x:Name="Invoice_MiddleGrid" Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="23*"/>
+                                </Grid.RowDefinitions>
                                 <Label x:Name="lbl_PONumber" Content="P.O. Number" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_PONumber" Text="4849-9093" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="30"/>
                                 <Label x:Name="lbl_Salesman" Content="Rep" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_Salesman" Text="CP" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="30"/>
                                 <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" ItemsSource="{Binding quote_items}" Margin="50,10,50,0"/>
+                            </Grid>
+                            <Grid x:Name="Invoice_Footer" Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Label Content="REMIT TO: " Grid.Column="0" Grid.Row="0" FontWeight="Bold"/>
+                                <TextBlock x:Name="txtBlk_remitCompanyName" Text="AquaTech Hydro Services LLC" Grid.Column="0" Grid.Row="1" FontWeight="Bold"/>
+                                <TextBlock x:Name="txtBlk_remitCompanyAddress" Text="1048 Carlton Rd" Grid.Column="0" Grid.Row="2" FontWeight="Bold"/>
+                                <TextBlock x:Name="txtBlk_remitCompanyAddress2" Text="Broussard, LA 70518" Grid.Column="0" Grid.Row="3" FontWeight="Bold"/>
+                                <Label Content="Past due balances subject to 1.5% finance charge per month" Grid.Column="1" Grid.Row="1" FontWeight="Bold" FontStyle="Italic"/>
+                                <Label Content="Total" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
+                                <TextBlock x:Name="txtBlk_InvoiceTotal" Text="$3,763.48" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
+                            </Grid>
                         </Grid>
-                        <Grid x:Name="Invoice_Footer" Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="REMIT TO: " Grid.Column="0" Grid.Row="0" FontWeight="Bold"/>
-                            <TextBlock x:Name="txtBlk_remitCompanyName" Text="AquaTech Hydro Services LLC" Grid.Column="0" Grid.Row="1" FontWeight="Bold"/>
-                            <TextBlock x:Name="txtBlk_remitCompanyAddress" Text="1048 Carlton Rd" Grid.Column="0" Grid.Row="2" FontWeight="Bold"/>
-                            <TextBlock x:Name="txtBlk_remitCompanyAddress2" Text="Broussard, LA 70518" Grid.Column="0" Grid.Row="3" FontWeight="Bold"/>
-                            <Label Content="Past due balances subject to 1.5% finance charge per month" Grid.Column="1" Grid.Row="1" FontWeight="Bold" FontStyle="Italic"/>
-                            <Label Content="Total" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
-                            <TextBlock x:Name="txtBlk_InvoiceTotal" Text="$3,763.48" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
-                        </Grid>
+
+
                     </Grid>
-                </TabItem>
-                <TabItem Header="Dashboard" MinWidth="400"/>
-            </TabControl>
+
+                    <Grid x:Name="Job_MainGrid" Visibility="Hidden">
+                        <Label Content="Job" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                    </Grid>
+                   
+
+                </Grid>
+            </Grid>
         </Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="40" HorizontalAlignment="Right" Margin="10">
+            <Button  Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}">
+                <materialDesign:PackIcon Kind="Bell"/>
+            </Button>
+            <Button x:Name="ButtonClose"  Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Click="ButtonClose_Click">
+                <materialDesign:PackIcon Kind="Power"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </Controls:MetroWindow>

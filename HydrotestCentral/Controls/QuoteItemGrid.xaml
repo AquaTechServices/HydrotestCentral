@@ -7,22 +7,129 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="HydrotestCentral.QuoteItemGrid"
              x:Name="QuoteItemGridControl"
              mc:Ignorable="d">
-    <DataGrid x:Name="QItems" ItemsSource="{Binding quote_items}" Margin="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsManipulationEnabled="True" GridLinesVisibility="All" FontFamily="Verdana" SelectionMode="Single" ColumnWidth="150" ClipboardCopyMode="IncludeHeader" AutoGenerateColumns="False" SelectionChanged="QItems_SelectionChanged" CellEditEnding="QItems_CellEditEnding" CurrentCellChanged="QItems_CurrentCellChanged" AlternatingRowBackground="DarkCyan">
+    <DataGrid x:Name="QItems" ItemsSource="{Binding quote_items}"  VerticalAlignment="Stretch" Background="White"   CanUserAddRows="False" IsManipulationEnabled="True" Foreground="Black" GridLinesVisibility="None" FontFamily="Verdana" SelectionMode="Single" ColumnWidth="150" ClipboardCopyMode="IncludeHeader" AutoGenerateColumns="False" SelectionChanged="QItems_SelectionChanged" CellEditEnding="QItems_CellEditEnding" CurrentCellChanged="QItems_CurrentCellChanged" >
         <DataGrid.Columns>
-            <DataGridTextColumn Header="qty" Binding="{Binding Path=qty}"/>
+            <DataGridTextColumn Header="QTY" Binding="{Binding Path=qty}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
             <!--<local:DataGridComboBoxColumnWithBindingHack Header="Item" SelectedValueBinding="{Binding Items}" SelectedValuePath="Itemname" ItemsSource="{Binding Items}"/>-->
-            <DataGridTextColumn Header="item" Binding="{Binding Path=item, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridTextColumn Header="rate" Binding="{Binding Path=rate, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridTextColumn Header="descr" Binding="{Binding Path=descr, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridTextColumn Header="grouping" Binding="{Binding Path=grouping, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridCheckBoxColumn Header="taxable" Binding="{Binding Path=taxable, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridCheckBoxColumn Header="discountable" Binding="{Binding Path=discountable, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridCheckBoxColumn Header="printable" Binding="{Binding Path=printable, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridTextColumn Header="jobno" Binding="{Binding Path=jobno}" Visibility="Hidden"/>
-            <DataGridTextColumn Header="tax_total" Binding="{Binding Path=tax_total, UpdateSourceTrigger=PropertyChanged}"/>
-            <DataGridTextColumn Header="line_total" Binding="{Binding Path=line_total, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="SemiBold" Width="200"/>
-            <DataGridTextColumn Header="tab_index" Binding="{Binding Path=tab_index}" Visibility="Hidden"/>
-            <DataGridTextColumn Header="row_index" Binding="{Binding Path=row_index}" Visibility="Hidden"/>
+            <DataGridTextColumn Header="ITEM" Binding="{Binding Path=item, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="RATE" Binding="{Binding Path=rate, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+
+            <DataGridTextColumn Header="DESCR" Binding="{Binding Path=descr, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="GROUPING" Binding="{Binding Path=grouping, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridCheckBoxColumn Header="TAXABLE" Binding="{Binding Path=taxable, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridCheckBoxColumn>
+
+            <DataGridCheckBoxColumn Header="DISCOUNTABLE" Binding="{Binding Path=discountable, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridCheckBoxColumn>
+            <DataGridCheckBoxColumn Header="PRINTABLE" Binding="{Binding Path=printable, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridCheckBoxColumn>
+            <DataGridTextColumn Header="JOBNO" Binding="{Binding Path=jobno}" Visibility="Hidden">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="TAX_TOTAL" Binding="{Binding Path=tax_total, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="LINE_TOTAL" Binding="{Binding Path=line_total, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="SemiBold" Width="200">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="TAB_INDEX" Binding="{Binding Path=tab_index}" Visibility="Hidden">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="ROW_INDEX" Binding="{Binding Path=row_index}" Visibility="Hidden">
+                <DataGridColumn.HeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3580BF"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </DataGridColumn.HeaderStyle>
+            </DataGridTextColumn>
         </DataGrid.Columns>
     </DataGrid>
+
 </UserControl>
