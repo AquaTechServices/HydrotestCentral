@@ -540,11 +540,6 @@ namespace HydrotestCentral.ViewModels
             return headers;
         }
 
-        public ObservableCollection<InvoiceItem> LoadInvoiceItemData()
-        {
-
-        }
-
         #endregion
 
         #region INotifyPropertyChanged Members

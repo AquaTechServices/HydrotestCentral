@@ -71,13 +71,6 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <!--<Controls:MetroWindow.Resources>
-        <LinearGradientBrush x:Key="ButtonGradient1" EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FFC1C1C1" Offset="1"/>
-            <GradientStop Color="#FFF3F3F3"/>
-            <GradientStop Color="#FFE4E4E4" Offset="0.611"/>
-        </LinearGradientBrush>
-    </Controls:MetroWindow.Resources>-->
     <Grid Background="#FF3580BF">
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"  />
         <StackPanel x:Name="StackPanelMenu" Width="358" HorizontalAlignment="Left" Margin="-363,0,0,0" RenderTransformOrigin="0.,0.5">
@@ -154,8 +147,8 @@
                                 </TransformGroup>
                             </ListViewItem.RenderTransform>
                             <StackPanel Orientation="Horizontal" Margin="10 0">
-                                <materialDesign:PackIcon Kind="Cash" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                                <TextBlock Text="Invoice" Margin="10" VerticalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="Office" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Job" Margin="10" VerticalAlignment="Center"/>
                             </StackPanel>
                         </ListViewItem>
                         <ListViewItem x:Name="listViewItem3" Height="64" RenderTransformOrigin="0.5,0.5" Selected="listViewItem3_Selected">
@@ -168,8 +161,8 @@
                                 </TransformGroup>
                             </ListViewItem.RenderTransform>
                             <StackPanel Orientation="Horizontal" Margin="10 0">
-                                <materialDesign:PackIcon Kind="Office" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                                <TextBlock Text="Job" Margin="10" VerticalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="Cash" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Invoice" Margin="10" VerticalAlignment="Center"/>
                             </StackPanel>
                         </ListViewItem>
                     </ListView>
@@ -208,10 +201,8 @@
                             <RowDefinition Height="139*"/>
                         </Grid.RowDefinitions>
 
-                        <Button  Grid.Column="0" Foreground="White"  Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
-                                
-                                Width="50" Margin="61,44,0,20"
-                                Padding="0,0,0,0" Height="Auto">
+                        <Button x:Name="btn_NewQuoteHeader"   Grid.Column="0" Foreground="White"  Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" Margin="20"
+                                Padding="0,0,0,0" Width="50" Height="50">
                             <Button.ToolTip>
                                 <ToolTip>
                                     <TextBlock FontWeight="Bold">
@@ -221,9 +212,9 @@
                             </Button.ToolTip>
                             <materialDesign:PackIcon Kind="Plus" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
                         </Button>
-                        <Button x:Name="btnDeleteQuoteHeader" Grid.Column="0"  Margin="121,44,0,20" FontSize="30" 
+                        <Button x:Name="btnDeleteQuoteHeader" Grid.Column="0"  Margin="90,20,20,20" FontSize="30" 
                                 BorderThickness="0" Padding="0,0,0,0"   HorizontalAlignment="Left" 
-                                Width="50" Click="Btn_DeleteQuoteHeader_Click" Background="#FF3580BF" Height="Auto">
+                                 Click="Btn_DeleteQuoteHeader_Click" Background="#FF3580BF" Width="50" Height="50">
                             <Button.ToolTip>
                                 <ToolTip>
                                     <TextBlock FontWeight="Bold">
@@ -233,9 +224,7 @@
                             </Button.ToolTip>
                             <materialDesign:PackIcon Kind="Delete" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
                         </Button>
-
-                        <Button x:Name="btn_SaveQuoteHeader"  Grid.Column="0" Margin="181,44,0,20" HorizontalAlignment="Left" BorderThickness="0" Click="Btn_SaveQuoteHeader_Click" Width="50" Background="#FF3580BF" Height="Auto">
-
+                        <Button x:Name="btn_SaveQuoteHeader"  Grid.Column="0" Margin="160,20,20,20" HorizontalAlignment="Left" BorderThickness="0" Click="Btn_SaveQuoteHeader_Click" Background="#FF3580BF" Width="50" Height="50">
                             <Path Data="M7.4590002,16.856308 C6.3770743,16.856308 5.5000001,17.733381 5.5000001,18.815308 L5.5000001,33.377308 C5.5000001,34.459232 6.3770743,35.336308 7.4590002,35.336308 L28.375,35.336308 C29.456926,35.336308 30.334,34.459232 30.334,33.377308 L30.334,18.815308 C30.334,17.733381 29.456926,16.856308 28.375,16.856308 z M18.584019,4.487381 L20.416071,4.487381 C20.772856,4.487381 21.062088,4.7766075 21.062088,5.1333857 L21.062088,10.508735 C21.062088,10.865514 20.772856,11.154741 20.416071,11.154741 L18.584019,11.154741 C18.227234,11.154741 17.938,10.865514 17.938,10.508735 L17.938,5.1333857 C17.938,4.7766075 18.227234,4.487381 18.584019,4.487381 z M6.2086731,3.5703743 C5.080876,3.5703743 4.1666165,4.4846158 4.166616,5.612391 L4.166616,10.041732 C4.1666165,11.169507 5.080876,12.083749 6.2086731,12.083749 L22.221121,12.083749 C23.348915,12.083749 24.263178,11.169507 24.263178,10.041732 L24.263178,5.612391 C24.263178,4.4846158 23.348915,3.5703743 22.221121,3.5703743 z M3.500099,0 L25.500877,0.15368047 35.584492,8.6954145 35.834,35.942581 C35.834,38.091366 34.266953,39.833309 32.333901,39.833309 L3.500099,39.833309 C1.5670471,39.833309 7.786133E-08,38.091366 0,35.942581 L0,3.8907325 C7.786133E-08,1.7419404 1.5670471,4.7684085E-07 3.500099,0 z" Fill="White" Stretch="Fill" Width="19.212" Height="21.358"/>
                             <Button.ToolTip>
                                 <ToolTip>
@@ -250,14 +239,12 @@
                         <!--<DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" x:FieldModifier="public" CanUserDeleteRows="True" CanUserAddRows="False" AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
                                   CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" AlternatingRowBackground="Silver"/>-->
                         <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" x:FieldModifier="public" 
-                          CanUserDeleteRows="True" VerticalAlignment="Bottom" CanUserAddRows="False" AutoGenerateColumns="False"  Margin="24,0,0,0" 
-                          Grid.ColumnSpan="2" IsManipulationEnabled="True" FontSize="13"  ScrollViewer.CanContentScroll="True" 
+                          CanUserDeleteRows="True" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False"  Margin="24,0" 
+                           IsManipulationEnabled="True" FontSize="13"  ScrollViewer.CanContentScroll="True"  Grid.ColumnSpan="2"
                           ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" 
-                          ScrollViewer.IsDeferredScrollingEnabled="True" CurrentCellChanged="QHeader_CurrentCellChanged" BorderThickness="0.5" CellEditEnding="QHeader_CellEditEnding" AreRowDetailsFrozen="True" IsReadOnly="false"  SelectionChanged="QHeader_SelectionChanged" FontWeight="Bold" Background="White" HeadersVisibility="Column" HorizontalAlignment="Left" Width="1101" Height="171" Grid.Row="1" BorderBrush="#FF141415">
-
+                          ScrollViewer.IsDeferredScrollingEnabled="True" CurrentCellChanged="QHeader_CurrentCellChanged" BorderThickness="0.5" CellEditEnding="QHeader_CellEditEnding" AreRowDetailsFrozen="True" IsReadOnly="false"  SelectionChanged="QHeader_SelectionChanged" FontWeight="Bold" Background="White" HeadersVisibility="Column" HorizontalAlignment="Left" Grid.Row="1" BorderBrush="#FF141415" MinHeight="250">
 
                             <DataGrid.Columns>
-
                                 <DataGridTextColumn Header="QUOTENO" Foreground="Black" Binding="{Binding quoteno }" MinWidth="100" >
                                     <DataGridColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
@@ -440,11 +427,7 @@
                                     </DataGridColumn.HeaderStyle>
                                 </DataGridTextColumn>
 
-
                             </DataGrid.Columns>
-
-
-
                         </DataGrid>
 
 
@@ -455,7 +438,6 @@
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-
                                 <ColumnDefinition Width="184*"/>
                                 <ColumnDefinition Width="625"/>
                                 <ColumnDefinition Width="171*"/>
@@ -466,53 +448,9 @@
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <!--<Button x:Name="btn_SaveItems" Content="Save" Grid.Row="0" BorderThickness="0" Grid.Column="0" Background="#FF3580BF" Width="80" Margin="5" MouseDown="Btn_SaveItems_Click">
-                                    <Button.ToolTip>
-                                        <ToolTip>
-                                            Save Iteam
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                </Button>-->
-                                <Button x:Name="btn_SaveItems" Grid.Column="0" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" MouseDown="Btn_SaveItems_Click"
-                                Width="50" Margin="61,1,0,3"
-                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
-                                    <Button.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform ScaleY="-1"/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Button.RenderTransform>
-                                    <Button.ToolTip>
-                                        <ToolTip>
-                                            <TextBlock FontWeight="Bold">
-                                            Save Item
-                                            </TextBlock>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <materialDesign:PackIcon Kind="ContentSave" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
-                                        <materialDesign:PackIcon.RenderTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform ScaleX="-1"/>
-                                                <SkewTransform/>
-                                                <RotateTransform Angle="179.248"/>
-                                                <TranslateTransform/>
-                                            </TransformGroup>
-                                        </materialDesign:PackIcon.RenderTransform>
-                                    </materialDesign:PackIcon>
-                                </Button>
-
-                                <!--<Button x:Name="btn_AddItemRow" Content="Add" Grid.Row="0" BorderThickness="0" Grid.Column="1" Background="#FF3580BF" Width="80" Margin="5">
-                                    <Button.ToolTip>
-                                        <ToolTip>
-                                            Add New Item Row
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                </Button>-->
-                                <Button x:Name="btn_AddItemRow" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
-                                Width="50" Margin="-15,1,0,3"
-                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
+                                
+                                <Button x:Name="btn_AddItemRow" Grid.Column="0" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" Margin="20,0"
+                                Padding="0,0,0,0" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Bottom" Height="50" Width="50">
                                     <Button.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform ScaleY="-1"/>
@@ -540,18 +478,8 @@
                                     </materialDesign:PackIcon>
                                 </Button>
 
-
-                                <!--<Button x:Name="btn_DeleteItemRow" Content="Delete" Grid.Row="0" Grid.Column="2" BorderThickness="0" Width="80" Background="#FF3580BF" Margin="5" MouseDown="Btn_DeleteItemRow_Click" >
-                                    <Button.ToolTip>
-                                        <ToolTip>
-                                            Delete Item Row
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                </Button>-->
-                                <Button x:Name="btn_DeleteItemRow" Grid.Column="2" Foreground="White" MouseDown="Btn_DeleteItemRow_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
-                                Width="50" Margin="-90
-                                         ,1,0,3"
-                                Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5">
+                                <Button x:Name="btn_DeleteItemRow" Grid.Column="0" Foreground="White" MouseDown="Btn_DeleteItemRow_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
+                                Padding="0,0,0,0" RenderTransformOrigin="0.5,0.5" Height="50" Width="50" Margin="90,0,20,0">
                                     <Button.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform ScaleY="-1"/>
@@ -568,6 +496,35 @@
                                         </ToolTip>
                                     </Button.ToolTip>
                                     <materialDesign:PackIcon Kind="Delete" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
+                                        <materialDesign:PackIcon.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="179.248"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </materialDesign:PackIcon.RenderTransform>
+                                    </materialDesign:PackIcon>
+                                </Button>
+
+                                <Button x:Name="btn_SaveItems" Grid.Column="0" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" MouseDown="Btn_SaveItems_Click"
+                                Padding="0,0,0,0" RenderTransformOrigin="0.5,0.5" Width="50" Height="50" Margin="160,0,20,0">
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="-1"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                            Save Item
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <materialDesign:PackIcon Kind="ContentSave" Height="21" RenderTransformOrigin="-15.094,0.6" Width="22">
                                         <materialDesign:PackIcon.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform ScaleX="-1"/>
@@ -597,7 +554,6 @@
                         </Grid>
                         <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,10,174,10"/>
                         <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="3" Width="250" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="Auto">
-
                             <Button.ToolTip>
                                 <ToolTip>
                                     <TextBlock FontWeight="Bold">
@@ -607,9 +563,13 @@
                             </Button.ToolTip>
                         </Button>
                     </Grid>
+
+                    <Grid x:Name="Job_MainGrid" Visibility="Hidden">
+                        <Label Content="Job" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                    </Grid>
+
                     <Grid x:Name="Invoice_MainGrid" Visibility="Hidden">
                         <Label Content="Invoice" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
-
                         <Grid x:Name="Invoice_MainGrid1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="10*"/>
@@ -705,13 +665,9 @@
                                 <TextBlock x:Name="txtBlk_InvoiceTotal" Text="$3,763.48" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" FontWeight="ExtraBold" FontSize="20"/>
                             </Grid>
                         </Grid>
-
-
                     </Grid>
 
-                    <Grid x:Name="Job_MainGrid" Visibility="Hidden">
-                        <Label Content="Job" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
-                    </Grid>
+
                    
 
                 </Grid>
