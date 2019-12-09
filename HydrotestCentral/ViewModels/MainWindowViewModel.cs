@@ -53,26 +53,10 @@ namespace HydrotestCentral.ViewModels
         public int selected_tab_index;
         public int selected_row_index;
 
-        public QuoteItem quoteItemToAdd;
 
         public MainWindowViewModel()
         {
             InitializeComponent();
-
-            //Set default QuoteItem to add
-            quoteItemToAdd = new QuoteItem();
-            quoteItemToAdd.item = "TESTITEM";
-            quoteItemToAdd.rate = 100.00;
-            quoteItemToAdd.qty = 1;
-            quoteItemToAdd.descr = "Test Item";
-            quoteItemToAdd.grouping = 1;
-            quoteItemToAdd.taxable = false;
-            quoteItemToAdd.discountable = false;
-            quoteItemToAdd.printable = false;
-            quoteItemToAdd.jobno = "C2019-1212";
-            quoteItemToAdd.tab_index = 0;
-            quoteItemToAdd.row_index = 0;
-
 
             quote_headers = new ObservableCollection<QuoteHeader>();
             quote_headers = LoadQuoteHeaderData();
