@@ -7,7 +7,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="HydrotestCentral.QuoteItemGrid"
              x:Name="QuoteItemGridControl"
              mc:Ignorable="d">
-    <DataGrid x:Name="QItems" ItemsSource="{Binding quote_items}"  VerticalAlignment="Stretch" Background="White"   CanUserAddRows="False" IsManipulationEnabled="True" Foreground="Black" GridLinesVisibility="None" FontFamily="Verdana" SelectionMode="Single" ColumnWidth="150" ClipboardCopyMode="IncludeHeader" AutoGenerateColumns="False" SelectionChanged="QItems_SelectionChanged" CellEditEnding="QItems_CellEditEnding" CurrentCellChanged="QItems_CurrentCellChanged" >
+    <DataGrid x:Name="QItems" ItemsSource="{Binding quote_items}"  VerticalAlignment="Stretch" Background="White"   CanUserAddRows="False" IsManipulationEnabled="True" Foreground="Black" GridLinesVisibility="None" FontFamily="Verdana" SelectionMode="Single" ColumnWidth="150" ClipboardCopyMode="IncludeHeader" AutoGenerateColumns="False" SelectionChanged="QItems_SelectionChanged" CellEditEnding="QItems_CellEditEnding">
         <DataGrid.Columns>
             <DataGridTextColumn Header="QTY" Binding="{Binding Path=qty}">
                 <DataGridColumn.HeaderStyle>

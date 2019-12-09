@@ -25,7 +25,7 @@ namespace HydrotestCentral
     /// <summary>
     /// Interaction logic for QuoteItemGrid.xaml
     /// </summary>
-    public partial class QuoteItemGrid: UserControl
+    public partial class QuoteItemGrid : UserControl
     {
         public static string jobno;
         public static int tab_index;
@@ -42,14 +42,14 @@ namespace HydrotestCentral
 
             main_vm = vm;
             this.DataContext = main_vm;
-            
+
             //MessageBox.Show(vm.ToString());
             //this.QItems.ItemsSource = vm.quote_items;
 
-            foreach(QuoteItem x in vm.quote_items)
+            foreach (QuoteItem x in vm.quote_items)
             {
                 //MessageBox.Show(x.ToString());
-                Trace.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
+                //Trace.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
             }
         }
 
@@ -104,6 +104,23 @@ namespace HydrotestCentral
             BindingOperations.SetBinding(element, ComboBox.ItemsSourceProperty,
               BindingOperations.GetBinding(this, ComboBox.ItemsSourceProperty));
         }
+
+        //private void FieldDataGridChecked(object sender, RoutedEventArgs e)
+        //{
+        //    foreach (FieldViewModel model in _fields)
+        //    {
+        //        model.IsChecked = true;
+        //    }
+        //}
+
+        //private void FieldDataGridUnchecked(object sender, RoutedEventArgs e)
+        //{
+        //    foreach (FieldViewModel model in _fields)
+        //    {
+        //        model.IsChecked = false;
+        //    }
+        //}
+
     }
 
 }

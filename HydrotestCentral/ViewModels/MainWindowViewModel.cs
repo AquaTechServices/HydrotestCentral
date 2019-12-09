@@ -15,7 +15,7 @@ using System.Windows.Controls;
 
 namespace HydrotestCentral.ViewModels
 {
-    public partial class MainWindowViewModel: INotifyPropertyChanged
+    public partial class MainWindowViewModel : INotifyPropertyChanged
     {
         SQLiteConnection connection;
         SQLiteCommand cmd;
@@ -48,7 +48,7 @@ namespace HydrotestCentral.ViewModels
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
         public ObservableCollection<InvoiceHeader> invoice_headers { get; set; }
         public ObservableCollection<InvoiceItem> invoice_items { get; set; }
-        public ObservableCollection<Customer> customers {  get; set; }
+        public ObservableCollection<Customer> customers { get; set; }
 
         public int selected_tab_index;
         public int selected_row_index;
@@ -108,26 +108,26 @@ namespace HydrotestCentral.ViewModels
 
                     headers.Add(new QuoteHeader
                     {
-                            quoteno = dr[0].ToString(),
-                            jobno = dr[0].ToString(),
-                            qt_date = dr[1].ToString(),
-                            cust = dr[2].ToString(),
-                            cust_contact = dr[3].ToString(),
-                            cust_phone = dr[4].ToString(),
-                            cust_email = dr[5].ToString(),
-                            loc = dr[6].ToString(),
-                            salesman = dr[7].ToString(),
-                            days_est = cleaned_days,
-                            status = dr[9].ToString(),
-                            jobtype = dr[10].ToString(),
-                            pipe_line_size = dr[11].ToString(),
-                            pipe_length = dr[12].ToString(),
-                            pressure = dr[13].ToString(),
-                            endclient = dr[14].ToString(),
-                            supervisor = dr[15].ToString(),
-                            est_start_date = dr[16].ToString(),
-                            est_stop_date = dr[17].ToString(),
-                            value = cleaned_value
+                        quoteno = dr[0].ToString(),
+                        jobno = dr[0].ToString(),
+                        qt_date = dr[1].ToString(),
+                        cust = dr[2].ToString(),
+                        cust_contact = dr[3].ToString(),
+                        cust_phone = dr[4].ToString(),
+                        cust_email = dr[5].ToString(),
+                        loc = dr[6].ToString(),
+                        salesman = dr[7].ToString(),
+                        days_est = cleaned_days,
+                        status = dr[9].ToString(),
+                        jobtype = dr[10].ToString(),
+                        pipe_line_size = dr[11].ToString(),
+                        pipe_length = dr[12].ToString(),
+                        pressure = dr[13].ToString(),
+                        endclient = dr[14].ToString(),
+                        supervisor = dr[15].ToString(),
+                        est_start_date = dr[16].ToString(),
+                        est_stop_date = dr[17].ToString(),
+                        value = cleaned_value
                     });
                     //Trace.WriteLine(dr[0].ToString() + " created in quote_headers");
                 }
@@ -164,49 +164,52 @@ namespace HydrotestCentral.ViewModels
                 adapter.Fill(ds, "QTE_ITEM");
 
 
-                    foreach (DataRow dr in ds.Tables[0].Rows)
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    int cleaned_qty = 0;
+                    double cleaned_rate = 0.00;
+                    int cleaned_grouping = 1;
+                    bool cleaned_taxable = false;
+                    bool cleaned_discountable = false;
+                    bool cleaned_printable = false;
+                    double cleaned_line_total = 0.00;
+                    double cleaned_tax_total = 0.00;
+                    int cleaned_tab_index = 0;
+                    int cleaned_row_index = 0;
+
+                    if (Int32.TryParse(dr[0].ToString(), out cleaned_qty)) { }
+                    if (Double.TryParse(dr[2].ToString(), out cleaned_rate)) { }
+                    if (Int32.TryParse(dr[4].ToString(), out cleaned_grouping)) { }
+                    if (Boolean.TryParse(dr[5].ToString(), out cleaned_taxable)) { }
+                    if (Boolean.TryParse(dr[6].ToString(), out cleaned_discountable)) { }
+                    if (Boolean.TryParse(dr[7].ToString(), out cleaned_printable)) { }
+                    if (Double.TryParse(dr[9].ToString(), out cleaned_line_total)) { }
+                    if (Double.TryParse(dr[10].ToString(), out cleaned_tax_total)) { }
+                    if (Int32.TryParse(dr[11].ToString(), out cleaned_tab_index)) { }
+                    if (Int32.TryParse(dr[12].ToString(), out cleaned_row_index)) { }
+
+                    items.Add(new QuoteItem
                     {
-                        int cleaned_qty = 0;
-                        double cleaned_rate = 0.00;
-                        int cleaned_grouping = 1;
-                        bool cleaned_taxable = false;
-                        bool cleaned_discountable = false;
-                        bool cleaned_printable = false;
-                        double cleaned_line_total = 0.00;
-                        double cleaned_tax_total = 0.00;
-                        int cleaned_tab_index = 0;
-                        int cleaned_row_index = 0;
+                        qty = cleaned_qty,
+                        item = dr[1].ToString(),
+                        rate = cleaned_rate,
+                        descr = dr[3].ToString(),
+                        grouping = cleaned_grouping,
+                        //taxable = cleaned_taxable,
+                        //discountable = cleaned_discountable,
+                        //printable = cleaned_printable,
+                        taxable = (dr[5].ToString().ToLower() == "1" ? true : false),
+                        discountable = (dr[6].ToString().ToLower() == "1" ? true : false),
+                        printable = (dr[7].ToString().ToLower() == "1" ? true : false),
+                        jobno = dr[8].ToString(),
+                        line_total = cleaned_line_total,
+                        tax_total = cleaned_tax_total,
+                        tab_index = cleaned_tab_index,
+                        row_index = cleaned_row_index
+                    });
+                    //Trace.WriteLine(dr[1].ToString() + " created in quote_items");
+                }
 
-                        if (Int32.TryParse(dr[0].ToString(), out cleaned_qty)) { }
-                        if (Double.TryParse(dr[2].ToString(), out cleaned_rate)) { }
-                        if (Int32.TryParse(dr[4].ToString(), out cleaned_grouping)) { }
-                        if (Boolean.TryParse(dr[5].ToString(), out cleaned_taxable)) { }
-                        if (Boolean.TryParse(dr[6].ToString(), out cleaned_discountable)) { }
-                        if (Boolean.TryParse(dr[7].ToString(), out cleaned_printable)) { }
-                        if (Double.TryParse(dr[9].ToString(), out cleaned_line_total)) { }
-                        if (Double.TryParse(dr[10].ToString(), out cleaned_tax_total)) { }
-                        if (Int32.TryParse(dr[11].ToString(), out cleaned_tab_index)) { }
-                        if (Int32.TryParse(dr[12].ToString(), out cleaned_row_index)) { }
-
-                        items.Add(new QuoteItem
-                        {
-                            qty = cleaned_qty,
-                            item = dr[1].ToString(),
-                            rate = cleaned_rate,
-                            descr = dr[3].ToString(),
-                            grouping = cleaned_grouping,
-                            taxable = cleaned_taxable,
-                            discountable = cleaned_discountable,
-                            printable = cleaned_printable,
-                            jobno = dr[8].ToString(),
-                            line_total = cleaned_line_total,
-                            tax_total = cleaned_tax_total,
-                            tab_index = cleaned_tab_index,
-                            row_index = cleaned_row_index
-                        });
-                        //Trace.WriteLine(dr[1].ToString() + " created in quote_items");
-                    }
-                
             }
             catch (Exception ex)
             {
@@ -227,7 +230,7 @@ namespace HydrotestCentral.ViewModels
         {
             Trace.WriteLine("QuoteItems.Count(): " + quote_items.Count());
             Trace.WriteLine("Linq query: " + quote_items.Where(item => item.jobno == incoming_jobno).Count());
-            return quote_items.Where(item => item.jobno == incoming_jobno).Count();   
+            return quote_items.Where(item => item.jobno == incoming_jobno).Count();
         }
 
         public void UpdateHeaderItem(string jobno)
@@ -235,9 +238,9 @@ namespace HydrotestCentral.ViewModels
             //Find QuoteHeader for that jobno
             QuoteHeader qh = new QuoteHeader();
 
-            foreach(QuoteHeader header in quote_headers)
+            foreach (QuoteHeader header in quote_headers)
             {
-                if(header.jobno == jobno)
+                if (header.jobno == jobno)
                 {
                     qh = header;
                     break;
@@ -334,7 +337,24 @@ namespace HydrotestCentral.ViewModels
             {
                 new_collection.Add(i);
             }
+            if (jobno != null && items.ToList().Count == 0)
+            {
+                List<QuoteItem> lst = new List<QuoteItem>();
+                new_collection.Add(new QuoteItem
+                {
+                    item = null,
+                    rate = 0,
+                    qty = 0,
+                    descr = null,
+                    grouping = 0,
+                    taxable = false,
+                    discountable = false,
+                    printable = false,
+                    jobno = jobno,
+                    tab_index = tab_index,
 
+                });
+            }
             quote_items = new_collection;
         }
 
@@ -381,7 +401,8 @@ namespace HydrotestCentral.ViewModels
                         cmd.Parameters.Add(new SQLiteParameter("@tab_index", qi.tab_index));
                         cmd.Parameters.Add(new SQLiteParameter("@row_index", qi.row_index));
 
-                        cmd.CommandText = String.Format("UPDATE QTE_ITEMS SET qty=(@qty), item=(@item), rate=(@rate), descr=(@descr), taxable=(@taxable), discountable=(@discountable), printable=(@printable), grouping=(@grouping), line_total=(@line_total), tax_total=(@tax_total), row_index=(@row_index) WHERE jobno=(@jobno) AND tab_index=(@tab_index)");
+                        //cmd.CommandText = String.Format("UPDATE QTE_ITEMS SET qty=(@qty), item=(@item), rate=(@rate), descr=(@descr), taxable=(@taxable), discountable=(@discountable), printable=(@printable), grouping=(@grouping), line_total=(@line_total), tax_total=(@tax_total), row_index=(@row_index) WHERE jobno=(@jobno) AND tab_index=(@tab_index)");
+                        cmd.CommandText = String.Format("INSERT INTO QTE_ITEMS (qty,item,rate,descr,grouping,taxable,discountable,printable,jobno,line_total,tax_total,tab_index,row_index)VALUES ((@qty),(@item),(@rate),(@descr),(@grouping),(@taxable),(@discountable),(@printable),(@jobno),(@line_total),(@tax_total),(@tab_index),(@row_index))");
                         cmd.ExecuteNonQuery();
                         connection.Close();
                     }
@@ -421,7 +442,8 @@ namespace HydrotestCentral.ViewModels
                 connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
-                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index, row_index);
+                cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1} AND row_index = {2}", jobno, tab_index, row_index);
+                //cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index, row_index);
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -484,11 +506,30 @@ namespace HydrotestCentral.ViewModels
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handle = PropertyChanged;
-            if(handle != null)
+            if (handle != null)
             {
                 handle(this, new PropertyChangedEventArgs(propertyName));
-            }            
+            }
         }
         #endregion
+
+
+        public void ADDQuoteItemsByJob_And_Tab(string jobno, int tab_index)
+        {
+
+            QuoteItem new_collection = new QuoteItem();
+
+            if (jobno != null)
+            {
+                new_collection.jobno = jobno;
+                new_collection.tab_index = tab_index;
+                new_collection.row_index = quote_items.OrderByDescending(x => x.row_index).FirstOrDefault().row_index + 1;
+                // row_index = null,
+            }
+            quote_items.Add(new_collection);
+        }
+
+
+
     }
 }

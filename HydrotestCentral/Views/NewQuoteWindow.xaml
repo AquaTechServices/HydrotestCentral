@@ -42,7 +42,7 @@
         <Label Content="End Client: " Grid.Column="0" Grid.Row="11" Foreground="Black" HorizontalAlignment="Right" Margin="10"/>
         <Label Content="Supervisor: " Grid.Column="0" Grid.Row="12" Foreground="Black" HorizontalAlignment="Right" Margin="10"/>
 
-        <TextBox x:Name="txt_jobno" Foreground="Black" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Margin="10" FontWeight="Bold" FontSize="14" Background="#FFF9F4F4"/>
+        <TextBox x:Name="txt_jobno" Foreground="Black" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Margin="10" FontWeight="Bold" FontSize="14"/>
         <TextBox x:Name="txt_qtdate" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch" Margin="10"/>
         <TextBox x:Name="txt_cust" Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch" Margin="10"/>
         <TextBox x:Name="txt_loc" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10"/>
@@ -56,7 +56,7 @@
         <TextBox x:Name="txt_endclient" Grid.Column="1" Grid.Row="11" HorizontalAlignment="Stretch" Margin="10"/>
         <TextBox x:Name="txt_supervisor" Grid.Column="1" Grid.Row="12" HorizontalAlignment="Stretch" Margin="10"/>
 
-        <Button x:Name="Btn_Back" Content="Back" Grid.Column="1" Grid.Row="13"  HorizontalAlignment="Center" Margin="10" VerticalAlignment="Bottom" Width="250" Click="Btn_Back_Click"/>
-        <Button x:Name="Add_Quote" Content="Add Quote" Grid.Column="0" Grid.Row="13" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Bottom" Width="250" Click="Btn_AddQuote_Click"/>
+        <Button x:Name="Btn_Back" Content="Back" Grid.Column="1" Grid.Row="13"  HorizontalAlignment="Center" Background="#FF3580BF" Margin="9,0,137,12" VerticalAlignment="Bottom" Width="250" Click="Btn_Back_Click"/>
+        <Button x:Name="Add_Quote" Content="Add Quote" Grid.Column="0" Grid.Row="13" Background="#FF3580BF" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Bottom" Width="250" Click="Btn_AddQuote_Click"/>
     </Grid>
 </Window>

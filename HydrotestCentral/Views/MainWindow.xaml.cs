@@ -155,16 +155,13 @@ namespace HydrotestCentral
                         }
                         // bind tab control
                         //tabDynamic.DataContext = _tabItems;
-
                     }
-
 
                     //Change QItems based on Row
                     main_vm.updateQuoteItemsByJob(this.jobno);
 
                     // Update selected tab child
                     getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
-
                 }
             }
         }
@@ -183,7 +180,7 @@ namespace HydrotestCentral
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        } 
+        }
         public void GetQuoteHeaderData()
         {
             QHeader.ItemsSource = main_vm.quote_headers;
@@ -247,9 +244,27 @@ namespace HydrotestCentral
         {
             //main_Quoteheader.DeleteHeaderItem(jobno);
 
-            main_vm.DeleteHeaderItem(jobno);
-            main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
+            //main_vm.DeleteHeaderItem(jobno);
+            //main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
+
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to remove the Quote?", "Delete Quote", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show("Quote removed successfully");
+                    break;
+                case MessageBoxResult.No:
+                    break;
+
+            }
+            if (result == MessageBoxResult.Yes)
+            {
+
+                main_vm.DeleteHeaderItem(jobno);
+                main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
+            }
         }
+
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -268,21 +283,60 @@ namespace HydrotestCentral
                 //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
                 main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
                 quoteHeaderBeingEdited = null;
+                // MessageBox.Show("Quoted updated successfully!");
             }
         }
 
         private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
         {
+            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            // Delete all items from QTE_ITEMS where jobno and tab_index match is found
+            main_vm.DeleteQuoteItemGrid(jobno, tabDynamic.SelectedIndex);
             saveTabItemGrid(jobno, tabDynamic.SelectedIndex);
+            main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+
+            TabItem tab = (TabItem)tabDynamic.SelectedItem;
+
+            grid.QItems.ItemsSource = main_vm.quote_items;
+            tab.Content = grid;
         }
+
+        //private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    int row_index = main_vm.selected_row_index;
+
+        //    main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
+        //    Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
+        //    main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+        //}
 
         private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
         {
-            int row_index = main_vm.selected_row_index;
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to remove the Quote Item?", "Delete Quote Item", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show("Quote Item removed successfully");
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
 
-            main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
-            Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
-            main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+            if (result == MessageBoxResult.Yes)
+            {
+                QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+                TabItem tab = (TabItem)tabDynamic.SelectedItem;
+                //int row_index = main_vm.selected_row_index;
+                int row_index = ((HydrotestCentral.Models.QuoteItem)((HydrotestCentral.QuoteItemGrid)tab.Content).QItems.SelectedItem).row_index;
+
+                main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
+                Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
+                main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+
+                grid.QItems.ItemsSource = main_vm.quote_items;
+                tab.Content = grid;
+            }
         }
 
         private void listViewItem_Selected(object sender, RoutedEventArgs e)
@@ -315,6 +369,50 @@ namespace HydrotestCentral
             Dashboard_MainGrid.Visibility = Visibility.Hidden;
             Invoice_MainGrid.Visibility = Visibility.Hidden;
             Job_MainGrid.Visibility = Visibility.Visible;
+        }
+
+        //private void btn_AddItemRow_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    TabItem tab = (TabItem)tabDynamic.SelectedItem;
+        //    //main_vm.ADDQuoteItemsByJob_And_Tab(this.jobno, tabDynamic.SelectedIndex);
+        //    //tab.Content = main_vm.quote_items;
+
+        //    //QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+        //    ////MessageBox.Show("Getting Tab Index: " + TabIndex);
+        //    //main_vm.updateQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+        //    //grid.QItems.ItemsSource = main_vm.quote_items;
+        //    //tab.Content = grid;
+
+        //    QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+        //    //MessageBox.Show("Getting Tab Index: " + TabIndex);
+        //    main_vm.ADDQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+        //    grid.QItems.ItemsSource = main_vm.quote_items;
+        //    tab.Content = grid;
+
+        //    // getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+        //}
+
+        private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem tab = (TabItem)tabDynamic.SelectedItem;
+            //main_vm.ADDQuoteItemsByJob_And_Tab(this.jobno, tabDynamic.SelectedIndex);
+            //tab.Content = main_vm.quote_items;
+
+            //QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            ////MessageBox.Show("Getting Tab Index: " + TabIndex);
+            //main_vm.updateQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+            //grid.QItems.ItemsSource = main_vm.quote_items;
+            //tab.Content = grid;
+
+            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            //MessageBox.Show("Getting Tab Index: " + TabIndex);
+            main_vm.ADDQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+            grid.QItems.ItemsSource = main_vm.quote_items;
+            tab.Content = grid;
         }
 
         public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
