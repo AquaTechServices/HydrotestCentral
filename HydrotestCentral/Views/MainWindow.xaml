@@ -96,7 +96,7 @@
                 </Ellipse.Fill>
             </Ellipse>
             <TextBlock Text="Tyler Trahan" Foreground="White" FontSize="28" FontFamily="Nirmala UI Semilight" Margin="120,-100,92,-100" VerticalAlignment="Top"/>
-            <TextBlock TextWrapping="Wrap" Margin="115,35,5,80" Foreground="#FFFBFBFB" FontSize="14" RenderTransformOrigin="0.519,0.028" Height="336"><Run Text="VI Smart Solutions applies the latest in artificial intelligence to solve complex problems in oil  gas, pipeline, agriculture, fisheries, and related industries. Our current platform, VINet is a deep-learning software technology we use to capture human intelligence to make automated decisions using complex data."/></TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="115,35,5,80" Foreground="#FFFBFBFB" FontSize="14" RenderTransformOrigin="0.519,0.028" Height="336"><Run Text="Hydrotest Pros"/></TextBlock>
 
         </StackPanel>
         <Grid x:Name="GridMain" Background="#FFFBFBFB" RenderTransformOrigin="0.5,0.5">
@@ -681,7 +681,7 @@
                                 <TextBlock x:Name="txtBlk_PONumber" Text="4849-9093" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="30"/>
                                 <Label x:Name="lbl_Salesman" Content="Rep" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_Salesman" Text="CP" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="30"/>
-                                <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" ItemsSource="{Binding quote_items}" Margin="50,10,50,0"/>
+                                <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" ItemsSource="{Binding quote_items}" Margin="50,10,50,0" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="White"/>
                             </Grid>
                             <Grid x:Name="Invoice_Footer" Grid.Row="2">
                                 <Grid.ColumnDefinitions>
