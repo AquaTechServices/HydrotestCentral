@@ -359,16 +359,16 @@ namespace HydrotestCentral
         {
             Quote_MainGrid.Visibility = Visibility.Hidden;
             Dashboard_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.Visibility = Visibility.Visible;
-            Job_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Visible;
         }
 
         private void listViewItem3_Selected(object sender, RoutedEventArgs e)
         {
             Quote_MainGrid.Visibility = Visibility.Hidden;
             Dashboard_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.Visibility = Visibility.Hidden;
-            Job_MainGrid.Visibility = Visibility.Visible;
+            Invoice_MainGrid.Visibility = Visibility.Visible;
+            Job_MainGrid.Visibility = Visibility.Hidden;
         }
 
         //private void btn_AddItemRow_MouseDown(object sender, MouseButtonEventArgs e)

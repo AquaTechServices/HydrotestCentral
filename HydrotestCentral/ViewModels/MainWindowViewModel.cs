@@ -80,6 +80,8 @@ namespace HydrotestCentral.ViewModels
             quote_items = LoadQuoteItemData();
         }
 
+        #region Quote Module Functions
+
         public ObservableCollection<QuoteHeader> LoadQuoteHeaderData()
         {
             var headers = new ObservableCollection<QuoteHeader>();
@@ -500,6 +502,67 @@ namespace HydrotestCentral.ViewModels
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
+
+        #endregion
+
+        #region Invoice Module Functions
+
+        public ObservableCollection<InvoiceHeader> LoadInvoiceHeaderData()
+        {
+            var headers = new ObservableCollection<InvoiceHeader>();
+
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT * FROM INV_HDR ORDER BY jobno, invno");
+                adapter = new SQLiteDataAdapter(cmd);
+
+                ds = new DataSet();
+
+                adapter.Fill(ds, "INV_HDR");
+
+
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    double cleaned_tax_rate = 0.00;
+
+                    if (Double.TryParse(dr[9].ToString(), out cleaned_tax_rate)) { }
+
+                    headers.Add(new InvoiceHeader
+                    {
+                        jobno = dr[0].ToString(),
+                        invno = dr[1].ToString(),
+                        invdate = dr[2].ToString(),
+                        cust = dr[3].ToString(),
+                        loc = dr[4].ToString(),
+                        salesman = dr[5].ToString(),
+                        jobtype = dr[6].ToString(),
+                        supervisor = dr[7].ToString(),
+                        po = dr[8].ToString(),
+                        tax_rate = cleaned_tax_rate,
+                        tax_descr = dr[10].ToString(),
+                    });
+                    //Trace.WriteLine(dr[0].ToString() + " created in invoice_headers");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                ds = null;
+                adapter.Dispose();
+                connection.Close();
+                connection.Dispose();
+            }
+
+            return headers;
+        }
+
+        #endregion
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

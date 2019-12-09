@@ -192,7 +192,7 @@
                         </Button>
                     </Grid>
                     <Grid x:Name="Dashboard_MainGrid">
-                        <Label Content="Dashboard" HorizontalAlignment="Left" Foreground="#FF3580BF" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <Label Content="Dashboard" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
                     </Grid>
                     <Grid x:Name="Quote_MainGrid" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
@@ -246,7 +246,7 @@
                             </Button.ToolTip>
 
                         </Button>
-                        <Label Content="Quote" HorizontalAlignment="Left" Foreground="#FF3580BF" Margin="55,5,0,0" VerticalAlignment="Top" Width="65" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <Label Content="Quote" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="65" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
                         <!--<DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" x:FieldModifier="public" CanUserDeleteRows="True" CanUserAddRows="False" AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
                                   CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" AlternatingRowBackground="Silver"/>-->
                         <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" x:FieldModifier="public" 
@@ -596,7 +596,7 @@
                             </TabControl>
                         </Grid>
                         <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,10,174,10"/>
-                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="3" Width="250" BorderThickness="0" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="Auto">
+                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="3" Width="250" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="Auto">
 
                             <Button.ToolTip>
                                 <ToolTip>
@@ -608,7 +608,7 @@
                         </Button>
                     </Grid>
                     <Grid x:Name="Invoice_MainGrid" Visibility="Hidden">
-                        <Label Content="Invoice" HorizontalAlignment="Left" Foreground="#FF3580BF" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <Label Content="Invoice" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
 
                         <Grid x:Name="Invoice_MainGrid1">
                             <Grid.RowDefinitions>
@@ -710,7 +710,7 @@
                     </Grid>
 
                     <Grid x:Name="Job_MainGrid" Visibility="Hidden">
-                        <Label Content="Job" HorizontalAlignment="Left" Foreground="#FF3580BF" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <Label Content="Job" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
                     </Grid>
 
 
