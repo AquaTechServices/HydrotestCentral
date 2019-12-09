@@ -295,7 +295,7 @@
                                         </Style>
                                     </DataGridColumn.HeaderStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="CUSTCONTACT" Foreground="Black" Binding="{Binding custcontact}" MinWidth="130" >
+                                <DataGridTextColumn Header="CUSTCONTACT" Foreground="Black" Binding="{Binding cust_contact}" MinWidth="130" >
                                     <DataGridColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="Background" Value="#FF3580BF"/>
@@ -304,7 +304,7 @@
                                         </Style>
                                     </DataGridColumn.HeaderStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="CUSTPHONE" Foreground="Black" Binding="{Binding custphone}"  MinWidth="120">
+                                <DataGridTextColumn Header="CUSTPHONE" Foreground="Black" Binding="{Binding cust_phone}"  MinWidth="120">
                                     <DataGridColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="Background" Value="#FF3580BF"/>
@@ -313,7 +313,7 @@
                                         </Style>
                                     </DataGridColumn.HeaderStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="CUSTEMAIL" Foreground="Black" Binding="{Binding custemail}"  MinWidth="150">
+                                <DataGridTextColumn Header="CUSTEMAIL" Foreground="Black" Binding="{Binding cust_email}"  MinWidth="150">
                                     <DataGridColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="Background" Value="#FF3580BF"/>
@@ -421,7 +421,7 @@
                                         </Style>
                                     </DataGridColumn.HeaderStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="ESTSTOP_DATE" Foreground="Black" Binding="{Binding est_end_date}" MinWidth="130" >
+                                <DataGridTextColumn Header="ESTSTOP_DATE" Foreground="Black" Binding="{Binding est_stop_date}" MinWidth="130" >
                                     <DataGridColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="Background" Value="#FF3580BF"/>
@@ -634,7 +634,7 @@
                                         <ColumnDefinition Width="1*"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Job #:" Foreground="SkyBlue" FontSize="18" FontWeight="Bold" Grid.Column="0"/>
-                                    <TextBox Text="{Binding jobno}" Background="SkyBlue" Grid.Column="1" Margin="5"/>
+                                    <TextBox Text="{Binding Path=Jobno, Mode=OneWay}" Background="SkyBlue" Grid.Column="1" Margin="5" />
                                     <Label Content="Invoice:" Foreground="SkyBlue" FontSize="18" FontWeight="Bold" Grid.Column="2"/>
                                     <TextBox Text="---" Background="SkyBlue" Grid.Column="3" Margin="5"/>
                                     <Button Content="Load" Foreground="SkyBlue" FontSize="18" FontWeight="Bold" Margin="5" Grid.Column="4"/>
@@ -704,7 +704,7 @@
                                 <TextBlock x:Name="txtBlk_PONumber" Text="4849-9093" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="30"/>
                                 <Label x:Name="lbl_Salesman" Content="Rep" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_Salesman" Text="CP" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="30"/>
-                                <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" ItemsSource="{Binding quote_items}" Margin="50,10,50,0" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All"/>
+                                <DataGrid x:Name="Invoice_DataGrid" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" Margin="50,10,50,0" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All"/>
                             </Grid>
                             <Grid x:Name="Invoice_Footer" Grid.Row="4">
                                 <Grid.ColumnDefinitions>

@@ -53,6 +53,11 @@ namespace HydrotestCentral.ViewModels
         public int selected_tab_index;
         public int selected_row_index;
 
+        private string _jobno;
+        private string _invno;
+
+        public string Jobno { get { return _jobno; } set { _jobno = value; OnPropertyChanged("Jobno"); } }
+        public string Invno { get { return _invno; } set { _invno = value; OnPropertyChanged("Invno"); } }
 
         public MainWindowViewModel()
         {
@@ -62,6 +67,9 @@ namespace HydrotestCentral.ViewModels
             quote_headers = LoadQuoteHeaderData();
             quote_items = new ObservableCollection<QuoteItem>();
             quote_items = LoadQuoteItemData();
+
+            Jobno = "C2019-0000";
+            Invno = "19-101";
         }
 
         #region Quote Module Functions
@@ -487,6 +495,21 @@ namespace HydrotestCentral.ViewModels
             }
         }
 
+        public void ADDQuoteItemsByJob_And_Tab(string jobno, int tab_index)
+        {
+
+            QuoteItem new_collection = new QuoteItem();
+
+            if (jobno != null)
+            {
+                new_collection.jobno = jobno;
+                new_collection.tab_index = tab_index;
+                new_collection.row_index = quote_items.OrderByDescending(x => x.row_index).FirstOrDefault().row_index + 1;
+                // row_index = null,
+            }
+            quote_items.Add(new_collection);
+        }
+
         #endregion
 
         #region Invoice Module Functions
@@ -561,20 +584,7 @@ namespace HydrotestCentral.ViewModels
         #endregion
 
 
-        public void ADDQuoteItemsByJob_And_Tab(string jobno, int tab_index)
-        {
 
-            QuoteItem new_collection = new QuoteItem();
-
-            if (jobno != null)
-            {
-                new_collection.jobno = jobno;
-                new_collection.tab_index = tab_index;
-                new_collection.row_index = quote_items.OrderByDescending(x => x.row_index).FirstOrDefault().row_index + 1;
-                // row_index = null,
-            }
-            quote_items.Add(new_collection);
-        }
 
 
 

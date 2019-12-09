@@ -124,6 +124,7 @@ namespace HydrotestCentral
                 try
                 {
                     this.jobno = temp.jobno;
+                    main_vm.Jobno = temp.jobno;
                     this.est_days = temp.days_est;
                 }
                 catch (Exception ex)
@@ -190,6 +191,7 @@ namespace HydrotestCentral
         {
             QuoteItemGrid grid = new QuoteItemGrid(jobno, tab_index, main_vm);
 
+            main_vm.Jobno = jobno;
             //MessageBox.Show("Getting Tab Index: " + TabIndex);
             main_vm.updateQuoteItemsByJob_And_Tab(jobno, tab_index);
             grid.QItems.ItemsSource = main_vm.quote_items;
@@ -369,30 +371,8 @@ namespace HydrotestCentral
             Dashboard_MainGrid.Visibility = Visibility.Hidden;
             Invoice_MainGrid.Visibility = Visibility.Visible;
             Job_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.DataContext = main_vm;
         }
-
-        //private void btn_AddItemRow_MouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    TabItem tab = (TabItem)tabDynamic.SelectedItem;
-        //    //main_vm.ADDQuoteItemsByJob_And_Tab(this.jobno, tabDynamic.SelectedIndex);
-        //    //tab.Content = main_vm.quote_items;
-
-        //    //QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-
-        //    ////MessageBox.Show("Getting Tab Index: " + TabIndex);
-        //    //main_vm.updateQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
-        //    //grid.QItems.ItemsSource = main_vm.quote_items;
-        //    //tab.Content = grid;
-
-        //    QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-
-        //    //MessageBox.Show("Getting Tab Index: " + TabIndex);
-        //    main_vm.ADDQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
-        //    grid.QItems.ItemsSource = main_vm.quote_items;
-        //    tab.Content = grid;
-
-        //    // getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
-        //}
 
         private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
         {
