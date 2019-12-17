@@ -96,6 +96,9 @@ namespace HydrotestCentral.Models
         public string jobno { get; set; }
         public double line_total { get; set; }
         public double tax_total { get; set; }
+        public string cust {get; set;}
+        public string invno {get; set;}
+        public string invdate {get; set;}
     }
 
     public class Customer

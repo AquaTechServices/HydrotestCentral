@@ -29,7 +29,7 @@ namespace HydrotestCentral
         public SQLiteDataAdapter dataAdapter;
         string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
-        public static QuoteRepository main_QuoteRepository;
+        public static Repository main_repository;
         public static MainWindowViewModel main_vm;
 
         public NewQuoteWindow(MainWindowViewModel incoming_vm)
@@ -38,7 +38,7 @@ namespace HydrotestCentral
 
             //set the QuoteHeaderDataProvider
             //main_Quoteheader = new QuoteHeaderDataProvider();
-            main_QuoteRepository = new QuoteRepository();
+            main_repository = new Repository();
             main_vm = new MainWindowViewModel();
             main_vm = incoming_vm;
             DataContext = main_vm;
@@ -111,10 +111,10 @@ namespace HydrotestCentral
             headeritem.pressure = txt_pressure.Text;
             headeritem.endclient = txt_endclient.Text;
             headeritem.supervisor = txt_supervisor.Text;
-            //headeritem.est_start_date = "NULL";
+            //headeritem.est_start_date = DateTime.Parse(txt;
             //headeritem.est_stop_date = "NULL";
             headeritem.value = 0;
-            main_QuoteRepository.AddNewHeaderItem(headeritem);
+            main_repository.addNewQuoteHeaderItem(headeritem);
             main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
             MessageBox.Show("Quote Added");
         }

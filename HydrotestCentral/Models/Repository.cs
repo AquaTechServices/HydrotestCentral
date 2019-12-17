@@ -11,11 +11,14 @@ using System.Windows;
 
 namespace HydrotestCentral.Models
 {
-    public class QuoteRepository
+    public class Repository
     {
+        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+
         public List<Models.QuoteHeader> quoteheaderRepository { get; set; }
         public List<Models.QuoteItem> quoteitemRepository { get; set; }
-        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+        public List<Models.InvoiceHeader> invoiceheaderRepository { get; set; }
+        public List<Models.InvoiceItem> invoiceitemRepository { get; set; }
 
         public static string connString {get; set; }
         SQLiteCommand cmd;
@@ -23,10 +26,12 @@ namespace HydrotestCentral.Models
 
         private SQLiteConnection connection;
 
-        public QuoteRepository()
+        public Repository()
         {
             quoteheaderRepository = GetQuoteHeaderRepo();
             quoteitemRepository = GetQuoteItemRepo();
+            invoiceheaderRepository = GetInvoiceHeaderRepo();
+            invoiceitemRepository = GetInvoiceItemRepo();
         }
 
         #region QuoteHeader
@@ -52,6 +57,7 @@ namespace HydrotestCentral.Models
                 {
                     QuoteHeader q = new QuoteHeader();
                     q.jobno = row["jobno"].ToString();
+                    //if(!string.IsNullOrEmpty(row["qt_date"].ToString())){ q.qt_date = DateTime.Parse(row["qt_date"].ToString());}
                     q.qt_date = row["qt_date"].ToString();
                     q.cust = row["cust"].ToString();
                     q.cust_contact = row["cust_contact"].ToString();
@@ -66,7 +72,9 @@ namespace HydrotestCentral.Models
                     q.pressure = row["pressure"].ToString();
                     q.endclient = row["endclient"].ToString();
                     q.supervisor = row["supervisor"].ToString();
+                    //if(!string.IsNullOrEmpty(row["est_start_date"].ToString())){ q.est_start_date = DateTime.Parse(row["est_start_date"].ToString());}
                     q.est_start_date = row["est_start_date"].ToString();
+                    //if(!string.IsNullOrEmpty(row["est_stop_date"].ToString())){ q.est_stop_date = DateTime.Parse(row["est_stop_date"].ToString());}
                     q.est_stop_date = row["est_stop_date"].ToString();
                     q.value = row["value"] is DBNull ? 0 : Convert.ToDouble(row["value"]);
 
@@ -78,7 +86,7 @@ namespace HydrotestCentral.Models
 
         }
 
-        public void AddNewHeaderItem(QuoteHeader NewquoteHeaderItem)
+        public void addNewQuoteHeaderItem(QuoteHeader NewquoteHeaderItem)
         {
             try
             {
@@ -124,12 +132,12 @@ namespace HydrotestCentral.Models
             }
         }
 
-        public void updateRecord(QuoteHeader quoteRecord)
+        public void updateQuoteHeaderRecord(QuoteHeader quoteRecord)
         {
 
         }
 
-        public void deleteRecord(QuoteHeader quoteRecord)
+        public void deleteQuoteHeaderRecord(QuoteHeader quoteRecord)
         {
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
@@ -149,7 +157,8 @@ namespace HydrotestCentral.Models
             }
         }
         
-        #endregion
+        #endregion QuoteHeader
+                
         #region QuoteItem
 
         public List<QuoteItem> GetQuoteItemRepo()
@@ -253,10 +262,6 @@ namespace HydrotestCentral.Models
             }
         }
 
-        public void updateRecord(QuoteItem quoteRecord)
-        {
-
-        }
 
         public void deleteRecord(QuoteItem quoteRecord)
         {
@@ -278,6 +283,98 @@ namespace HydrotestCentral.Models
             }
         }
 
+        #endregion QuoteItem
+
+        #region InvoiceHeader
+
+        public List<InvoiceHeader> GetInvoiceHeaderRepo()
+        {
+            List<InvoiceHeader> header_list = new List<InvoiceHeader>();
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                if (conn == null)
+                {
+                    throw new Exception("Connection String is Null. Set the value of Connection String in ->Properties-?Settings.settings");
+                }
+
+                SQLiteCommand query = new SQLiteCommand("SELECT * FROM INV_HDR", conn);
+                conn.Open();
+                SQLiteDataAdapter sqlDataAdapter = new SQLiteDataAdapter(query);
+                DataTable dt = new DataTable();
+                sqlDataAdapter.Fill(dt);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    InvoiceHeader i = new InvoiceHeader();
+                    i.jobno = row["jobno"].ToString();
+                    i.invno = row["invno"].ToString();
+                    //if(!string.IsNullOrEmpty(row["invdate"].ToString())){ i.invdate = DateTime.Parse(row["invdate"].ToString());}
+                    i.invdate = row["invdate"].ToString();
+                    i.cust = row["cust"].ToString();
+                    i.loc = row["loc"].ToString();
+                    i.salesman = row["salesman"].ToString();
+                    i.jobtype = row["job_type"].ToString();
+                    i.supervisor = row["supervisor"].ToString();
+                    i.po = row["po"].ToString();
+                    i.tax_rate = row["tax_rate"] is DBNull ? 0 : Convert.ToDouble(row["tax_rate"]);
+                    i.tax_descr = row["tax_descr"].ToString();
+
+                    header_list.Add(i);
+                }
+
+                
+            }
+
+            return header_list;
+        }
+        #endregion InvoiceHeader
+
+        #region InvoiceItem
+
+        public List<InvoiceItem> GetInvoiceItemRepo()
+        {
+            List<InvoiceItem> item_list = new List<InvoiceItem>();
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                if (conn == null)
+                {
+                    throw new Exception("Connection String is Null. Set the value of Connection String in ->Properties-?Settings.settings");
+                }
+
+                SQLiteCommand query = new SQLiteCommand("SELECT * FROM INV_ITEMS", conn);
+                conn.Open();
+                SQLiteDataAdapter sqlDataAdapter = new SQLiteDataAdapter(query);
+                DataTable dt = new DataTable();
+                sqlDataAdapter.Fill(dt);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    InvoiceItem i = new InvoiceItem();
+                    i.qty = Convert.ToInt32(row["qty"]);
+                    i.item = row["item"].ToString();
+                    i.rate = (double)row["rate"];
+                    i.descr = row["descr"].ToString();
+                    i.type = row["type"].ToString();
+                    i.grouping = Convert.ToInt32(row["grouping"]);
+                    i.taxable = Convert.ToBoolean(row["taxable"]);
+                    i.discountable = Convert.ToBoolean(row["discountable"]);
+                    i.printable = Convert.ToBoolean(row["printable"]);
+                    i.jobno = row["jobno"].ToString();
+                    i.line_total = (double)row["line_total"];
+                    i.tax_total = (double)row["tax_total"];
+                    i.cust = row["cust"].ToString();
+                    i.invno = row["invno"].ToString();
+                    i.invdate = row["invdate"].ToString();
+
+                    item_list.Add(i);
+                }
+
+                return item_list;
+            }
+        }
+       
         #endregion
     }
 }

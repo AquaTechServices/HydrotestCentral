@@ -96,9 +96,15 @@ namespace HydrotestCentral.ViewModels
                     int cleaned_days = 0;
                     double cleaned_value = 0.00;
 
+
                     if (Int32.TryParse(dr[8].ToString(), out cleaned_days)) { }
 
                     if (Double.TryParse(dr[17].ToString(), out cleaned_value)) { }
+
+                    //if(!string.IsNullOrEmpty(dr[1].ToString())){ cleaned_qt_date= DateTime.Parse(dr[1].ToString());}
+
+                    //if(!string.IsNullOrEmpty(dr[16].ToString())){ cleaned_est_start_date= DateTime.Parse(dr[16].ToString());}
+                    //if(!string.IsNullOrEmpty(dr[17].ToString())){ cleaned_est_stop_date= DateTime.Parse(dr[17].ToString());}
 
                     headers.Add(new QuoteHeader
                     {
@@ -119,7 +125,7 @@ namespace HydrotestCentral.ViewModels
                         pressure = dr[13].ToString(),
                         endclient = dr[14].ToString(),
                         supervisor = dr[15].ToString(),
-                        est_start_date = dr[16].ToString(),
+                        est_start_date = dr[16].ToString(), 
                         est_stop_date = dr[17].ToString(),
                         value = cleaned_value
                     });
@@ -534,8 +540,11 @@ namespace HydrotestCentral.ViewModels
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     double cleaned_tax_rate = 0.00;
+                    DateTime cleaned_invdate = new DateTime();
 
                     if (Double.TryParse(dr[9].ToString(), out cleaned_tax_rate)) { }
+
+                    //if (DateTime.TryParse(dr[2].ToString(), out cleaned_invdate)) { }
 
                     headers.Add(new InvoiceHeader
                     {

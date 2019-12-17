@@ -135,7 +135,7 @@
     </Compile>
     <Compile Include="Controls\TextBoxAutoComplete.cs" />
     <Compile Include="Models\Model.cs" />
-    <Compile Include="Models\QuoteRepository.cs" />
+    <Compile Include="Models\Repository.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.Designer.cs">
       <DependentUpon>MainWindowViewModel.cs</DependentUpon>
