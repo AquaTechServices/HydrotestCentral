@@ -16,10 +16,12 @@ using MahApps.Metro.Controls;
 using System.Diagnostics;
 using System.Data;
 using System.Data.SQLite;
+using System.Net.Mail;
 //using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using HydrotestCentral.ViewModels;
 using HydrotestCentral.Models;
+using QBFC13Lib;
 
 namespace HydrotestCentral
 {
@@ -39,6 +41,7 @@ namespace HydrotestCentral
         private List<TabItem> _tabItems;
         //private List<string> _tabNames;
         //private TabItem _tabAdd;
+        public string accounting_string;
 
         public static MainWindowViewModel main_vm;
         //public static QuoteHeaderDataProvider main_Quoteheader;
@@ -60,19 +63,21 @@ namespace HydrotestCentral
             tabAdd.Header = "+";
             _tabItems.Add(tabAdd);
 
-            this.AddTabItem();
+            //this.AddTabItem();
 
             // bind tab control
-            tabDynamic.DataContext = _tabItems;
+            //tabDynamic.DataContext = _tabItems;
 
-            tabDynamic.SelectedIndex = 0;
+            //tabDynamic.SelectedIndex = 0;
+            accounting_string = main_vm.accounting_String;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
         }
-
+        /*
         private TabItem AddTabItemByName(string name)
         {
             int count = _tabItems.Count;
@@ -81,7 +86,7 @@ namespace HydrotestCentral
             TabItem tab = new TabItem();
             tab.Header = string.Format(name);
             tab.Name = string.Format(name);
-            tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
+            //tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
 
             // Insert Content Here
 
@@ -108,6 +113,7 @@ namespace HydrotestCentral
             _tabItems.Insert(count - 1, tab);
             return tab;
         }
+        */
 
         private void QHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -140,6 +146,7 @@ namespace HydrotestCentral
                 }
                 else
                 {
+                    /*
                     //Change QItems based on Row
                     //main_vm.updateQuoteItemsByJob(this.jobno);
 
@@ -162,7 +169,8 @@ namespace HydrotestCentral
                     main_vm.updateQuoteItemsByJob(this.jobno);
 
                     // Update selected tab child
-                    getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+                    //getTabItemGrid((TabItem)tabDynamic.SelectedItem, tabDynamic.SelectedIndex);
+                    */
                 }
             }
         }
@@ -211,7 +219,7 @@ namespace HydrotestCentral
             main_vm.DeleteQuoteItemGrid(jobno, tab_index);
             Trace.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
         }
-
+        /*
         private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabItem tab = tabDynamic.SelectedItem as TabItem;
@@ -241,6 +249,7 @@ namespace HydrotestCentral
                 }
             }
         }
+        */
 
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -288,7 +297,7 @@ namespace HydrotestCentral
                 // MessageBox.Show("Quoted updated successfully!");
             }
         }
-
+        /*
         private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
         {
             QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
@@ -340,6 +349,7 @@ namespace HydrotestCentral
                 tab.Content = grid;
             }
         }
+        */
 
         private void listViewItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -373,7 +383,7 @@ namespace HydrotestCentral
             Job_MainGrid.Visibility = Visibility.Hidden;
             Invoice_MainGrid.DataContext = main_vm;
         }
-
+        /*
         private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
         {
             TabItem tab = (TabItem)tabDynamic.SelectedItem;
@@ -422,7 +432,7 @@ namespace HydrotestCentral
                 // Calculate tax total
 
                 cmd.Parameters.Add(new SQLiteParameter("@tax_total", tax_total));
-                */
+                
                 cmd.CommandText = string.Format("UPDATE QTE_ITEMS, SET WHERE jobno=(@jobno) AND tab_index=(@tabindex) AND row_index=(@rowindex)");
                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
                 SQLiteCommandBuilder builder = new SQLiteCommandBuilder(adapter);
@@ -436,6 +446,7 @@ namespace HydrotestCentral
                 System.Windows.MessageBox.Show(Ex.Message);
             }
         }
+        */
 
         public bool checkFilename(string sourceFolder, string filename)
         {
@@ -450,6 +461,144 @@ namespace HydrotestCentral
         {
             NewQuoteWindow NQ_Win = new NewQuoteWindow(main_vm);
             NQ_Win.Show();
+        }
+
+        private void Btn_Activate_Job(object sender, RoutedEventArgs e)
+        {
+            bool sessionBegun = false;
+            bool connectionOpen = false;
+            QBSessionManager sessionManager = null;
+
+
+            string custName = "";
+            string jobName = "";
+
+            // Get selected Row
+            if (QHeader.SelectedItem != null)
+            {
+                QuoteHeader temp = (QuoteHeader)QHeader.SelectedItem;
+                //MessageBox.Show("QHeader Selection Changed...JobNo now: " + temp.jobno);
+
+                // Get selected Row cell base on which the datagrid will be changed
+                try
+                {
+                    jobName = temp.jobno;
+                    custName = temp.cust;
+                    //MessageBox.Show(jobName + " | " + custName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+
+
+                //Check if everything is OK
+                if (jobno == null || jobno == string.Empty)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a job to add job number in Quickbooks!");
+            }
+
+            if(MessageBox.Show("Do you want to make " + jobName + " for " + custName + " an ACTIVE job?" + "\n\n-This will:\n\n\t 1) Add the job into Quickbooks\n\n\t", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                // Try to add the job into Quickbooks
+                try
+                {
+                    //MessageBox.Show("In Try Block: " + jobName + " | " + custName);
+                    // Create the session Manager object
+                    sessionManager = new QBSessionManager();
+
+                    // Create the message set request object to hold our request
+                    //Create the message set request object to hold our request
+                    IMsgSetRequest requestMsgSet = sessionManager.CreateMsgSetRequest("US", 8, 0);
+                    requestMsgSet.Attributes.OnError = ENRqOnError.roeContinue;
+
+                    //Connect to QuickBooks and begin a session
+                    //sessionManager.OpenConnection(main_vm.accounting_String, "Hydrotest Central");
+                    sessionManager.OpenConnection2("", "Hydrotest Central", ENConnectionType.ctLocalQBD);
+                    connectionOpen = true;
+                    //MessageBox.Show(accounting_string);
+                    sessionManager.BeginSession("", ENOpenMode.omDontCare);
+                    sessionBegun = true;
+
+                    ICustomerAdd customerAddRq = requestMsgSet.AppendCustomerAddRq();
+                    customerAddRq.Name.SetValue(jobName);
+                    customerAddRq.ParentRef.FullName.SetValue(custName);
+
+                    customerAddRq.JobStatus.SetValue(ENJobStatus.jsAwarded);
+
+                    //customerAddRq.JobDesc.SetValue("Job Description");
+
+                    //customerAddRq.JobStartDate.SetValue(DateTime.Parse("1/1/2020"));
+                    //customerAddRq.JobProjectedEndDate.SetValue(DateTime.Parse("1/30/2020"));
+                    //customerAddRq.JobEndDate.SetValue(DateTime.Parse("1/30/2020"));
+
+                    //Send the request and get the response from QuickBooks
+                    IMsgSetResponse responseMsgSet = sessionManager.DoRequests(requestMsgSet);
+                    IResponse response = responseMsgSet.ResponseList.GetAt(0);
+                    ICustomerRet customerRet = (ICustomerRet)response.Detail;
+
+
+                    if (customerRet.ListID.GetValue() != null)
+                    {
+                        MessageBox.Show("Job Added into Quickbooks");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
+                }
+                finally
+                {
+                    // End the session and close the connection to Quickbooks
+                    if (sessionBegun)
+                    {
+                        sessionManager.EndSession();
+                    }
+                    if (connectionOpen)
+                    {
+                        sessionManager.CloseConnection();
+                    }
+                }
+            }
+            else
+            {
+                // Do nothing
+            }
+        }
+
+        private void Btn_Email(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SmtpClient server = new SmtpClient("smtp.office365.com");
+                server.UseDefaultCredentials = false;
+                server.Port = 587;
+                server.EnableSsl = true;
+                server.Credentials = new System.Net.NetworkCredential("Tyler@hydrotestpros.com", "Hydro#6792", "aquatechhydro.com");
+                server.Timeout = 10000;
+                server.TargetName = "STARTTLS/smtp.office365.com";
+
+                MailMessage mail = new MailMessage();
+                mail.Sender = new MailAddress("Tyler@hydrotesptros.com", "Tyler Trahan");
+                mail.From = new MailAddress("Tyler@hydrotestpros.com", "Tyler Trahan");
+                mail.To.Add("tyler@hydrotestpros.com");
+                mail.Subject = "test out message sending";
+                mail.Body = "this is my message body";
+                mail.IsBodyHtml = true;
+
+
+                server.Send(mail);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void Btn_print_Click(object sender, RoutedEventArgs e)
@@ -565,7 +714,7 @@ namespace HydrotestCentral
              excelApp = null;
              GC.Collect();*/
         }
-
+        /*
         private void Btn_DeleteTab_Click(object sender, RoutedEventArgs e)
         {
             string tabName = (sender as Button).CommandParameter.ToString();
@@ -605,6 +754,7 @@ namespace HydrotestCentral
                 }
             }
         }
+        */
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
         {

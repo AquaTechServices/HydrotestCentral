@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:HydrotestCentral"
         mc:Ignorable="d"
@@ -201,11 +202,10 @@
                             <ColumnDefinition Width="0*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="169*"/>
-                            <RowDefinition Height="308*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="6*"/>
                             <!--<RowDefinition Height="2*"/>-->
-                            <RowDefinition Height="623*"/>
-                            <RowDefinition Height="139*"/>
+                            <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
                         <Button  Grid.Column="0" Foreground="White"  Click="Btn_NewQuote_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
@@ -250,12 +250,11 @@
                         <!--<DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" Margin="20,10,0,10" x:FieldModifier="public" CanUserDeleteRows="True" CanUserAddRows="False" AutoGenerateColumns="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="3" IsManipulationEnabled="True" SelectionChanged="QHeader_SelectionChanged" ColumnWidth="150" AreRowDetailsFrozen="True" IsReadOnly="false" 
                                   CurrentCellChanged="QHeader_CurrentCellChanged" CellEditEnding="QHeader_CellEditEnding" AlternatingRowBackground="Silver"/>-->
                         <DataGrid x:Name="QHeader" ItemsSource="{Binding quote_headers, UpdateSourceTrigger=PropertyChanged}" x:FieldModifier="public" 
-                          CanUserDeleteRows="True" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False"  Margin="25,0" 
+                          CanUserDeleteRows="True" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False" 
                           Grid.ColumnSpan="2" IsManipulationEnabled="True" FontSize="13"  ScrollViewer.CanContentScroll="True" 
-                          ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" 
-                          ScrollViewer.IsDeferredScrollingEnabled="True" CurrentCellChanged="QHeader_CurrentCellChanged" BorderThickness="0.5" CellEditEnding="QHeader_CellEditEnding" AreRowDetailsFrozen="True" IsReadOnly="false"  SelectionChanged="QHeader_SelectionChanged" FontWeight="Bold" Background="White" HeadersVisibility="Column" HorizontalAlignment="Stretch" Grid.Row="1" BorderBrush="#FF141415">
-
-
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          Style="{StaticResource AzureDataGrid}"
+                          CurrentCellChanged="QHeader_CurrentCellChanged" BorderThickness="0.5" CellEditEnding="QHeader_CellEditEnding" AreRowDetailsFrozen="True" IsReadOnly="false"  SelectionChanged="QHeader_SelectionChanged" FontWeight="Bold" Background="White" HeadersVisibility="Column" HorizontalAlignment="Stretch" Grid.Row="1" BorderBrush="#FF141415">
                             <DataGrid.Columns>
 
                                 <DataGridTextColumn Header="QUOTENO" Foreground="Black" Binding="{Binding quoteno }" MinWidth="100" >
@@ -442,13 +441,9 @@
 
 
                             </DataGrid.Columns>
-
-
-
                         </DataGrid>
 
-
-                        <Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="2">
+                        <!--<Grid x:Name="TabControlGrid" Grid.Row="2" Grid.ColumnSpan="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="9*"/>
@@ -466,13 +461,13 @@
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <!--<Button x:Name="btn_SaveItems" Content="Save" Grid.Row="0" BorderThickness="0" Grid.Column="0" Background="#FF3580BF" Width="80" Margin="5" MouseDown="Btn_SaveItems_Click">
+                                <Button x:Name="btn_SaveItems" Content="Save" Grid.Row="0" BorderThickness="0" Grid.Column="0" Background="#FF3580BF" Width="80" Margin="5" MouseDown="Btn_SaveItems_Click">
                                     <Button.ToolTip>
                                         <ToolTip>
                                             Save Iteam
                                         </ToolTip>
                                     </Button.ToolTip>
-                                </Button>-->
+                                </Button>
                                 <Button x:Name="btn_SaveItems" Grid.Column="0" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
                                 Width="50" Margin="61,1,0,3"
                                 Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5" Click="Btn_SaveItems_Click">
@@ -503,13 +498,13 @@
                                     </materialDesign:PackIcon>
                                 </Button>
 
-                                <!--<Button x:Name="btn_AddItemRow" Content="Add" Grid.Row="0" BorderThickness="0" Grid.Column="1" Background="#FF3580BF" Width="80" Margin="5">
+                                <Button x:Name="btn_AddItemRow" Content="Add" Grid.Row="0" BorderThickness="0" Grid.Column="1" Background="#FF3580BF" Width="80" Margin="5">
                                     <Button.ToolTip>
                                         <ToolTip>
                                             Add New Item Row
                                         </ToolTip>
                                     </Button.ToolTip>
-                                </Button>-->
+                                </Button>
                                 <Button x:Name="btn_AddItemRow" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
                                 Width="50" Margin="-15,1,0,3"
                                 Padding="0,0,0,0" Height="Auto" RenderTransformOrigin="0.5,0.5" Click="btn_AddItemRow_Click" >
@@ -541,13 +536,13 @@
                                 </Button>
 
 
-                                <!--<Button x:Name="btn_DeleteItemRow" Content="Delete" Grid.Row="0" Grid.Column="2" BorderThickness="0" Width="80" Background="#FF3580BF" Margin="5" MouseDown="Btn_DeleteItemRow_Click" >
+                                <Button x:Name="btn_DeleteItemRow" Content="Delete" Grid.Row="0" Grid.Column="2" BorderThickness="0" Width="80" Background="#FF3580BF" Margin="5" MouseDown="Btn_DeleteItemRow_Click" >
                                     <Button.ToolTip>
                                         <ToolTip>
                                             Delete Item Row
                                         </ToolTip>
                                     </Button.ToolTip>
-                                </Button>-->
+                                </Button>
                                 <Button x:Name="btn_DeleteItemRow" Grid.Column="2" Foreground="White" Click="Btn_DeleteItemRow_Click" HorizontalAlignment="Left" FontSize="40" BorderThickness="0" Background="#FF3580BF" 
                                 Width="50" Margin="-90
                                          ,1,0,3"
@@ -594,10 +589,12 @@
                                     </DataTemplate>
                                 </TabControl.Resources>
                             </TabControl>
-                        </Grid>
-                        <TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,10,174,10"/>
-                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="3" Width="250" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="Auto">
+                        </Grid>-->
 
+                        <!--<TextBox x:Name="txt_path" Text="C:\Test" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,10,174,10"/>-->
+                        <Button x:Name="btn_activateJob" Content="Make This Job Active" Grid.Column="0" Grid.Row="2" Width="350" Background="#FF3580BF" HorizontalAlignment="left" Height="60" Margin="60,20,20,20" Padding="10" Click="Btn_Activate_Job"></Button>
+                        <Button x:Name="btn_sendEmail" Content="Email Test" Grid.Column="1" Grid.Row="2" Width="350" Background="#FF3580BF" HorizontalAlignment="Left" Height="60" Margin="20" Padding="10" Click="Btn_Email"></Button>
+                        <Button x:Name="btn_print" Content="Print" Grid.Column="1" Grid.Row="2" Width="250" Background="#FF3580BF" HorizontalAlignment="left" Margin="0,21,0,27" Click="Btn_print_Click" Height="60" Padding="10" Visibility="Hidden">
                             <Button.ToolTip>
                                 <ToolTip>
                                     <TextBlock FontWeight="Bold">

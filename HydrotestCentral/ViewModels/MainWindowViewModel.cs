@@ -21,7 +21,8 @@ namespace HydrotestCentral.ViewModels
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
         DataSet ds;
-        string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+        public string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+        public string accounting_String = System.Configuration.ConfigurationManager.ConnectionStrings["accounting_String"].ConnectionString;
 
         private ObservableCollection<QuoteHeader> quote_header_data = null;
 
@@ -81,6 +82,7 @@ namespace HydrotestCentral.ViewModels
             try
             {
                 connection = new SQLiteConnection(connection_String);
+                //MessageBox.Show("Opening Database - " + connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_HDR ORDER BY jobno");

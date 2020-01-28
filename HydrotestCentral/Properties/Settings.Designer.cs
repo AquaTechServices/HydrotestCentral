@@ -25,8 +25,7 @@ namespace HydrotestCentral.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@\"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases" +
-            "\\CentralDB.db\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("@\"Data Source=.\\CentralDB.db\"")]
         public string connString {
             get {
                 return ((string)(this["connString"]));
