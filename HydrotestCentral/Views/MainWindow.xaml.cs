@@ -22,6 +22,8 @@ using System.IO;
 using HydrotestCentral.ViewModels;
 using HydrotestCentral.Models;
 using QBFC13Lib;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 
 namespace HydrotestCentral
 {
@@ -77,6 +79,41 @@ namespace HydrotestCentral
         {
 
         }
+
+        private void listViewItem_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Visible;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void listViewItem1_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Visible;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void listViewItem2_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Hidden;
+            Job_MainGrid.Visibility = Visibility.Visible;
+        }
+
+        private void listViewItem3_Selected(object sender, RoutedEventArgs e)
+        {
+            Quote_MainGrid.Visibility = Visibility.Hidden;
+            Dashboard_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.Visibility = Visibility.Visible;
+            Job_MainGrid.Visibility = Visibility.Hidden;
+            Invoice_MainGrid.DataContext = main_vm;
+            loadInvoiceScreen();
+        }
+
         /*
         private TabItem AddTabItemByName(string name)
         {
@@ -186,10 +223,12 @@ namespace HydrotestCentral
             ButtonOpenMenu.Visibility = Visibility.Visible;
             ButtonCloseMenu.Visibility = Visibility.Collapsed;
         }
+
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
+
         public void GetQuoteHeaderData()
         {
             QHeader.ItemsSource = main_vm.quote_headers;
@@ -320,7 +359,6 @@ namespace HydrotestCentral
             }
         }
 
-
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
             main_vm.UpdateHeaderItem(jobno);
@@ -395,39 +433,7 @@ namespace HydrotestCentral
         }
         */
 
-        private void listViewItem_Selected(object sender, RoutedEventArgs e)
-        {
-            Quote_MainGrid.Visibility = Visibility.Hidden;
-            Dashboard_MainGrid.Visibility = Visibility.Visible;
-            Invoice_MainGrid.Visibility = Visibility.Hidden;
-            Job_MainGrid.Visibility = Visibility.Hidden;
-        }
 
-        private void listViewItem1_Selected(object sender, RoutedEventArgs e)
-        {
-            Quote_MainGrid.Visibility = Visibility.Visible;
-            Dashboard_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.Visibility = Visibility.Hidden;
-            Job_MainGrid.Visibility = Visibility.Hidden;
-        }
-
-        private void listViewItem2_Selected(object sender, RoutedEventArgs e)
-        {
-            Quote_MainGrid.Visibility = Visibility.Hidden;
-            Dashboard_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.Visibility = Visibility.Hidden;
-            Job_MainGrid.Visibility = Visibility.Visible;
-        }
-
-        private void listViewItem3_Selected(object sender, RoutedEventArgs e)
-        {
-            Quote_MainGrid.Visibility = Visibility.Hidden;
-            Dashboard_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.Visibility = Visibility.Visible;
-            Job_MainGrid.Visibility = Visibility.Hidden;
-            Invoice_MainGrid.DataContext = main_vm;
-            loadInvoiceScreen();
-        }
         /*
         private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
         {
@@ -805,8 +811,79 @@ namespace HydrotestCentral
         {
             loadInvoiceScreen();
         }
-            
 
+        private void Btn_InvPrev(object sender, RoutedEventArgs e)
+        {
+            if (main_vm.InvnoCount > 1)
+            {
+                if(main_vm.CurrentInvIndex > 1)
+                {
+                    main_vm.CurrentInvIndex = main_vm.CurrentInvIndex - 1;
+                    main_vm.CurrentInvoiceHeader = main_vm.invoice_headers[main_vm.CurrentInvIndex];
+                    main_vm.Invno = main_vm.CurrentInvoiceHeader.invno;
+                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+                }
+            }
+        }
+
+        private void Btn_InvNext(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine("InvNext Clicked!");
+            if (main_vm.InvnoCount > 1)
+            {
+                Trace.WriteLine("InvnoCount: " + main_vm.InvnoCount.ToString());
+                if(main_vm.CurrentInvIndex < main_vm.InvnoCount)
+                {
+                    Trace.WriteLine("CurrentInvno: " + main_vm.CurrentInvIndex.ToString());
+                    main_vm.CurrentInvoiceHeader = main_vm.invoice_headers[main_vm.CurrentInvIndex];
+
+                    main_vm.CurrentInvIndex = main_vm.CurrentInvIndex + 1;
+                    main_vm.Invno = main_vm.CurrentInvoiceHeader.invno;
+                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+                }
+            }
+        }
+            
+        private void Btn_PrintInvoice(object sender, RoutedEventArgs e)
+        {
+
+            /* FIRST TEST OF PDFSharp
+                // Create the PDF Document
+                PdfDocument document = new PdfDocument();
+                // Create and empty page
+                PdfPage page = document.AddPage();
+                // Get an XGraphics object for drawing
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+                // Create a font
+                XFont font = new XFont("Verdana", 20, XFontStyle.Bold);
+                // Draw the text
+                gfx.DrawString("Hello, World!", font, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormat.Center);
+                // Save the document...
+                string filename = "C:\\Users\\SFWMD\\Desktop\\HelloWorld.pdf";
+                document.Save(filename);
+                // ...and start a viewer.
+                Process.Start(filename);
+            */
+
+            PDFCreator pd = new PDFCreator();
+
+            // Create a MigraDoc document
+            Document document = pd.CreateDocument();
+
+            //string ddl = MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToString(document);
+            MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToFile(document, "MigraDoc.mdddl");
+
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
+            renderer.Document = document;
+
+            renderer.RenderDocument();
+
+            // Save the document...
+            string filename = "C:\\Users\\SFWMD\\Desktop\\Test.pdf";
+            renderer.PdfDocument.Save(filename);
+            // ...and start a viewer.
+            Process.Start(filename);
+        }
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
         {

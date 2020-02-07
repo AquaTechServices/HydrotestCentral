@@ -74,19 +74,19 @@ namespace HydrotestCentral.ViewModels
         {
             get
             {
-                    if (inv_item_data != null)
-                    {
-                        return inv_item_data;
-                    }
-                    return null;
-             }
+                if (inv_item_data != null)
+                {
+                    return inv_item_data;
+                }
+                return null;
+            }
             set
             {
-                    if (inv_item_data != value)
-                    {
-                        inv_item_data = value;
-                        OnPropertyChanged("invoice_items");
-                    }
+                if (inv_item_data != value)
+                {
+                    inv_item_data = value;
+                    OnPropertyChanged("invoice_items");
+                }
             }
         }
         public ObservableCollection<Customer> customers { get; set; }
@@ -96,9 +96,15 @@ namespace HydrotestCentral.ViewModels
 
         private string _jobno;
         private string _invno;
+        private int _currentInvIndex;
+        private InvoiceHeader _currentInvoiceHeader;
+        private int _invnoCount;
 
         public string Jobno { get { return _jobno; } set { _jobno = value; OnPropertyChanged("Jobno"); } }
         public string Invno { get { return _invno; } set { _invno = value; OnPropertyChanged("Invno"); } }
+        public int CurrentInvIndex { get { return _currentInvIndex; } set { _currentInvIndex = value; OnPropertyChanged("CurrentInvIndex"); } }
+        public int InvnoCount { get { return _invnoCount; } set { _invnoCount = value; OnPropertyChanged("InvnoCount"); } }
+        public InvoiceHeader CurrentInvoiceHeader { get { return _currentInvoiceHeader; } set { _currentInvoiceHeader = value; OnPropertyChanged("CurrentInvoiceHeader"); } }
 
         public MainWindowViewModel()
         {
@@ -113,6 +119,8 @@ namespace HydrotestCentral.ViewModels
 
             Jobno = "";
             Invno = "";
+            CurrentInvIndex = 0;
+            InvnoCount = 0;
         }
 
         #region Quote Module Functions
@@ -723,6 +731,17 @@ namespace HydrotestCentral.ViewModels
                 connection.Close();
                 connection.Dispose();
             }
+
+            if(invoice_headers.Count > 0)
+            {
+                CurrentInvIndex = 1;
+                CurrentInvoiceHeader = invoice_headers[0];
+            }
+            else
+            {
+                CurrentInvIndex = 0;
+            }
+            InvnoCount = invoice_headers.Count;
 
             return invoice_headers;
         }
