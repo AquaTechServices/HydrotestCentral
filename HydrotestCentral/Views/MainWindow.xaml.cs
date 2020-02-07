@@ -251,6 +251,50 @@ namespace HydrotestCentral
         }
         */
 
+        public void loadInvoiceScreen()
+        {
+            if (txtBx_InvoiceJobno.Text == "" && txtBx_Invno.Text == "")
+            {
+
+            }
+            else if (txtBx_Invno.Text != main_vm.Invno)
+            {
+                //Search for and load this Invoice number typed in
+                Trace.WriteLine("New InvNo typed in: " + txtBx_Invno.Text);
+                main_vm.Invno = txtBx_Invno.Text;
+                main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+
+                //Get JobNo and set main viewmodel to correct jobno
+                if (main_vm.invoice_items != null)
+                {
+                    InvoiceItem first_invItem = main_vm.invoice_items.FirstOrDefault<InvoiceItem>();
+                    if (first_invItem != null)
+                    {
+                        main_vm.Jobno = first_invItem.jobno;
+                    }
+                }
+
+            }
+            else
+            {
+                main_vm.invoice_headers = main_vm.LoadInvoiceHeaders(txtBx_InvoiceJobno.Text);
+
+                // Need to edit if there is more than one InvNo
+                Trace.WriteLine(main_vm.invoice_headers.ToString());
+
+                InvoiceHeader first = main_vm.invoice_headers.FirstOrDefault<InvoiceHeader>();
+
+                if (first != null)
+                {
+                    Trace.WriteLine("first:" + first.jobno);
+                    main_vm.Invno = first.invno;
+                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+                }
+
+                txtBx_Invno.Text = main_vm.Invno;
+            }
+        }
+
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
             //main_Quoteheader.DeleteHeaderItem(jobno);
@@ -382,6 +426,7 @@ namespace HydrotestCentral
             Invoice_MainGrid.Visibility = Visibility.Visible;
             Job_MainGrid.Visibility = Visibility.Hidden;
             Invoice_MainGrid.DataContext = main_vm;
+            loadInvoiceScreen();
         }
         /*
         private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
@@ -758,46 +803,7 @@ namespace HydrotestCentral
 
         private void Btn_Load(object sender, RoutedEventArgs e)
         {
-            if(txtBx_InvoiceJobno.Text == "" && txtBx_Invno.Text =="")
-            {
-
-            }
-            else if (txtBx_Invno.Text != main_vm.Invno)
-            {
-                //Search for and load this Invoice number typed in
-                Trace.WriteLine("New InvNo typed in: " + txtBx_Invno.Text);
-                main_vm.Invno = txtBx_Invno.Text;
-                main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
-
-                //Get JobNo and set main viewmodel to correct jobno
-                if (main_vm.invoice_items != null)
-                {
-                    InvoiceItem first_invItem = main_vm.invoice_items.FirstOrDefault<InvoiceItem>();
-                    if (first_invItem != null)
-                    {
-                        main_vm.Jobno = first_invItem.jobno;
-                    }
-                }
-
-            }
-            else
-            {
-                main_vm.invoice_headers = main_vm.LoadInvoiceHeaders(txtBx_InvoiceJobno.Text);
-
-                // Need to edit if there is more than one InvNo
-                Trace.WriteLine(main_vm.invoice_headers.ToString());
-
-                InvoiceHeader first = main_vm.invoice_headers.FirstOrDefault<InvoiceHeader>();
-
-                if (first != null)
-                {
-                    Trace.WriteLine("first:" + first.jobno);
-                    main_vm.Invno = first.invno;
-                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
-                }
-
-                txtBx_Invno.Text = main_vm.Invno;
-            }
+            loadInvoiceScreen();
         }
             
 

@@ -646,11 +646,13 @@
                                 <TextBlock x:Name="txtBlk_custName" Text="{Binding invoice_headers[0].cust}" Grid.Row="7" Grid.Column="0" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="txtBlk_custAddress" Text="{Binding invoice_headers[0].cust_addr1}" Grid.Row="8" Grid.Column="0" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="txtBlk_custCityStateZip" Grid.Row="9" Grid.Column="0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                    <Run Text="{Binding invoice_header[0].city}"/>
-                                    <Run Text=", "/>
-                                    <Run Text="{Binding invoice_header[0].state}"/>
-                                    <Run Text=" "/>
-                                    <Run Text="{Binding invoice_header[0].zip}"/>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}, {1} {2}">
+                                            <Binding Path="invoice_headers[0].cust_city"/>
+                                            <Binding Path="invoice_headers[0].cust_state"/>
+                                            <Binding Path="invoice_headers[0].cust_zip"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
                                 </TextBlock>
 
                                 <Image x:Name="img_CompanyLogo" Source="..\Assets\hydrotestpros_logo.jpg" Grid.Column="1" Grid.Row="0" Grid.RowSpan="7"/>
