@@ -71,7 +71,7 @@ namespace HydrotestCentral.Models
             Section section = this.document.AddSection();
 
             // Put a logo in the header
-            Image image = section.Headers.Primary.AddImage("../../hydrotestpros_logo.jpg");
+            Image image = section.Headers.Primary.AddImage("../../Assets/hydrotestpros_logo.jpg");
             image.Height = "2.5cm";
             image.LockAspectRatio = true;
             image.RelativeVertical = RelativeVertical.Line;
@@ -82,7 +82,7 @@ namespace HydrotestCentral.Models
 
             // Create footer
             Paragraph paragraph = section.Footers.Primary.AddParagraph();
-            paragraph.AddText("PowerBooks Inc · Sample Street 42 · 56789 Cologne · Germany");
+            paragraph.AddText("Hydrotest Pros · 1048 Carlton Rd · Broussard, LA · 70518");
             paragraph.Format.Font.Size = 9;
             paragraph.Format.Alignment = ParagraphAlignment.Center;
 
@@ -96,7 +96,7 @@ namespace HydrotestCentral.Models
             this.addressFrame.RelativeVertical = RelativeVertical.Page;
 
             // Put sender in address frame
-            paragraph = this.addressFrame.AddParagraph("PowerBooks Inc · Sample Street 42 · 56789 Cologne");
+            paragraph = this.addressFrame.AddParagraph("Hydrotest Pros · 1048 Carlton Rd · Broussard, LA · 70518");
             paragraph.Format.Font.Name = "Times New Roman";
             paragraph.Format.Font.Size = 7;
             paragraph.Format.SpaceAfter = 3;
@@ -107,7 +107,7 @@ namespace HydrotestCentral.Models
             paragraph.Style = "Reference";
             paragraph.AddFormattedText("INVOICE", TextFormat.Bold);
             paragraph.AddTab();
-            paragraph.AddText("Cologne, ");
+            paragraph.AddText("Broussard, ");
             paragraph.AddDateField("dd.MM.yyyy");
 
             // Create the item table
@@ -253,7 +253,7 @@ namespace HydrotestCentral.Models
             row = this.table.AddRow();
             row.Cells[0].Borders.Visible = false;
             row.Cells[0].AddParagraph("Shipping and Handling");
-            row.Cells[5].AddParagraph(0.ToString("0.00") + " €");
+            row.Cells[5].AddParagraph(0.ToString("0.00") + " $");
             row.Cells[0].Format.Font.Bold = true;
             row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
             row.Cells[0].MergeRight = 4;
@@ -266,7 +266,7 @@ namespace HydrotestCentral.Models
             row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
             row.Cells[0].MergeRight = 4;
             totalExtendedPrice += 0.19 * totalExtendedPrice;
-            row.Cells[5].AddParagraph(totalExtendedPrice.ToString("0.00") + " €");
+            row.Cells[5].AddParagraph(totalExtendedPrice.ToString("0.00") + " $");
 
             // Set the borders of the specified cell range
             this.table.SetEdge(5, this.table.Rows.Count - 4, 1, 4, Edge.Box, BorderStyle.Single, 0.75);
