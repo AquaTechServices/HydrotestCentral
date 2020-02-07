@@ -12,6 +12,8 @@ using HydrotestCentral.Models;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Globalization;
 
 namespace HydrotestCentral.ViewModels
 {
@@ -25,6 +27,8 @@ namespace HydrotestCentral.ViewModels
         public string accounting_String = System.Configuration.ConfigurationManager.ConnectionStrings["accounting_String"].ConnectionString;
 
         private ObservableCollection<QuoteHeader> quote_header_data = null;
+        private ObservableCollection<InvoiceHeader> inv_header_data = null;
+        private ObservableCollection<InvoiceItem> inv_item_data = null;
 
         public ObservableCollection<QuoteHeader> quote_headers
         {
@@ -47,8 +51,44 @@ namespace HydrotestCentral.ViewModels
         }
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
-        public ObservableCollection<InvoiceHeader> invoice_headers { get; set; }
-        public ObservableCollection<InvoiceItem> invoice_items { get; set; }
+        public ObservableCollection<InvoiceHeader> invoice_headers
+        {
+            get
+            {
+                if (inv_header_data != null)
+                {
+                    return inv_header_data;
+                }
+                return null;
+            }
+            set
+            {
+                if (inv_header_data != value)
+                {
+                    inv_header_data = value;
+                    OnPropertyChanged("invoice_headers");
+                }
+            }
+        }
+        public ObservableCollection<InvoiceItem> invoice_items
+        {
+            get
+            {
+                    if (inv_item_data != null)
+                    {
+                        return inv_item_data;
+                    }
+                    return null;
+             }
+            set
+            {
+                    if (inv_item_data != value)
+                    {
+                        inv_item_data = value;
+                        OnPropertyChanged("invoice_items");
+                    }
+            }
+        }
         public ObservableCollection<Customer> customers { get; set; }
 
         public int selected_tab_index;
@@ -68,9 +108,11 @@ namespace HydrotestCentral.ViewModels
             quote_headers = LoadQuoteHeaderData();
             quote_items = new ObservableCollection<QuoteItem>();
             quote_items = LoadQuoteItemData();
+            invoice_headers = new ObservableCollection<InvoiceHeader>();
+            invoice_items = new ObservableCollection<InvoiceItem>();
 
-            Jobno = "C2019-0000";
-            Invno = "19-101";
+            Jobno = "";
+            Invno = "";
         }
 
         #region Quote Module Functions
@@ -522,45 +564,70 @@ namespace HydrotestCentral.ViewModels
 
         #region Invoice Module Functions
 
-        public ObservableCollection<InvoiceHeader> LoadInvoiceHeaderData()
+        public ObservableCollection<InvoiceItem> LoadInvoiceItemsData(string invno)
         {
-            var headers = new ObservableCollection<InvoiceHeader>();
+            var items = new ObservableCollection<InvoiceItem>();
+
+            Trace.WriteLine(invno);
 
             try
             {
                 connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
-                cmd.CommandText = string.Format("SELECT * FROM INV_HDR ORDER BY jobno, invno");
+                cmd.CommandText = string.Format("SELECT * FROM INV_ITEMS WHERE invno=\"{0}\" ORDER BY invno", invno);
                 adapter = new SQLiteDataAdapter(cmd);
 
                 ds = new DataSet();
 
-                adapter.Fill(ds, "INV_HDR");
+                adapter.Fill(ds, "INV_ITEMS");
 
 
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
-                    double cleaned_tax_rate = 0.00;
+                    int cleaned_qty = 0;
+                    int cleaned_group = 0;
+
+                    double cleaned_rate = 0.00;
+                    double cleaned_line_total = 0.00;
+                    double cleaned_tax_total = 0.00;
+
                     DateTime cleaned_invdate = new DateTime();
 
-                    if (Double.TryParse(dr[9].ToString(), out cleaned_tax_rate)) { }
+                    bool parsed_taxable = false;
+                    bool parsed_discountable = false;
+                    bool parsed_printable = false;
 
-                    //if (DateTime.TryParse(dr[2].ToString(), out cleaned_invdate)) { }
+                    if (Int32.TryParse(dr[0].ToString(), out cleaned_qty)) { }
+                    if (Int32.TryParse(dr[5].ToString(), out cleaned_group)) { }
 
-                    headers.Add(new InvoiceHeader
+                    if (Double.TryParse(dr[2].ToString(), out cleaned_rate)) { }
+                    if (Double.TryParse(dr[10].ToString(), out cleaned_line_total)) { }
+                    if (Double.TryParse(dr[11].ToString(), out cleaned_tax_total)) { }
+
+                    if (DateTime.TryParse(dr[2].ToString(), out cleaned_invdate)) { }
+
+                    if (Boolean.TryParse(dr[6].ToString(), out parsed_taxable)) { }
+                    if (Boolean.TryParse(dr[7].ToString(), out parsed_discountable)) { }
+                    if (Boolean.TryParse(dr[8].ToString(), out parsed_printable)) { }
+
+                    items.Add(new InvoiceItem
                     {
-                        jobno = dr[0].ToString(),
-                        invno = dr[1].ToString(),
-                        invdate = dr[2].ToString(),
-                        cust = dr[3].ToString(),
-                        loc = dr[4].ToString(),
-                        salesman = dr[5].ToString(),
-                        jobtype = dr[6].ToString(),
-                        supervisor = dr[7].ToString(),
-                        po = dr[8].ToString(),
-                        tax_rate = cleaned_tax_rate,
-                        tax_descr = dr[10].ToString(),
+                        qty = cleaned_qty,
+                        item = dr[1].ToString(),
+                        rate = cleaned_rate,
+                        descr = dr[3].ToString(),
+                        type = dr[4].ToString(),
+                        grouping = cleaned_group,
+                        taxable = parsed_taxable,
+                        discountable = parsed_discountable,
+                        printable = parsed_printable,
+                        jobno = dr[9].ToString(),
+                        line_total = cleaned_line_total,
+                        tax_total = cleaned_tax_total,
+                        cust = dr[12].ToString(),
+                        invno = dr[13].ToString(),
+                        invdate = dr[14].ToString()
                     });
                     //Trace.WriteLine(dr[0].ToString() + " created in invoice_headers");
                 }
@@ -577,9 +644,108 @@ namespace HydrotestCentral.ViewModels
                 connection.Dispose();
             }
 
-            return headers;
+            return items;
         }
 
+        public ObservableCollection<InvoiceHeader> LoadInvoiceHeaders(string jobno)
+        {
+            var invoice_headers = new ObservableCollection<InvoiceHeader>();
+
+            Trace.WriteLine(jobno);
+
+            try
+            {
+                connection = new SQLiteConnection(connection_String);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT * FROM INV_HDR WHERE jobno=\"{0}\"", jobno);
+                adapter = new SQLiteDataAdapter(cmd);
+
+                ds = new DataSet();
+
+                adapter.Fill(ds, "INV_HDR");
+
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    double cleaned_taxrate = 0.00;
+                    double cleaned_subtotal = 0.00;
+                    double cleaned_taxtotal = 0.00;
+                    double cleaned_invtotal = 0.00;
+
+                    DateTime cleaned_invdate = new DateTime();
+                    DateTime cleaned_duedate = new DateTime();
+
+
+                    if (Double.TryParse(dr[16].ToString(), out cleaned_taxrate)) { }
+                    if (Double.TryParse(dr[18].ToString(), out cleaned_subtotal)) { }
+                    if (Double.TryParse(dr[19].ToString(), out cleaned_taxtotal)) { }
+                    if (Double.TryParse(dr[20].ToString(), out cleaned_invtotal)) { }
+
+                    if (DateTime.TryParse(dr[2].ToString(), out cleaned_invdate)) { }
+                    if (DateTime.TryParse(dr[3].ToString(), out cleaned_duedate)) { }
+
+
+                    invoice_headers.Add(new InvoiceHeader
+                    {
+                        jobno = dr[0].ToString(),
+                        invno = dr[1].ToString(),
+                        invdate = cleaned_invdate.ToString("MM/dd/yy"),
+                        duedate = cleaned_duedate.ToString("MM/dd/yy"),
+                        terms = dr[4].ToString(),
+                        cust = dr[5].ToString(),
+                        cust_addr1 = dr[6].ToString(),
+                        cust_addr2 = dr[7].ToString(),
+                        cust_city = dr[8].ToString(),
+                        cust_state = dr[9].ToString(),
+                        cust_zip = dr[10].ToString(),
+                        loc = dr[11].ToString(),
+                        salesman = dr[12].ToString(),
+                        jobtype = dr[13].ToString(),
+                        supervisor = dr[14].ToString(),
+                        po = dr[15].ToString(),
+                        tax_rate = cleaned_taxrate,
+                        tax_descr = dr[17].ToString(),
+                        sub_total = cleaned_subtotal,
+                        tax_total = cleaned_taxtotal,
+                        inv_total = cleaned_invtotal
+                    });
+                    //Trace.WriteLine(dr[0].ToString() + " created in invoice_headers");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                ds = null;
+                adapter.Dispose();
+                connection.Close();
+                connection.Dispose();
+            }
+
+            return invoice_headers;
+        }
+        #endregion
+
+        #region Converters
+        public class DollarConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                decimal d = decimal.Parse(value.ToString());
+
+                string currency_string = string.Format("{0:C}", d);
+
+                return currency_string;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+
+                throw new NotImplementedException();
+            }
+        }
         #endregion
 
         #region INotifyPropertyChanged Members

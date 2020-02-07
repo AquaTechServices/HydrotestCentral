@@ -8,7 +8,7 @@
              x:Name="QuoteItemGridControl"
              mc:Ignorable="d">
     <DataGrid x:Name="QItems" ItemsSource="{Binding quote_items}"  VerticalAlignment="Stretch" Background="White"   CanUserAddRows="False" IsManipulationEnabled="True" Foreground="Black" GridLinesVisibility="None" FontFamily="Verdana" SelectionMode="Single" ColumnWidth="150" ClipboardCopyMode="IncludeHeader" AutoGenerateColumns="False" SelectionChanged="QItems_SelectionChanged" CellEditEnding="QItems_CellEditEnding">
-        <DataGrid.Columns>
+        <!--<DataGrid.Columns>
             <DataGridTextColumn Header="QTY" Binding="{Binding Path=qty}">
                 <DataGridColumn.HeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
@@ -18,7 +18,7 @@
                     </Style>
                 </DataGridColumn.HeaderStyle>
             </DataGridTextColumn>
-            <!--<local:DataGridComboBoxColumnWithBindingHack Header="Item" SelectedValueBinding="{Binding Items}" SelectedValuePath="Itemname" ItemsSource="{Binding Items}"/>-->
+            --><!--<local:DataGridComboBoxColumnWithBindingHack Header="Item" SelectedValueBinding="{Binding Items}" SelectedValuePath="Itemname" ItemsSource="{Binding Items}"/>--><!--
             <DataGridTextColumn Header="ITEM" Binding="{Binding Path=item, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridColumn.HeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
@@ -129,7 +129,7 @@
                     </Style>
                 </DataGridColumn.HeaderStyle>
             </DataGridTextColumn>
-        </DataGrid.Columns>
+        </DataGrid.Columns>-->
     </DataGrid>
 
 </UserControl>

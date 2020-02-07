@@ -70,8 +70,14 @@ namespace HydrotestCentral.Models
         public string jobno { get; set; }
         public string invno { get; set; }
         public string invdate { get; set; }
+        public string duedate { get; set; }
+        public string terms { get; set; }
         public string cust { get; set; }
-        public int cust_id { get; set; }
+        public string cust_addr1 { get; set; }
+        public string cust_addr2 { get; set; }
+        public string cust_city { get; set; }
+        public string cust_state { get; set; }
+        public string cust_zip { get; set; }
         public string loc { get; set; }
         public string salesman { get; set; }
         public string jobtype { get; set; }
@@ -79,6 +85,9 @@ namespace HydrotestCentral.Models
         public string po { get; set; }
         public double tax_rate { get; set; }
         public string tax_descr { get; set; }
+        public double sub_total { get; set; }
+        public double tax_total { get; set; }
+        public double inv_total { get; set; }
 
     }
 
