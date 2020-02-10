@@ -868,7 +868,7 @@ namespace HydrotestCentral
             PDFCreator pd = new PDFCreator();
 
             // Create a MigraDoc document
-            Document document = pd.CreateDocument();
+            Document document = pd.CreateDocument(main_vm.CurrentInvoiceHeader);
 
             //string ddl = MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToString(document);
             MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToFile(document, "MigraDoc.mdddl");
