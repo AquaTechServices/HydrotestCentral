@@ -3,6 +3,7 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace HydrotestCentral.Models
         public Color TableGray { get; private set; }
         public string invoice_notes { get; private set; }
 
-        public Document CreateDocument(InvoiceHeader ih)
+        public Document CreateDocument(InvoiceHeader ih, ObservableCollection<InvoiceItem> inv_items)
         {
             // Create a new MigraDoc document
             this.document = new Document();
@@ -31,7 +32,7 @@ namespace HydrotestCentral.Models
             this.document.Info.Subject = "Demonstrates how to create an invoice.";
             this.document.Info.Author = "Hydrotest Pros";
 
-            this.invoice_notes = "This is test notes";
+            this.invoice_notes = "";
 
             DefineStyles();
 
@@ -39,7 +40,7 @@ namespace HydrotestCentral.Models
 
             if(ih != null)
             {
-                FillContent(ih);
+                FillContent(ih, inv_items);
             }
             else
             {
@@ -84,19 +85,44 @@ namespace HydrotestCentral.Models
 
             // Put a logo in the header
             Image image = section.Headers.Primary.AddImage("../../Assets/hydrotestpros_logo.jpg");
-            image.Height = "3cm";
+            image.Height = "6cm";
             image.LockAspectRatio = true;
-            image.RelativeVertical = RelativeVertical.Line;
+            image.RelativeVertical = RelativeVertical.Margin;
             image.RelativeHorizontal = RelativeHorizontal.Margin;
             image.Top = ShapePosition.Top;
             image.Left = ShapePosition.Right;
-            image.WrapFormat.Style = WrapStyle.Through;
+            image.WrapFormat.Style = WrapStyle.TopBottom;
 
             // Create footer
-            Paragraph paragraph = section.Footers.Primary.AddParagraph();
-            paragraph.AddText("Hydrotest Pros · 1048 Carlton Rd, Broussard, LA · 70518");
+            Table tbl = section.Footers.Primary.AddTable();
+            tbl.BottomPadding = 1;
+            tbl.TopPadding = 1;
+            Column col = tbl.AddColumn();
+            col.Format.Alignment = ParagraphAlignment.Left;
+            col = tbl.AddColumn();
+            col.Format.Alignment = ParagraphAlignment.Left;
+            Row row = tbl.AddRow();
+            row.Cells[0].AddParagraph("PLEASE REMIT TO:");
+            row.Cells[0].Column.Width = 150;
+            row.Cells[1].Column.Width = 300;
+            row.Cells[1].MergeDown = 3;
+            row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
+            Paragraph paragraph = row.Cells[1].AddParagraph();
             paragraph.Format.Font.Size = 10;
+            paragraph.AddFormattedText("Past due balances subject to 1.5% finance charge per month", TextFormat.Italic);
             paragraph.Format.Alignment = ParagraphAlignment.Center;
+            Row row2 = tbl.AddRow();
+            row2.Cells[0].AddParagraph("Hydrotest Pros");
+            Row row3 = tbl.AddRow();
+            row3.Cells[0].AddParagraph("1048 Carlton Rd");
+            Row row4 = tbl.AddRow();
+            row4.Cells[0].AddParagraph("Broussard, LA 70518");
+
+
+            //Paragraph paragraph = section.Footers.Primary.AddParagraph();
+            //paragraph.Format.Font.Size = 10;
+            //paragraph.AddFormattedText("Past due balances subject to 1.5% finance charge per month", TextFormat.Italic);
+            //paragraph.Format.Alignment = ParagraphAlignment.Center;
             
             // Create the text frame for the address
             this.addressFrame = section.AddTextFrame();
@@ -104,44 +130,55 @@ namespace HydrotestCentral.Models
             this.addressFrame.Width = "7.0cm";
             this.addressFrame.Left = ShapePosition.Left;
             this.addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.addressFrame.Top = "1.0cm";
+            this.addressFrame.RelativeVertical = RelativeVertical.Page;
+            this.addressFrame.Top = "2.0cm";
 
             // Put sender in address frame
-            paragraph = this.addressFrame.AddParagraph("Hydrotest Pros · 1048 Carlton Rd · Broussard, LA · 70518");
+            paragraph = this.addressFrame.AddParagraph("Hydrotest Pros");
             paragraph.Format.Font.Name = "Times New Roman";
-            paragraph.Format.Font.Size = 8;
+            paragraph.Format.Font.Size = 10;
+            paragraph.Format.SpaceAfter = 3;
+            paragraph = this.addressFrame.AddParagraph("1048 Carlton Rd");
+            paragraph.Format.Font.Name = "Times New Roman";
+            paragraph.Format.Font.Size = 10;
+            paragraph.Format.SpaceAfter = 3;
+            paragraph = this.addressFrame.AddParagraph("Broussard, LA · 70518");
+            paragraph.Format.Font.Name = "Times New Roman";
+            paragraph.Format.Font.Size = 10;
             paragraph.Format.SpaceAfter = 3;
 
             paragraph = this.addressFrame.AddParagraph("AR@hydrotestpros.com");
             paragraph.Format.Font.Name = "Times New Roman";
-            paragraph.Format.Font.Size = 8;
+            paragraph.Format.Font.Size = 10;
             paragraph.Format.SpaceAfter = 3;
 
             paragraph = this.addressFrame.AddParagraph("Phone # 337-999-1001 · Fax # 337-999-1002");
             paragraph.Format.Font.Name = "Times New Roman";
-            paragraph.Format.Font.Size = 8;
-            paragraph.Format.SpaceAfter = 6;
+            paragraph.Format.Font.Size = 10;
+            paragraph.Format.SpaceAfter = 3;
 
             paragraph.AddLineBreak();
 
             // Create the text frame for the invoice info
             this.invoiceInfoFrame = section.AddTextFrame();
             this.invoiceInfoFrame.Width = "4.0 cm";
-            this.invoiceInfoFrame.RelativeVertical = RelativeVertical.Line;
+            this.invoiceInfoFrame.RelativeVertical = RelativeVertical.Margin;
             this.invoiceInfoFrame.RelativeHorizontal = RelativeHorizontal.Column;
             this.invoiceInfoFrame.Top = ShapePosition.Top;
             this.invoiceInfoFrame.Left = ShapePosition.Right;
+            this.invoiceInfoFrame.Top = "4.0 cm";
+
 
             // Add the print date field
             paragraph = section.AddParagraph();
-            paragraph.Format.SpaceBefore = "1cm";
+            paragraph.Format.SpaceBefore = "7.0 cm";
             paragraph.Style = "Reference";
             paragraph.AddFormattedText("INVOICE", TextFormat.Bold);
             //paragraph.AddTab();
             //paragraph.AddText("Broussard, ");
             //paragraph.AddDateField("dd/MM/yyyy");
 
-            float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
+            //float sectionWidth = section.PageSetup.PageWidth - section.PageSetup.LeftMargin - section.PageSetup.RightMargin;
 
 
             // Create the item table
@@ -154,7 +191,7 @@ namespace HydrotestCentral.Models
             this.table.Rows.LeftIndent = 0;
 
             // Before you can add a row, you must define the columns
-            Column column = this.table.AddColumn("1cm");
+            Column column = this.table.AddColumn();
             column.Format.Alignment = ParagraphAlignment.Center;
 
             column = this.table.AddColumn();
@@ -173,7 +210,7 @@ namespace HydrotestCentral.Models
             column.Format.Alignment = ParagraphAlignment.Right;
 
             // Create the header of the table
-            Row row = table.AddRow();
+            row = table.AddRow();
             row.HeadingFormat = true;
             row.Format.Alignment = ParagraphAlignment.Center;
             row.Format.Font.Bold = true;
@@ -184,50 +221,57 @@ namespace HydrotestCentral.Models
             row.Cells[0].VerticalAlignment = VerticalAlignment.Bottom;
             row.Cells[0].MergeDown = 1;
             row.Cells[0].Column.Width = 60;
-            row.Cells[1].AddParagraph("Services/Equipment/Header");
+            row.Cells[1].AddParagraph("");
             row.Cells[1].Format.Alignment = ParagraphAlignment.Left;
             row.Cells[1].MergeRight = 3;
             row.Cells[5].AddParagraph("Extended Price");
             row.Cells[5].Format.Alignment = ParagraphAlignment.Left;
             row.Cells[5].VerticalAlignment = VerticalAlignment.Bottom;
             row.Cells[5].MergeDown = 1;
-            row.Cells[5].Column.Width = 100;
+            row.Cells[5].Column.Width = 75;
 
             row = table.AddRow();
             row.HeadingFormat = true;
             row.Format.Alignment = ParagraphAlignment.Center;
             row.Format.Font.Bold = true;
             row.Shading.Color = TableBlue;
-            row.Cells[1].AddParagraph("Quantity");
+            row.Cells[1].AddParagraph("Qty");
             row.Cells[1].Format.Alignment = ParagraphAlignment.Left;
-            row.Cells[1].Column.Width = 60;
+            row.Cells[1].Column.Width = 30;
             row.Cells[2].AddParagraph("Description");
             row.Cells[2].Format.Alignment = ParagraphAlignment.Left;
-            row.Cells[2].Column.Width = 120;
+            row.Cells[2].Column.Width = 225;
             row.Cells[3].AddParagraph("Price Each");
             row.Cells[3].Format.Alignment = ParagraphAlignment.Left;
             row.Cells[3].Column.Width = 60;
-            row.Cells[4].AddParagraph("Taxable");
+            row.Cells[4].AddParagraph("Taxed");
             row.Cells[4].Format.Alignment = ParagraphAlignment.Left;
-            row.Cells[4].Column.Width = 60;
+            row.Cells[4].Column.Width = 30;
 
             this.table.SetEdge(0, 0, 6, 2, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
         }
 
-        void FillContent(InvoiceHeader ih)
+        void FillContent(InvoiceHeader ih, ObservableCollection<InvoiceItem> inv_items)
         {
             // Fill address in address text frame
             //XPathNavigator item = SelectItem("/invoice/to");
             Paragraph paragraph = this.addressFrame.AddParagraph();
+            paragraph.Format.SpaceBefore = "2 cm";
+            paragraph.AddText("Bill To:");
+            paragraph.AddLineBreak();
+            paragraph.AddTab();
             paragraph.AddText(ih.cust);
             paragraph.AddLineBreak();
+            paragraph.AddTab();
             paragraph.AddText(ih.cust_addr1);
             paragraph.AddLineBreak();
             if(ih.cust_addr2!="")
             {
+                paragraph.AddTab();
                 paragraph.AddText(ih.cust_addr2);
                 paragraph.AddLineBreak();
             }
+            paragraph.AddTab();
             paragraph.AddText(ih.cust_city + ", " + ih.cust_state + " " + ih.cust_zip);
 
             Table table = this.invoiceInfoFrame.AddTable();
@@ -249,10 +293,61 @@ namespace HydrotestCentral.Models
             Row row4 = table.AddRow();
             row4.Cells[0].AddParagraph("Due Date: ");
             row4.Cells[1].AddParagraph(ih.duedate);
-
+            Row row5 = table.AddRow();
+            row4.Cells[0].AddParagraph("PO: ");
+            row4.Cells[1].AddParagraph(ih.po);
+            Row row6 = table.AddRow();
+            row4.Cells[0].AddParagraph("Rep: ");
+            row4.Cells[1].AddParagraph(ih.salesman);
+            Row row7 = table.AddRow();
+            row4.Cells[0].AddParagraph("Job #: ");
+            row4.Cells[1].AddParagraph(ih.jobno);
 
             // Iterate the invoice items
-            double totalExtendedPrice = 0;
+            foreach(InvoiceItem item in inv_items)
+            {
+                    string name = item.item;
+                    double quantity = 0.00;
+                    quantity = item.qty;
+                    string descr = item.descr;
+                    descr = item.descr;
+                    double price = 0.00;
+                    price = item.rate;
+                    string taxable = "";
+                    double total = 0.00;
+                    total = item.line_total;
+
+                    if(item.taxable){ taxable = "Yes"; } else { taxable = "No"; }
+
+                    // Each item fills two rows
+                    Row itemrow1 = this.table.AddRow();
+                    Row itemrow2 = this.table.AddRow();
+                    itemrow1.TopPadding = 1.5;
+                    itemrow1.Cells[0].Shading.Color = TableGray;
+                    itemrow1.Cells[0].VerticalAlignment = VerticalAlignment.Center;
+                    itemrow1.Cells[0].MergeDown = 1;
+                    itemrow1.Cells[1].Format.Alignment = ParagraphAlignment.Left;
+                    itemrow1.Cells[1].MergeRight = 3;
+                    itemrow1.Cells[5].Shading.Color = TableGray;
+                    itemrow1.Cells[5].MergeDown = 1;
+
+                    itemrow1.Cells[0].AddParagraph(name);
+                    paragraph = itemrow1.Cells[1].AddParagraph();
+                    //paragraph.AddFormattedText("title", TextFormat.Bold);
+                    //paragraph.AddFormattedText(" by ", TextFormat.Italic);
+                    //paragraph.AddText(name);
+                    itemrow2.Cells[1].AddParagraph(quantity.ToString());
+                    itemrow2.Cells[2].AddParagraph(descr);
+                    itemrow2.Cells[3].AddParagraph("$ " + price.ToString("0.00"));
+                    itemrow2.Cells[4].AddParagraph(taxable.ToString());
+                    itemrow2.Cells[5].AddParagraph("$ " + total.ToString("0.00"));
+                    //double extendedPrice = quantity * price;
+                    //extendedPrice = extendedPrice * (100 - discount) / 100;
+                    itemrow1.Cells[5].AddParagraph("$ "+ total.ToString("0.00"));
+                    itemrow1.Cells[5].VerticalAlignment = VerticalAlignment.Bottom;
+
+                this.table.SetEdge(0, this.table.Rows.Count - 2, 6, 2, Edge.Box, BorderStyle.Single, 0.75);
+            }
             //XPathNodeIterator iter = this.navigator.Select("/invoice/items/*");
             /*while (iter.MoveNext())
             {

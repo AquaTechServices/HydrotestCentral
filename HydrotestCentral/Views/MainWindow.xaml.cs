@@ -563,7 +563,6 @@ namespace HydrotestCentral
                     // Create the session Manager object
                     sessionManager = new QBSessionManager();
 
-                    // Create the message set request object to hold our request
                     //Create the message set request object to hold our request
                     IMsgSetRequest requestMsgSet = sessionManager.CreateMsgSetRequest("US", 8, 0);
                     requestMsgSet.Attributes.OnError = ENRqOnError.roeContinue;
@@ -583,7 +582,6 @@ namespace HydrotestCentral
                     customerAddRq.JobStatus.SetValue(ENJobStatus.jsAwarded);
 
                     //customerAddRq.JobDesc.SetValue("Job Description");
-
                     //customerAddRq.JobStartDate.SetValue(DateTime.Parse("1/1/2020"));
                     //customerAddRq.JobProjectedEndDate.SetValue(DateTime.Parse("1/30/2020"));
                     //customerAddRq.JobEndDate.SetValue(DateTime.Parse("1/30/2020"));
@@ -620,6 +618,384 @@ namespace HydrotestCentral
             else
             {
                 // Do nothing
+            }
+        }
+
+        private void Btn_AddInvoiceToQB(object sender, RoutedEventArgs e)
+        {
+            bool sessionBegun = false;
+            bool connectionOpen = false;
+            QBSessionManager sessionManager = null;
+
+            Trace.WriteLine("Add Invoice func ran");
+
+            try
+            {
+                // Create the session Manager object
+                sessionManager = new QBSessionManager();
+                //sessionManager.OpenConnection(main_vm.accounting_String, "Hydrotest Central");
+                sessionManager.OpenConnection2("", "Hydrotest Central", ENConnectionType.ctLocalQBD);
+                connectionOpen = true;
+                //MessageBox.Show(accounting_string);
+                sessionManager.BeginSession("", ENOpenMode.omDontCare);
+                sessionBegun = true;
+
+                //Create the message set request object to hold our request
+                IMsgSetRequest requestMsgSet = sessionManager.CreateMsgSetRequest("US", 8, 0);
+                requestMsgSet.Attributes.OnError = ENRqOnError.roeContinue;
+
+                IMsgSetResponse responseMsgSet = null;
+
+                //responseMsgSet = sessionManager.GetErrorRecoveryStatus();
+
+                // ERROR RECOVERY: 
+                // All steps are described in QBFC Developers Guide, on pg 41
+                // under section titled "Automated Error Recovery"
+
+                // (1) Set the error recovery ID using ErrorRecoveryID function
+                //		Value must be in GUID format
+                //	You could use c:\Program Files\Microsoft Visual Studio\Common\Tools\GuidGen.exe 
+                //	to create a GUID for your unique ID
+                string errecid = "{DB6385F9-9122-4F5B-84BB-E925D9C1C232}";
+                sessionManager.ErrorRecoveryID.SetValue(errecid);
+
+                // (2) Set EnableErrorRecovery to true to enable error recovery
+                sessionManager.EnableErrorRecovery = true;
+
+
+                // (3) Set SaveAllMsgSetRequestInfo to true so the entire contents of the MsgSetRequest
+                //		will be saved to disk. If SaveAllMsgSetRequestInfo is false (default), only the 
+                //		newMessageSetID will be saved. 
+                sessionManager.SaveAllMsgSetRequestInfo = true;
+
+                // (4) Use IsErrorRecoveryInfo to check whether an unprocessed response exists. 
+                //		If IsErrorRecoveryInfo is true:
+
+                if (sessionManager.IsErrorRecoveryInfo())
+                {
+                    Trace.WriteLine("Error Recovery Processed");
+                    //string reqXML;
+                    //string resXML;
+                    IMsgSetRequest reqMsgSet = null;
+                    IMsgSetResponse resMsgSet = null;
+
+                    // a. Get the response status, using GetErrorRecoveryStatus
+                    resMsgSet = sessionManager.GetErrorRecoveryStatus();
+                    // resXML = resMsgSet.ToXMLString();
+                    // MessageBox.Show(resXML);
+
+                    if (resMsgSet.Attributes.MessageSetStatusCode.Equals("600"))
+                    {
+                        // This case may occur when a transaction has failed after QB processed 
+                        // the request but client app didn't get the response and started with 
+                        // another company file.
+                        MessageBox.Show("The oldMessageSetID does not match any stored IDs, and no newMessageSetID is provided.");
+                    }
+                    else if (resMsgSet.Attributes.MessageSetStatusCode.Equals("9001"))
+                    {
+                        MessageBox.Show("Invalid checksum. The newMessageSetID specified, matches the currently stored ID, but checksum fails.");
+                    }
+                    else if (resMsgSet.Attributes.MessageSetStatusCode.Equals("9002"))
+                    {
+                        // Response was not successfully stored or stored properly
+                        MessageBox.Show("No stored response was found.");
+                    }
+                    // 9003 = Not used
+                    else if (resMsgSet.Attributes.MessageSetStatusCode.Equals("9004"))
+                    {
+                        // MessageSetID is set with a string of size > 24 char
+                        MessageBox.Show("Invalid MessageSetID, greater than 24 character was given.");
+                    }
+                    else if (resMsgSet.Attributes.MessageSetStatusCode.Equals("9005"))
+                    {
+                        MessageBox.Show("Unable to store response.");
+                    }
+                    else
+                    {
+                        IResponse res = resMsgSet.ResponseList.GetAt(0);
+                        int sCode = res.StatusCode;
+                        //string sMessage = res.StatusMessage;
+                        //string sSeverity = res.StatusSeverity;
+                        //MessageBox.Show("StatusCode = " + sCode + "\n" + "StatusMessage = " + sMessage + "\n" + "StatusSeverity = " + sSeverity);
+
+                        if (sCode == 0)
+                        {
+                            MessageBox.Show("Last request was processed and Invoice was added successfully!");
+                        }
+                        else if (sCode > 0)
+                        {
+                            MessageBox.Show("There was a warning but last request was processed successfully!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("It seems that there was an error in processing last request");
+                            // b. Get the saved request, using GetSavedMsgSetRequest
+                            reqMsgSet = sessionManager.GetSavedMsgSetRequest();
+                            //reqXML = reqMsgSet.ToXMLString();
+                            //MessageBox.Show(reqXML);
+
+                            // c. Process the response, possibly using the saved request
+                            resMsgSet = sessionManager.DoRequests(reqMsgSet);
+                            IResponse resp = resMsgSet.ResponseList.GetAt(0);
+                            int statCode = resp.StatusCode;
+                            if (statCode == 0)
+                            {
+                                string resStr = null;
+                                IInvoiceRet invRet = resp.Detail as IInvoiceRet;
+                                resStr = resStr + "Following invoice has been successfully submitted to QuickBooks:\n\n\n";
+                                if (invRet.TxnNumber != null)
+                                    resStr = resStr + "Txn Number = " + Convert.ToString(invRet.TxnNumber.GetValue()) + "\n";
+                            } // if (statusCode == 0)
+                        } // else (sCode)
+                    } // else (MessageSetStatusCode)
+
+                    // d. Clear the response status, using ClearErrorRecovery
+                    sessionManager.ClearErrorRecovery();
+                    MessageBox.Show("Proceeding with current transaction.");
+                }
+
+                // Add the request to the message set request object
+                IInvoiceAdd invoiceAdd = requestMsgSet.AppendInvoiceAddRq();
+
+                // ---Set the IInvoiceAdd fields---
+
+                // Customer:Job
+                string customer = "Hydrotest Pros:C2020-0004";
+                if (!customer.Equals(""))
+                {
+                    invoiceAdd.CustomerRef.FullName.SetValue(customer);
+                }
+
+                // Invoice Date
+                string invoiceDate = "1/1/2020";
+                if (!invoiceDate.Equals(""))
+                {
+                    invoiceAdd.TxnDate.SetValue(Convert.ToDateTime(invoiceDate));
+                }
+
+                // Invoice Number
+                string invoiceNumber = "INV555";
+                if (!invoiceNumber.Equals(""))
+                {
+                    invoiceAdd.RefNumber.SetValue(invoiceNumber);
+                }
+
+                // Bill Address
+                string bAddr1 = "Hydrotest Pros";
+                string bAddr2 = "123 Acme Dr";
+                string bAddr3 = "";
+                string bAddr4 = "";
+                string bCity = "Broussard";
+                string bState = "LA";
+                string bPostal = "70518";
+                string bCountry = "USA";
+                invoiceAdd.BillAddress.Addr1.SetValue(bAddr1);
+                invoiceAdd.BillAddress.Addr2.SetValue(bAddr2);
+                invoiceAdd.BillAddress.Addr3.SetValue(bAddr3);
+                invoiceAdd.BillAddress.Addr4.SetValue(bAddr4);
+                invoiceAdd.BillAddress.City.SetValue(bCity);
+                invoiceAdd.BillAddress.State.SetValue(bState);
+                invoiceAdd.BillAddress.PostalCode.SetValue(bPostal);
+                invoiceAdd.BillAddress.Country.SetValue(bCountry);
+
+                // P.O. Number
+                string poNumber = "PO555";
+                if (!poNumber.Equals(""))
+                {
+                    invoiceAdd.PONumber.SetValue(poNumber);
+                }
+
+                // Terms
+                string terms = "NET 30";
+                if (terms.IndexOf("Please select one from list") >= 0)
+                {
+                    terms = "";
+                }
+                if (!terms.Equals(""))
+                {
+                    invoiceAdd.TermsRef.FullName.SetValue(terms);
+                }
+
+                // Due Date
+                string dueDate = "2/1/2020";
+                if (!dueDate.Equals(""))
+                {
+                    invoiceAdd.DueDate.SetValue(Convert.ToDateTime(dueDate));
+                }
+
+                // Customer Message
+                //string customerMsg = "Customer Message";
+                //if (!customerMsg.Equals(""))
+                //{
+                //    invoiceAdd.CustomerMsgRef.FullName.SetValue(customerMsg);
+                //}
+
+                // Set the values for the invoice line (main_vm.invoice_items.Count)
+                for (int i=0; i<1; i++)
+                {
+                    // Create the line item for the invoice 
+                    int c = 6;
+                    if(c == 6)  // full row
+                    {
+                        string item = "Service";
+                        string desc = "Service Item";
+                        string rate = "100.00";
+                        string qty = "1";
+                        string amount = "100.00";
+                        //string taxable = "0";
+
+                        if(!item.Equals("") || !desc.Equals(""))
+                        {
+                            IInvoiceLineAdd invoiceLineAdd = invoiceAdd.ORInvoiceLineAddList.Append().InvoiceLineAdd;
+
+                            invoiceLineAdd.ItemRef.FullName.SetValue(item);
+                            invoiceLineAdd.Desc.SetValue(desc);
+                            invoiceLineAdd.ORRatePriceLevel.Rate.SetValue(Convert.ToDouble(rate));
+                            invoiceLineAdd.Quantity.SetValue(Convert.ToDouble(qty));
+                            invoiceLineAdd.Amount.SetValue(Convert.ToDouble(amount));
+
+                            // Currently IsTaxable is not supported in QBD - QuickBooks Desktop Edition
+                            /*
+                            if (taxable.ToUpper().Equals("Y") || taxable.ToUpper().Equals("N"))
+                            {
+                                bool isTaxable = false;
+                                if (taxable.ToUpper().Equals("Y")) isTaxable=true;
+                                    invoiceLineAdd.IsTaxable.SetValue(isTaxable);
+                            }
+                            */
+                        }
+                    }
+                }
+
+                // If all inputs are in, perform the request and obtain a response from QuickBooks
+                if (true)
+                {
+                    responseMsgSet = sessionManager.DoRequests(requestMsgSet);
+                    //MessageBox.Show(responseMsgSet.ToString());
+
+                    // Uncomment the following to view and save the request and response XML
+                    string requestXML = requestMsgSet.ToXMLString();
+                    MessageBox.Show(requestXML);
+                    //SaveXML(requestXML);
+                    // string responseXML = responseSet.ToXMLString();
+                    // MessageBox.Show(responseXML);
+                    // SaveXML(responseXML);
+
+                    IResponse response = responseMsgSet.ResponseList.GetAt(0);
+                    int statusCode = response.StatusCode;
+                     string statusMessage = response.StatusMessage;
+                     string statusSeverity = response.StatusSeverity;
+                     MessageBox.Show("Status:\nCode = " + statusCode + "\nMessage = " + statusMessage + "\nSeverity = " + statusSeverity);
+
+                    if (statusCode == 0)
+                    {
+                        string resString = null;
+                        IInvoiceRet invoiceRet = response.Detail as IInvoiceRet;
+                        resString = resString + "Following invoice has been successfully submitted to QuickBooks:\n\n\n";
+                        if (invoiceRet.TimeCreated != null)
+                            resString = resString + "Time Created = " + Convert.ToString(invoiceRet.TimeCreated.GetValue()) + "\n";
+                        if (invoiceRet.TxnNumber != null)
+                            resString = resString + "Txn Number = " + Convert.ToString(invoiceRet.TxnNumber.GetValue()) + "\n";
+                        if (invoiceRet.TxnDate != null)
+                            resString = resString + "Txn Date = " + Convert.ToString(invoiceRet.TxnDate.GetValue()) + "\n";
+                        if (invoiceRet.RefNumber != null)
+                            resString = resString + "Reference Number = " + invoiceRet.RefNumber.GetValue() + "\n";
+                        if (invoiceRet.CustomerRef.FullName != null)
+                            resString = resString + "Customer FullName = " + invoiceRet.CustomerRef.FullName.GetValue() + "\n";
+                        resString = resString + "\nBilling Address:" + "\n";
+                        if (invoiceRet.BillAddress.Addr1 != null)
+                            resString = resString + "Addr1 = " + invoiceRet.BillAddress.Addr1.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.Addr2 != null)
+                            resString = resString + "Addr2 = " + invoiceRet.BillAddress.Addr2.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.Addr3 != null)
+                            resString = resString + "Addr3 = " + invoiceRet.BillAddress.Addr3.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.Addr4 != null)
+                            resString = resString + "Addr4 = " + invoiceRet.BillAddress.Addr4.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.City != null)
+                            resString = resString + "City = " + invoiceRet.BillAddress.City.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.State != null)
+                            resString = resString + "State = " + invoiceRet.BillAddress.State.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.PostalCode != null)
+                            resString = resString + "Postal Code = " + invoiceRet.BillAddress.PostalCode.GetValue() + "\n";
+                        if (invoiceRet.BillAddress.Country != null)
+                            resString = resString + "Country = " + invoiceRet.BillAddress.Country.GetValue() + "\n";
+                        if (invoiceRet.PONumber != null)
+                            resString = resString + "\nPO Number = " + invoiceRet.PONumber.GetValue() + "\n";
+                        if (invoiceRet.TermsRef.FullName != null)
+                            resString = resString + "Terms = " + invoiceRet.TermsRef.FullName.GetValue() + "\n";
+                        if (invoiceRet.DueDate != null)
+                            resString = resString + "Due Date = " + Convert.ToString(invoiceRet.DueDate.GetValue()) + "\n";
+                        if (invoiceRet.SalesTaxTotal != null)
+                            resString = resString + "Sales Tax = " + Convert.ToString(invoiceRet.SalesTaxTotal.GetValue()) + "\n";
+                        resString = resString + "\nInvoice Line Items:" + "\n";
+                        IORInvoiceLineRetList orInvoiceLineRetList = invoiceRet.ORInvoiceLineRetList;
+                        string fullname = "<empty>";
+                        string desc = "<empty>";
+                        string rate = "<empty>";
+                        string quantity = "<empty>";
+                        string amount = "<empty>";
+                        for (int i = 0; i <= orInvoiceLineRetList.Count - 1; i++)
+                        {
+                            if (invoiceRet.ORInvoiceLineRetList.GetAt(i).ortype == ENORInvoiceLineRet.orilrInvoiceLineRet)
+                            {
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.ItemRef.FullName != null)
+                                    fullname = invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.ItemRef.FullName.GetValue();
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Desc != null)
+                                    desc = invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Desc.GetValue();
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.ORRate.Rate != null)
+                                    rate = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.ORRate.Rate.GetValue());
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Quantity != null)
+                                    quantity = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Quantity.GetValue());
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Amount != null)
+                                    amount = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineRet.Amount.GetValue());
+                            }
+                            else
+                            {
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.ItemGroupRef.FullName != null)
+                                    fullname = invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.ItemGroupRef.FullName.GetValue();
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.Desc != null)
+                                    desc = invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.Desc.GetValue();
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.InvoiceLineRetList.GetAt(i).ORRate.Rate != null)
+                                    rate = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.InvoiceLineRetList.GetAt(i).ORRate.Rate.GetValue());
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.Quantity != null)
+                                    quantity = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.Quantity.GetValue());
+                                if (invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.TotalAmount != null)
+                                    amount = Convert.ToString(invoiceRet.ORInvoiceLineRetList.GetAt(i).InvoiceLineGroupRet.TotalAmount.GetValue());
+                            }
+                            resString = resString + "Fullname: " + fullname + "\n";
+                            resString = resString + "Description: " + desc + "\n";
+                            resString = resString + "Rate: " + rate + "\n";
+                            resString = resString + "Quantity: " + quantity + "\n";
+                            resString = resString + "Amount: " + amount + "\n\n";
+                        }
+                        MessageBox.Show(resString);
+                    } // if statusCode is zero
+
+
+
+
+                    
+                } // if all input is in
+                else
+                {
+                    MessageBox.Show("One or more required input is missing.\n\nPlease check and make sure all of the input have been entered.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+            finally
+            {
+                // End the session and close the connection to Quickbooks
+                if (sessionBegun)
+                {
+                    sessionManager.EndSession();
+                }
+                if (connectionOpen)
+                {
+                    sessionManager.CloseConnection();
+                }
             }
         }
 
@@ -868,7 +1244,7 @@ namespace HydrotestCentral
             PDFCreator pd = new PDFCreator();
 
             // Create a MigraDoc document
-            Document document = pd.CreateDocument(main_vm.CurrentInvoiceHeader);
+            Document document = pd.CreateDocument(main_vm.CurrentInvoiceHeader, main_vm.invoice_items);
 
             //string ddl = MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToString(document);
             MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToFile(document, "MigraDoc.mdddl");

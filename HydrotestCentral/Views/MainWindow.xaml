@@ -623,7 +623,7 @@
                                     <Button Content="Load" Foreground="SkyBlue" FontSize="18" FontWeight="Bold" Grid.Column="4" Grid.Row="0" Click="Btn_Load"/>
                                     <Button Content="Print" Foreground="Black" Background="AntiqueWhite" FontSize="12" FontWeight="SemiBold" Grid.Column="0" Grid.Row="1" Width="100" Height="25" Margin="0,0,0,3" Click="Btn_PrintInvoice"/>
                                     <Button Content="Email" Foreground="Black" Background="AntiqueWhite" FontSize="12" FontWeight="SemiBold" Grid.Column="1" Grid.Row="1" Width="100" Height="25" Margin="0,0,0,3"/>
-                                    <Button Content="Export to Quickbooks" Foreground="Black" Background="AntiqueWhite" FontSize="12" FontWeight="SemiBold" Grid.Column="2" Grid.Row="1" Width="200" Height="25" Margin="0,0,0,3"/>
+                                    <Button Content="Export to Quickbooks" Foreground="Black" Background="AntiqueWhite" FontSize="12" FontWeight="SemiBold" Grid.Column="2" Grid.Row="1" Width="200" Height="25" Margin="0,0,0,3" Click="Btn_AddInvoiceToQB"/>
                                     <TextBlock x:Name="txtBlk_InvCount" Foreground="Black" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center">
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} of {1} Invoices">
@@ -780,7 +780,7 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridTextColumn>
-                                        <DataGridCheckBoxColumn Header="Printable" Binding="{Binding printable}"  MinWidth="75">
+                                        <DataGridCheckBoxColumn Header="Printable" Binding="{Binding printable, UpdateSourceTrigger=PropertyChanged}"  MinWidth="75">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -789,6 +789,9 @@
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
+                                            <DataGridCheckBoxColumn.ElementStyle>
+                                                <Style TargetType="CheckBox"/>
+                                            </DataGridCheckBoxColumn.ElementStyle>
                                         </DataGridCheckBoxColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
