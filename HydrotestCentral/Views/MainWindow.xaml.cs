@@ -114,43 +114,27 @@ namespace HydrotestCentral
             loadInvoiceScreen();
         }
 
-        /*
-        private TabItem AddTabItemByName(string name)
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
         {
-            int count = _tabItems.Count;
-
-            // Create new Tab
-            TabItem tab = new TabItem();
-            tab.Header = string.Format(name);
-            tab.Name = string.Format(name);
-            //tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
-
-            // Insert Content Here
-
-            // insert tab item right before the last (+) tab item
-            _tabItems.Insert(count - 1, tab);
-
-            return tab;
+            ButtonOpenMenu.Visibility = Visibility.Collapsed;
+            ButtonCloseMenu.Visibility = Visibility.Visible;
         }
 
-        private TabItem AddTabItem()
+        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
         {
-            int count = _tabItems.Count;
-
-            // create new tab item
-            TabItem tab = new TabItem();
-            tab.Header = string.Format("Day {0}", count);
-            tab.Name = string.Format("tab{0}", count - 1);
-            tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
-
-            // add controls to tab item, this case I added just a textbox
-            getTabItemGrid(tab, count - 1);
-
-            // insert tab item right before the last (+) tab item
-            _tabItems.Insert(count - 1, tab);
-            return tab;
+            ButtonOpenMenu.Visibility = Visibility.Visible;
+            ButtonCloseMenu.Visibility = Visibility.Collapsed;
         }
-        */
+
+        private void ButtonClose_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        public void GetQuoteHeaderData()
+        {
+            QHeader.ItemsSource = main_vm.quote_headers;
+        }
 
         private void QHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -212,28 +196,6 @@ namespace HydrotestCentral
             }
         }
 
-        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ButtonOpenMenu.Visibility = Visibility.Collapsed;
-            ButtonCloseMenu.Visibility = Visibility.Visible;
-        }
-
-        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ButtonOpenMenu.Visibility = Visibility.Visible;
-            ButtonCloseMenu.Visibility = Visibility.Collapsed;
-        }
-
-        private void ButtonClose_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
-        public void GetQuoteHeaderData()
-        {
-            QHeader.ItemsSource = main_vm.quote_headers;
-        }
-
         public void getTabItemGrid(TabItem tab, int tab_index)
         {
             QuoteItemGrid grid = new QuoteItemGrid(jobno, tab_index, main_vm);
@@ -257,81 +219,6 @@ namespace HydrotestCentral
         {
             main_vm.DeleteQuoteItemGrid(jobno, tab_index);
             Trace.WriteLine(string.Format("tab {0} deleted\n", tab_index + 1));
-        }
-        /*
-        private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TabItem tab = tabDynamic.SelectedItem as TabItem;
-
-            if (tab != null && tab.Header != null)
-            {
-                if (tab.Header.Equals("+"))
-                {
-                    // clear tab control binding
-                    tabDynamic.DataContext = null;
-
-                    // add new tab
-                    TabItem newTab = this.AddTabItem();
-
-                    // bind tab control
-                    tabDynamic.DataContext = _tabItems;
-
-
-                    // select newly added tab item
-                    tabDynamic.SelectedItem = newTab;
-                }
-                else
-                {
-                    //MessageBox.Show("Selected Tab Index: " + tabDynamic.SelectedIndex.ToString());
-                    main_vm.selected_tab_index = tabDynamic.SelectedIndex;
-                    getTabItemGrid(tab, tabDynamic.SelectedIndex);
-                }
-            }
-        }
-        */
-
-        public void loadInvoiceScreen()
-        {
-            if (txtBx_InvoiceJobno.Text == "" && txtBx_Invno.Text == "")
-            {
-
-            }
-            else if (txtBx_Invno.Text != main_vm.Invno)
-            {
-                //Search for and load this Invoice number typed in
-                Trace.WriteLine("New InvNo typed in: " + txtBx_Invno.Text);
-                main_vm.Invno = txtBx_Invno.Text;
-                main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
-
-                //Get JobNo and set main viewmodel to correct jobno
-                if (main_vm.invoice_items != null)
-                {
-                    InvoiceItem first_invItem = main_vm.invoice_items.FirstOrDefault<InvoiceItem>();
-                    if (first_invItem != null)
-                    {
-                        main_vm.Jobno = first_invItem.jobno;
-                    }
-                }
-
-            }
-            else
-            {
-                main_vm.invoice_headers = main_vm.LoadInvoiceHeaders(txtBx_InvoiceJobno.Text);
-
-                // Need to edit if there is more than one InvNo
-                Trace.WriteLine(main_vm.invoice_headers.ToString());
-
-                InvoiceHeader first = main_vm.invoice_headers.FirstOrDefault<InvoiceHeader>();
-
-                if (first != null)
-                {
-                    Trace.WriteLine("first:" + first.jobno);
-                    main_vm.Invno = first.invno;
-                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
-                }
-
-                txtBx_Invno.Text = main_vm.Invno;
-            }
         }
 
         private void Btn_DeleteQuoteHeader_Click(object sender, RoutedEventArgs e)
@@ -379,125 +266,6 @@ namespace HydrotestCentral
                 // MessageBox.Show("Quoted updated successfully!");
             }
         }
-        /*
-        private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
-        {
-            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-
-            // Delete all items from QTE_ITEMS where jobno and tab_index match is found
-            main_vm.DeleteQuoteItemGrid(jobno, tabDynamic.SelectedIndex);
-            saveTabItemGrid(jobno, tabDynamic.SelectedIndex);
-            main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
-
-            TabItem tab = (TabItem)tabDynamic.SelectedItem;
-
-            grid.QItems.ItemsSource = main_vm.quote_items;
-            tab.Content = grid;
-        }
-
-        //private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
-        //{
-        //    int row_index = main_vm.selected_row_index;
-
-        //    main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
-        //    Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
-        //    main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
-        //}
-
-        private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to remove the Quote Item?", "Delete Quote Item", MessageBoxButton.YesNo);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    MessageBox.Show("Quote Item removed successfully");
-                    break;
-                case MessageBoxResult.No:
-                    break;
-            }
-
-            if (result == MessageBoxResult.Yes)
-            {
-                QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-                TabItem tab = (TabItem)tabDynamic.SelectedItem;
-                //int row_index = main_vm.selected_row_index;
-                int row_index = ((HydrotestCentral.Models.QuoteItem)((HydrotestCentral.QuoteItemGrid)tab.Content).QItems.SelectedItem).row_index;
-
-                main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
-                Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
-                main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
-
-                grid.QItems.ItemsSource = main_vm.quote_items;
-                tab.Content = grid;
-            }
-        }
-        */
-
-
-        /*
-        private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
-        {
-            TabItem tab = (TabItem)tabDynamic.SelectedItem;
-            //main_vm.ADDQuoteItemsByJob_And_Tab(this.jobno, tabDynamic.SelectedIndex);
-            //tab.Content = main_vm.quote_items;
-
-            //QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-
-            ////MessageBox.Show("Getting Tab Index: " + TabIndex);
-            //main_vm.updateQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
-            //grid.QItems.ItemsSource = main_vm.quote_items;
-            //tab.Content = grid;
-
-            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
-
-            //MessageBox.Show("Getting Tab Index: " + TabIndex);
-            main_vm.ADDQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
-            grid.QItems.ItemsSource = main_vm.quote_items;
-            tab.Content = grid;
-        }
-
-        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
-        {
-            string job = this.jobno;
-
-            try
-            {
-                connection.Open();
-                Trace.WriteLine("Connection String:" + connection.ConnectionString.ToString());
-                SQLiteCommand cmd = connection.CreateCommand();
-                cmd.Parameters.Add(new SQLiteParameter("@jobno", jobno));
-                cmd.Parameters.Add(new SQLiteParameter("@tabindex", tab_index));
-                cmd.Parameters.Add(new SQLiteParameter("@rowindex", row_index));
-                /*
-                cmd.Parameters.Add(new SQLiteParameter("@qty", qty));
-                cmd.Parameters.Add(new SQLiteParameter("@item", item));
-                cmd.Parameters.Add(new SQLiteParameter("@rate", rate));
-                cmd.Parameters.Add(new SQLiteParameter("@descr", descr));
-                cmd.Parameters.Add(new SQLiteParameter("@group", group));
-                cmd.Parameters.Add(new SQLiteParameter("@taxable", taxable));
-                cmd.Parameters.Add(new SQLiteParameter("@discountable", discountable));
-                cmd.Parameters.Add(new SQLiteParameter("@printable", printable));
-                // Calculate line total
-
-                cmd.Parameters.Add(new SQLiteParameter("@line_total", line_total));
-                // Calculate tax total
-
-                cmd.Parameters.Add(new SQLiteParameter("@tax_total", tax_total));
-                
-                cmd.CommandText = string.Format("UPDATE QTE_ITEMS, SET WHERE jobno=(@jobno) AND tab_index=(@tabindex) AND row_index=(@rowindex)");
-                SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
-                SQLiteCommandBuilder builder = new SQLiteCommandBuilder(adapter);
-                Trace.WriteLine("Unedited:" + items_dt.Rows.Count.ToString());
-                adapter.Update(items_dt);
-                Trace.WriteLine("Edited:" + items_dt.Rows.Count.ToString());
-                connection.Close();
-            }
-            catch (Exception Ex)
-            {
-                System.Windows.MessageBox.Show(Ex.Message);
-            }
-        }
-        */
 
         public bool checkFilename(string sourceFolder, string filename)
         {
@@ -512,6 +280,50 @@ namespace HydrotestCentral
         {
             NewQuoteWindow NQ_Win = new NewQuoteWindow(main_vm);
             NQ_Win.Show();
+        }
+
+        public void loadInvoiceScreen()
+        {
+            if (txtBx_InvoiceJobno.Text == "" && txtBx_Invno.Text == "")
+            {
+
+            }
+            else if (txtBx_Invno.Text != main_vm.Invno)
+            {
+                //Search for and load this Invoice number typed in
+                Trace.WriteLine("New InvNo typed in: " + txtBx_Invno.Text);
+                main_vm.Invno = txtBx_Invno.Text;
+                main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+
+                //Get JobNo and set main viewmodel to correct jobno
+                if (main_vm.invoice_items != null)
+                {
+                    InvoiceItem first_invItem = main_vm.invoice_items.FirstOrDefault<InvoiceItem>();
+                    if (first_invItem != null)
+                    {
+                        main_vm.Jobno = first_invItem.jobno;
+                    }
+                }
+
+            }
+            else
+            {
+                main_vm.invoice_headers = main_vm.LoadInvoiceHeaders(txtBx_InvoiceJobno.Text);
+
+                // Need to edit if there is more than one InvNo
+                Trace.WriteLine(main_vm.invoice_headers.ToString());
+
+                InvoiceHeader first = main_vm.invoice_headers.FirstOrDefault<InvoiceHeader>();
+
+                if (first != null)
+                {
+                    Trace.WriteLine("first:" + first.jobno);
+                    main_vm.Invno = first.invno;
+                    main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+                }
+
+                txtBx_Invno.Text = main_vm.Invno;
+            }
         }
 
         private void Btn_Activate_Job(object sender, RoutedEventArgs e)
@@ -760,34 +572,34 @@ namespace HydrotestCentral
                 // ---Set the IInvoiceAdd fields---
 
                 // Customer:Job
-                string customer = "Hydrotest Pros:C2020-0004";
+                string customer = main_vm.CurrentInvoiceHeader.cust + ":" + main_vm.CurrentInvoiceHeader.jobno;
                 if (!customer.Equals(""))
                 {
                     invoiceAdd.CustomerRef.FullName.SetValue(customer);
                 }
 
                 // Invoice Date
-                string invoiceDate = "1/1/2020";
+                string invoiceDate = main_vm.CurrentInvoiceHeader.invdate;
                 if (!invoiceDate.Equals(""))
                 {
                     invoiceAdd.TxnDate.SetValue(Convert.ToDateTime(invoiceDate));
                 }
 
                 // Invoice Number
-                string invoiceNumber = "INV555";
+                string invoiceNumber = main_vm.CurrentInvoiceHeader.invno;
                 if (!invoiceNumber.Equals(""))
                 {
                     invoiceAdd.RefNumber.SetValue(invoiceNumber);
                 }
 
                 // Bill Address
-                string bAddr1 = "Hydrotest Pros";
-                string bAddr2 = "123 Acme Dr";
-                string bAddr3 = "";
+                string bAddr1 = main_vm.CurrentInvoiceHeader.cust;
+                string bAddr2 = main_vm.CurrentInvoiceHeader.cust_addr1;
+                string bAddr3 = main_vm.CurrentInvoiceHeader.cust_addr2;
                 string bAddr4 = "";
-                string bCity = "Broussard";
-                string bState = "LA";
-                string bPostal = "70518";
+                string bCity = main_vm.CurrentInvoiceHeader.cust_city;
+                string bState = main_vm.CurrentInvoiceHeader.cust_state;
+                string bPostal = main_vm.CurrentInvoiceHeader.cust_zip;
                 string bCountry = "USA";
                 invoiceAdd.BillAddress.Addr1.SetValue(bAddr1);
                 invoiceAdd.BillAddress.Addr2.SetValue(bAddr2);
@@ -799,14 +611,14 @@ namespace HydrotestCentral
                 invoiceAdd.BillAddress.Country.SetValue(bCountry);
 
                 // P.O. Number
-                string poNumber = "PO555";
+                string poNumber = main_vm.CurrentInvoiceHeader.po;
                 if (!poNumber.Equals(""))
                 {
                     invoiceAdd.PONumber.SetValue(poNumber);
                 }
 
                 // Terms
-                string terms = "NET 30";
+                string terms = main_vm.CurrentInvoiceHeader.terms;
                 if (terms.IndexOf("Please select one from list") >= 0)
                 {
                     terms = "";
@@ -817,7 +629,7 @@ namespace HydrotestCentral
                 }
 
                 // Due Date
-                string dueDate = "2/1/2020";
+                string dueDate = main_vm.CurrentInvoiceHeader.duedate;
                 if (!dueDate.Equals(""))
                 {
                     invoiceAdd.DueDate.SetValue(Convert.ToDateTime(dueDate));
@@ -831,17 +643,18 @@ namespace HydrotestCentral
                 //}
 
                 // Set the values for the invoice line (main_vm.invoice_items.Count)
-                for (int i=0; i<1; i++)
+                for (int i=0; i<main_vm.invoice_items.Count; i++)
                 {
                     // Create the line item for the invoice 
                     int c = 6;
+
                     if(c == 6)  // full row
                     {
-                        string item = "Service";
-                        string desc = "Service Item";
-                        string rate = "100.00";
-                        string qty = "1";
-                        string amount = "100.00";
+                        string item = main_vm.invoice_items[i].item;
+                        string desc = main_vm.invoice_items[i].descr;
+                        string rate = main_vm.invoice_items[i].rate.ToString();
+                        string qty = main_vm.invoice_items[i].qty.ToString();
+                        string amount = main_vm.invoice_items[i].line_total.ToString();
                         //string taxable = "0";
 
                         if(!item.Equals("") || !desc.Equals(""))
@@ -868,7 +681,7 @@ namespace HydrotestCentral
                 }
 
                 // If all inputs are in, perform the request and obtain a response from QuickBooks
-                if (true)
+                if (isAllInputIn())
                 {
                     responseMsgSet = sessionManager.DoRequests(requestMsgSet);
                     //MessageBox.Show(responseMsgSet.ToString());
@@ -970,11 +783,6 @@ namespace HydrotestCentral
                         }
                         MessageBox.Show(resString);
                     } // if statusCode is zero
-
-
-
-
-                    
                 } // if all input is in
                 else
                 {
@@ -996,6 +804,30 @@ namespace HydrotestCentral
                 {
                     sessionManager.CloseConnection();
                 }
+            }
+        }
+
+        private bool isAllInputIn()
+        {
+            if ( main_vm.CurrentInvoiceHeader.cust.Equals("") ||
+                main_vm.CurrentInvoiceHeader.jobno.Equals("") ||
+                main_vm.CurrentInvoiceHeader.cust_addr1.Equals("") ||
+                main_vm.CurrentInvoiceHeader.cust_city.Equals("") ||
+                main_vm.CurrentInvoiceHeader.cust_state.Equals("") ||
+                main_vm.CurrentInvoiceHeader.invno.Equals("") ||
+                main_vm.CurrentInvoiceHeader.po.Equals("") ||
+                main_vm.CurrentInvoiceHeader.duedate.Equals("") ||
+                main_vm.CurrentInvoiceHeader.invdate.Equals("") ||
+                main_vm.CurrentInvoiceHeader.terms.Equals("") ||
+                main_vm.CurrentInvoiceHeader.inv_total.Equals("")
+                )
+            {
+                MessageBox.Show("Not all fields necessary for Invoice are populated!");
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
@@ -1141,47 +973,6 @@ namespace HydrotestCentral
              excelApp = null;
              GC.Collect();*/
         }
-        /*
-        private void Btn_DeleteTab_Click(object sender, RoutedEventArgs e)
-        {
-            string tabName = (sender as Button).CommandParameter.ToString();
-
-            var item = tabDynamic.Items.Cast<TabItem>().Where(i => i.Name.Equals(tabName)).SingleOrDefault();
-
-            TabItem tab = item as TabItem;
-
-            if (tab != null)
-            {
-                if (_tabItems.Count < 3)
-                {
-                    MessageBox.Show("Cannot remove last tab.");
-                }
-                else if (MessageBox.Show(string.Format("Are you sure you want to remove the tab '{0}'?", tab.Header.ToString()),
-                    "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    // get selected tab
-                    TabItem selectedTab = tabDynamic.SelectedItem as TabItem;
-
-                    deleteTabItemGrid(tab, tabDynamic.SelectedIndex);
-
-                    // clear tab control binding
-                    tabDynamic.DataContext = null;
-
-                    _tabItems.Remove(tab);
-
-                    // bind tab control
-                    tabDynamic.DataContext = _tabItems;
-
-                    // select previously selected tab. if that is removed then select first tab
-                    if (selectedTab == null || selectedTab.Equals(tab))
-                    {
-                        selectedTab = _tabItems[0];
-                    }
-                    tabDynamic.SelectedItem = selectedTab;
-                }
-            }
-        }
-        */
 
         private void Btn_Load(object sender, RoutedEventArgs e)
         {
@@ -1265,6 +1056,240 @@ namespace HydrotestCentral
         {
             System.Windows.Application.Current.Shutdown();
         }
+
+        #region Deprecated Functions
+        /*
+        private void Btn_DeleteTab_Click(object sender, RoutedEventArgs e)
+        {
+            string tabName = (sender as Button).CommandParameter.ToString();
+
+            var item = tabDynamic.Items.Cast<TabItem>().Where(i => i.Name.Equals(tabName)).SingleOrDefault();
+
+            TabItem tab = item as TabItem;
+
+            if (tab != null)
+            {
+                if (_tabItems.Count < 3)
+                {
+                    MessageBox.Show("Cannot remove last tab.");
+                }
+                else if (MessageBox.Show(string.Format("Are you sure you want to remove the tab '{0}'?", tab.Header.ToString()),
+                    "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    // get selected tab
+                    TabItem selectedTab = tabDynamic.SelectedItem as TabItem;
+
+                    deleteTabItemGrid(tab, tabDynamic.SelectedIndex);
+
+                    // clear tab control binding
+                    tabDynamic.DataContext = null;
+
+                    _tabItems.Remove(tab);
+
+                    // bind tab control
+                    tabDynamic.DataContext = _tabItems;
+
+                    // select previously selected tab. if that is removed then select first tab
+                    if (selectedTab == null || selectedTab.Equals(tab))
+                    {
+                        selectedTab = _tabItems[0];
+                    }
+                    tabDynamic.SelectedItem = selectedTab;
+                }
+            }
+        }
+        */
+
+        /*
+        private void btn_AddItemRow_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem tab = (TabItem)tabDynamic.SelectedItem;
+            //main_vm.ADDQuoteItemsByJob_And_Tab(this.jobno, tabDynamic.SelectedIndex);
+            //tab.Content = main_vm.quote_items;
+
+            //QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            ////MessageBox.Show("Getting Tab Index: " + TabIndex);
+            //main_vm.updateQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+            //grid.QItems.ItemsSource = main_vm.quote_items;
+            //tab.Content = grid;
+
+            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            //MessageBox.Show("Getting Tab Index: " + TabIndex);
+            main_vm.ADDQuoteItemsByJob_And_Tab(jobno, tabDynamic.SelectedIndex);
+            grid.QItems.ItemsSource = main_vm.quote_items;
+            tab.Content = grid;
+        }
+
+        public void UpdateQuoteItems_Row(DataGrid datagrid, int tab_index, int row_index)
+        {
+            string job = this.jobno;
+
+            try
+            {
+                connection.Open();
+                Trace.WriteLine("Connection String:" + connection.ConnectionString.ToString());
+                SQLiteCommand cmd = connection.CreateCommand();
+                cmd.Parameters.Add(new SQLiteParameter("@jobno", jobno));
+                cmd.Parameters.Add(new SQLiteParameter("@tabindex", tab_index));
+                cmd.Parameters.Add(new SQLiteParameter("@rowindex", row_index));
+                /*
+                cmd.Parameters.Add(new SQLiteParameter("@qty", qty));
+                cmd.Parameters.Add(new SQLiteParameter("@item", item));
+                cmd.Parameters.Add(new SQLiteParameter("@rate", rate));
+                cmd.Parameters.Add(new SQLiteParameter("@descr", descr));
+                cmd.Parameters.Add(new SQLiteParameter("@group", group));
+                cmd.Parameters.Add(new SQLiteParameter("@taxable", taxable));
+                cmd.Parameters.Add(new SQLiteParameter("@discountable", discountable));
+                cmd.Parameters.Add(new SQLiteParameter("@printable", printable));
+                // Calculate line total
+
+                cmd.Parameters.Add(new SQLiteParameter("@line_total", line_total));
+                // Calculate tax total
+
+                cmd.Parameters.Add(new SQLiteParameter("@tax_total", tax_total));
+
+                cmd.CommandText = string.Format("UPDATE QTE_ITEMS, SET WHERE jobno=(@jobno) AND tab_index=(@tabindex) AND row_index=(@rowindex)");
+                SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                SQLiteCommandBuilder builder = new SQLiteCommandBuilder(adapter);
+                Trace.WriteLine("Unedited:" + items_dt.Rows.Count.ToString());
+                adapter.Update(items_dt);
+                Trace.WriteLine("Edited:" + items_dt.Rows.Count.ToString());
+                connection.Close();
+            }
+            catch (Exception Ex)
+            {
+                System.Windows.MessageBox.Show(Ex.Message);
+            }
+        }
+        */
+
+        /*
+        private void Btn_SaveItems_Click(object sender, RoutedEventArgs e)
+        {
+            QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+
+            // Delete all items from QTE_ITEMS where jobno and tab_index match is found
+            main_vm.DeleteQuoteItemGrid(jobno, tabDynamic.SelectedIndex);
+            saveTabItemGrid(jobno, tabDynamic.SelectedIndex);
+            main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+
+            TabItem tab = (TabItem)tabDynamic.SelectedItem;
+
+            grid.QItems.ItemsSource = main_vm.quote_items;
+            tab.Content = grid;
+        }
+
+        //private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    int row_index = main_vm.selected_row_index;
+
+        //    main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
+        //    Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
+        //    main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+        //}
+
+        private void Btn_DeleteItemRow_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to remove the Quote Item?", "Delete Quote Item", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show("Quote Item removed successfully");
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+
+            if (result == MessageBoxResult.Yes)
+            {
+                QuoteItemGrid grid = new QuoteItemGrid(jobno, tabDynamic.SelectedIndex, main_vm);
+                TabItem tab = (TabItem)tabDynamic.SelectedItem;
+                //int row_index = main_vm.selected_row_index;
+                int row_index = ((HydrotestCentral.Models.QuoteItem)((HydrotestCentral.QuoteItemGrid)tab.Content).QItems.SelectedItem).row_index;
+
+                main_vm.DeleteQuoteItemRow(jobno, tabDynamic.SelectedIndex, row_index);
+                Trace.WriteLine(string.Format("Item Row {0} Deleted...", row_index));
+                main_vm.updateQuoteItemsByJob_And_Tab(jobno, main_vm.selected_tab_index);
+
+                grid.QItems.ItemsSource = main_vm.quote_items;
+                tab.Content = grid;
+            }
+        }
+        */
+
+        /*
+        private void tabDynamic_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabItem tab = tabDynamic.SelectedItem as TabItem;
+
+            if (tab != null && tab.Header != null)
+            {
+                if (tab.Header.Equals("+"))
+                {
+                    // clear tab control binding
+                    tabDynamic.DataContext = null;
+
+                    // add new tab
+                    TabItem newTab = this.AddTabItem();
+
+                    // bind tab control
+                    tabDynamic.DataContext = _tabItems;
+
+
+                    // select newly added tab item
+                    tabDynamic.SelectedItem = newTab;
+                }
+                else
+                {
+                    //MessageBox.Show("Selected Tab Index: " + tabDynamic.SelectedIndex.ToString());
+                    main_vm.selected_tab_index = tabDynamic.SelectedIndex;
+                    getTabItemGrid(tab, tabDynamic.SelectedIndex);
+                }
+            }
+        }
+        */
+
+        /*
+        private TabItem AddTabItemByName(string name)
+        {
+            int count = _tabItems.Count;
+
+            // Create new Tab
+            TabItem tab = new TabItem();
+            tab.Header = string.Format(name);
+            tab.Name = string.Format(name);
+            //tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
+
+            // Insert Content Here
+
+            // insert tab item right before the last (+) tab item
+            _tabItems.Insert(count - 1, tab);
+
+            return tab;
+        }
+
+        private TabItem AddTabItem()
+        {
+            int count = _tabItems.Count;
+
+            // create new tab item
+            TabItem tab = new TabItem();
+            tab.Header = string.Format("Day {0}", count);
+            tab.Name = string.Format("tab{0}", count - 1);
+            tab.HeaderTemplate = tabDynamic.FindResource("TabHeader") as DataTemplate;
+
+            // add controls to tab item, this case I added just a textbox
+            getTabItemGrid(tab, count - 1);
+
+            // insert tab item right before the last (+) tab item
+            _tabItems.Insert(count - 1, tab);
+            return tab;
+        }
+        */
+
+        #endregion
 
     }
 }

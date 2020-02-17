@@ -702,13 +702,34 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="45"/>
                                     <RowDefinition Height="20*"/>
                                 </Grid.RowDefinitions>
                                 <Label x:Name="lbl_PONumber" Content="P.O. Number:" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" FontWeight="Bold" FontSize="12" Foreground="Black" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_PONumber" Text="{Binding CurrentInvoiceHeader.po}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Stretch"  MinHeight="30" FontSize="12" Margin="0,5,0,0" />
                                 <Label x:Name="lbl_Salesman" Content="Sales Rep:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" FontWeight="Bold" Foreground="Black" FontSize="12" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_Salesman" Text="{Binding CurrentInvoiceHeader.salesman}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" MinHeight="30" FontSize="12" Margin="0,5,0,0"/>
-                                <DataGrid x:Name="Invoice_DataGrid" ItemsSource="{Binding invoice_items, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="2" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All" AutoGenerateColumns="False" Foreground="#DD000000" Style="{StaticResource AzureDataGrid}" Margin="10,0" HorizontalAlignment="Stretch">
+                                <Button x:Name="btn_DeleteInvoiceLine" Grid.Column="0" Grid.Row="2" Height="40" Width="40" Margin="20,0,0,0" Padding="0" BorderThickness="0" HorizontalAlignment="Left">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                Save Invoice
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <materialDesign:PackIcon Kind="Delete" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
+                                </Button>
+                                <Button x:Name="btn_SaveInvoice" Grid.Column="0" Grid.Row="2" Height="40" Width="40" Padding="0" BorderThickness="0" HorizontalAlignment="Left" Margin="100,0,0,0">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                Save Invoice
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Path Data="M7.4590002,16.856308 C6.3770743,16.856308 5.5000001,17.733381 5.5000001,18.815308 L5.5000001,33.377308 C5.5000001,34.459232 6.3770743,35.336308 7.4590002,35.336308 L28.375,35.336308 C29.456926,35.336308 30.334,34.459232 30.334,33.377308 L30.334,18.815308 C30.334,17.733381 29.456926,16.856308 28.375,16.856308 z M18.584019,4.487381 L20.416071,4.487381 C20.772856,4.487381 21.062088,4.7766075 21.062088,5.1333857 L21.062088,10.508735 C21.062088,10.865514 20.772856,11.154741 20.416071,11.154741 L18.584019,11.154741 C18.227234,11.154741 17.938,10.865514 17.938,10.508735 L17.938,5.1333857 C17.938,4.7766075 18.227234,4.487381 18.584019,4.487381 z M6.2086731,3.5703743 C5.080876,3.5703743 4.1666165,4.4846158 4.166616,5.612391 L4.166616,10.041732 C4.1666165,11.169507 5.080876,12.083749 6.2086731,12.083749 L22.221121,12.083749 C23.348915,12.083749 24.263178,11.169507 24.263178,10.041732 L24.263178,5.612391 C24.263178,4.4846158 23.348915,3.5703743 22.221121,3.5703743 z M3.500099,0 L25.500877,0.15368047 35.584492,8.6954145 35.834,35.942581 C35.834,38.091366 34.266953,39.833309 32.333901,39.833309 L3.500099,39.833309 C1.5670471,39.833309 7.786133E-08,38.091366 0,35.942581 L0,3.8907325 C7.786133E-08,1.7419404 1.5670471,4.7684085E-07 3.500099,0 z" Fill="White" Stretch="Fill" Width="19.212" Height="21.358"/>
+                                </Button >
+                                <DataGrid x:Name="Invoice_DataGrid" ItemsSource="{Binding invoice_items, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="3" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All" AutoGenerateColumns="False" Foreground="#DD000000" Style="{StaticResource AzureDataGrid}" Margin="10,0" HorizontalAlignment="Stretch">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Qty" Foreground="Black" Binding="{Binding qty}"  MinWidth="50">
                                             <DataGridColumn.HeaderStyle>

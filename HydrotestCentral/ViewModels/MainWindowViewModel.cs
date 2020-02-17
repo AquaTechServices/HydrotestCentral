@@ -146,12 +146,13 @@ namespace HydrotestCentral.ViewModels
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     int cleaned_days = 0;
+                    int cleaned_cust_id = 0;
                     double cleaned_value = 0.00;
 
+                    if (Int32.TryParse(dr[3].ToString(), out cleaned_cust_id)) { }
+                    if (Int32.TryParse(dr[9].ToString(), out cleaned_days)) { }
 
-                    if (Int32.TryParse(dr[8].ToString(), out cleaned_days)) { }
-
-                    if (Double.TryParse(dr[17].ToString(), out cleaned_value)) { }
+                    if (Double.TryParse(dr[19].ToString(), out cleaned_value)) { }
 
                     //if(!string.IsNullOrEmpty(dr[1].ToString())){ cleaned_qt_date= DateTime.Parse(dr[1].ToString());}
 
@@ -164,21 +165,22 @@ namespace HydrotestCentral.ViewModels
                         jobno = dr[0].ToString(),
                         qt_date = dr[1].ToString(),
                         cust = dr[2].ToString(),
-                        cust_contact = dr[3].ToString(),
-                        cust_phone = dr[4].ToString(),
-                        cust_email = dr[5].ToString(),
-                        loc = dr[6].ToString(),
-                        salesman = dr[7].ToString(),
+                        cust_id = cleaned_cust_id,
+                        cust_contact = dr[4].ToString(),
+                        cust_phone = dr[5].ToString(),
+                        cust_email = dr[6].ToString(),
+                        loc = dr[7].ToString(),
+                        salesman = dr[8].ToString(),
                         days_est = cleaned_days,
-                        status = dr[9].ToString(),
-                        jobtype = dr[10].ToString(),
-                        pipe_line_size = dr[11].ToString(),
-                        pipe_length = dr[12].ToString(),
-                        pressure = dr[13].ToString(),
-                        endclient = dr[14].ToString(),
-                        supervisor = dr[15].ToString(),
-                        est_start_date = dr[16].ToString(), 
-                        est_stop_date = dr[17].ToString(),
+                        status = dr[10].ToString(),
+                        jobtype = dr[11].ToString(),
+                        pipe_line_size = dr[12].ToString(),
+                        pipe_length = dr[13].ToString(),
+                        pressure = dr[14].ToString(),
+                        endclient = dr[15].ToString(),
+                        supervisor = dr[16].ToString(),
+                        est_start_date = dr[17].ToString(), 
+                        est_stop_date = dr[18].ToString(),
                         value = cleaned_value
                     });
                     //Trace.WriteLine(dr[0].ToString() + " created in quote_headers");
@@ -606,6 +608,8 @@ namespace HydrotestCentral.ViewModels
                     bool parsed_discountable = false;
                     bool parsed_printable = false;
 
+                    string descr_string = "";
+
                     if (Int32.TryParse(dr[0].ToString(), out cleaned_qty)) { }
                     if (Int32.TryParse(dr[5].ToString(), out cleaned_group)) { }
 
@@ -618,6 +622,8 @@ namespace HydrotestCentral.ViewModels
                     if (Boolean.TryParse(dr[6].ToString(), out parsed_taxable)) { }
                     if (Boolean.TryParse(dr[7].ToString(), out parsed_discountable)) { }
                     if (Boolean.TryParse(dr[8].ToString(), out parsed_printable)) { }
+
+                    if (dr[3].ToString().Equals("")) { descr_string = " "; } else
 
                     items.Add(new InvoiceItem
                     {
@@ -675,6 +681,7 @@ namespace HydrotestCentral.ViewModels
 
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
+                    int cleaned_cust_id = 0;
                     double cleaned_taxrate = 0.00;
                     double cleaned_subtotal = 0.00;
                     double cleaned_taxtotal = 0.00;
@@ -683,15 +690,19 @@ namespace HydrotestCentral.ViewModels
                     DateTime cleaned_invdate = new DateTime();
                     DateTime cleaned_duedate = new DateTime();
 
+                    string po_string = "";
 
-                    if (Double.TryParse(dr[16].ToString(), out cleaned_taxrate)) { }
-                    if (Double.TryParse(dr[18].ToString(), out cleaned_subtotal)) { }
-                    if (Double.TryParse(dr[19].ToString(), out cleaned_taxtotal)) { }
-                    if (Double.TryParse(dr[20].ToString(), out cleaned_invtotal)) { }
+                    if (Int32.TryParse(dr[6].ToString(), out cleaned_cust_id)) { }
+
+                    if (Double.TryParse(dr[17].ToString(), out cleaned_taxrate)) { }
+                    if (Double.TryParse(dr[19].ToString(), out cleaned_subtotal)) { }
+                    if (Double.TryParse(dr[20].ToString(), out cleaned_taxtotal)) { }
+                    if (Double.TryParse(dr[21].ToString(), out cleaned_invtotal)) { }
 
                     if (DateTime.TryParse(dr[2].ToString(), out cleaned_invdate)) { }
                     if (DateTime.TryParse(dr[3].ToString(), out cleaned_duedate)) { }
 
+                    if (dr[16].ToString().Equals("")) { po_string = " "; } else { po_string = dr[16].ToString();}
 
                     invoice_headers.Add(new InvoiceHeader
                     {
@@ -701,18 +712,19 @@ namespace HydrotestCentral.ViewModels
                         duedate = cleaned_duedate.ToString("MM/dd/yy"),
                         terms = dr[4].ToString(),
                         cust = dr[5].ToString(),
-                        cust_addr1 = dr[6].ToString(),
-                        cust_addr2 = dr[7].ToString(),
-                        cust_city = dr[8].ToString(),
-                        cust_state = dr[9].ToString(),
-                        cust_zip = dr[10].ToString(),
-                        loc = dr[11].ToString(),
-                        salesman = dr[12].ToString(),
-                        jobtype = dr[13].ToString(),
-                        supervisor = dr[14].ToString(),
-                        po = dr[15].ToString(),
+                        cust_id = cleaned_cust_id,
+                        cust_addr1 = dr[7].ToString(),
+                        cust_addr2 = dr[8].ToString(),
+                        cust_city = dr[9].ToString(),
+                        cust_state = dr[10].ToString(),
+                        cust_zip = dr[11].ToString(),
+                        loc = dr[12].ToString(),
+                        salesman = dr[13].ToString(),
+                        jobtype = dr[14].ToString(),
+                        supervisor = dr[15].ToString(),
+                        po = po_string,
                         tax_rate = cleaned_taxrate,
-                        tax_descr = dr[17].ToString(),
+                        tax_descr = dr[18].ToString(),
                         sub_total = cleaned_subtotal,
                         tax_total = cleaned_taxtotal,
                         inv_total = cleaned_invtotal

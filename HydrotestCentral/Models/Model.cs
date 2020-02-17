@@ -21,6 +21,7 @@ namespace HydrotestCentral.Models
         public string jobno { get; set; }
         public string qt_date { get; set; }
         public string cust { get; set; }
+        public int cust_id { get; set; }
         public string cust_contact { get; set; }
         public string cust_phone { get; set; }
         public string cust_email { get; set; }
@@ -73,6 +74,7 @@ namespace HydrotestCentral.Models
         public string duedate { get; set; }
         public string terms { get; set; }
         public string cust { get; set; }
+        public int cust_id { get; set; }
         public string cust_addr1 { get; set; }
         public string cust_addr2 { get; set; }
         public string cust_city { get; set; }
