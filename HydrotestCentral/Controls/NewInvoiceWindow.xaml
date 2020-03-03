@@ -1,0 +1,161 @@
+﻿<simpleChildWindow:ChildWindow
+        xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HydrotestCentral.Controls"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        x:Class="HydrotestCentral.Controls.NewInvoiceWindow"
+        Padding="15"
+        d:DesignHeight="600"
+        ChildWindowHeight="600"
+        d:DesignWidth="800" 
+        ChildWindowWidth="800"
+        AllowMove="True"
+        ShowCloseButton="True"
+        mc:Ignorable="d"
+        Title="Select Values for new Invoice" Loaded="ChildWindow_Loaded">
+    <simpleChildWindow:ChildWindow.OverlayBrush>
+        <SolidColorBrush Opacity="0.8" Color="{StaticResource Gray2}" />
+    </simpleChildWindow:ChildWindow.OverlayBrush>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="TopGrid" Grid.Row="0" Grid.ColumnSpan="4"/>
+        <Grid x:Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <mah:MetroHeader Margin="5" Header="Invoice Number:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBx_Invno" Text="invno" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Invoice Date:" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <DatePicker x:Name="dp_invdate" SelectedDateFormat="Short" BorderThickness="2" SelectedDate="{x:Static sys:DateTime.Now}">
+                    <DatePicker.BorderBrush>
+                        <SolidColorBrush Color="Black"/>
+                    </DatePicker.BorderBrush>
+                </DatePicker>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Job No:" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBox_jobno" Text="Enable" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Due Date:" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <DatePicker x:Name="dp_duedate" SelectedDateFormat="Short" BorderBrush="Black" BorderThickness="2"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Purchase Order Number:" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBx_po" Text="Enable" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Salesperson:" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBx_salesman" Text="Enable" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Location:" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBx_loc" Text="Enable" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Customer:" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <mah:SplitButton x:Name="CustDropDown" Margin="5 0 5 0" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"  HorizontalContentAlignment="Left"  ItemsSource="{Binding customers}" DisplayMemberPath="name" BorderBrush="Black" BorderThickness="2" SelectionChanged="CustDropDown_SelectionChanged"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Customer Address:" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <RichTextBox x:Name="rTxtBx_CustAddress" BorderBrush="Black" BorderThickness="2" Block.LineHeight="2"/>
+            </mah:MetroHeader>
+            <mah:MetroHeader Margin="5" Header="Terms:" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">
+                <mah:MetroHeader.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </mah:MetroHeader.HeaderTemplate>
+                <TextBox x:Name="txtBx_Terms" Text="" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center"/>
+            </mah:MetroHeader>
+        </Grid>
+        <Button Content="Start Invoice" Grid.Row="8"  Grid.Column="3" Margin="3" Padding="3" Click="Btn_Start_Click"/>
+        <Button Content="Cancel" Grid.Row="8"  Grid.Column="2" Margin="3" Padding="3" Click="Btn_Cancel_Click"/>
+    </Grid>
+</simpleChildWindow:ChildWindow>

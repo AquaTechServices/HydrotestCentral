@@ -310,7 +310,7 @@ namespace HydrotestCentral.Models
                     i.jobno = row["jobno"].ToString();
                     i.invno = row["invno"].ToString();
                     //if(!string.IsNullOrEmpty(row["invdate"].ToString())){ i.invdate = DateTime.Parse(row["invdate"].ToString());}
-                    i.invdate = row["invdate"].ToString();
+                    i.invdate = DateTime.Parse(row["invdate"].ToString());
                     i.cust = row["cust"].ToString();
                     i.loc = row["loc"].ToString();
                     i.salesman = row["salesman"].ToString();

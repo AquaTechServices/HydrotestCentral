@@ -82,32 +82,51 @@ namespace HydrotestCentral.Models
         {
             // Each MigraDoc document needs at least one section.
             Section section = this.document.AddSection();
+            section.PageSetup.TopMargin = "2.5cm";
+            section.PageSetup.BottomMargin = "2.5cm";
+            section.PageSetup.FooterDistance = "0.25cm";
 
             // Put a logo in the header
-            Image image = section.Headers.Primary.AddImage("../../Assets/hydrotestpros_logo.jpg");
-            image.Height = "6cm";
+            Image image = section.Headers.FirstPage.AddImage("../../Assets/hydrotestpros_logo.jpg");
+            image.Height = "2.5cm";
             image.LockAspectRatio = true;
-            image.RelativeVertical = RelativeVertical.Margin;
             image.RelativeHorizontal = RelativeHorizontal.Margin;
-            image.Top = ShapePosition.Top;
+            image.RelativeVertical = RelativeVertical.Page;
+            image.Top = "2.0cm";
             image.Left = ShapePosition.Right;
-            image.WrapFormat.Style = WrapStyle.TopBottom;
+            image.WrapFormat.Style = WrapStyle.Through;
+
+            Image image2 = section.Headers.Primary.AddImage("../../Assets/hydrotestpros_logo.jpg");
+            image2.Height = "1.5cm";
+            image2.LockAspectRatio = true;
+            image2.Top = "0.25 cm";
+            image2.RelativeHorizontal = RelativeHorizontal.Margin;
+            image2.RelativeVertical = RelativeVertical.Page;
+            image2.Left = ShapePosition.Right;
+
 
             // Create footer
-            Table tbl = section.Footers.Primary.AddTable();
-            tbl.BottomPadding = 1;
-            tbl.TopPadding = 1;
+            section.PageSetup.DifferentFirstPageHeaderFooter = true;
+            Table tbl = section.Footers.FirstPage.AddTable();
+            tbl.Format.SpaceBefore = "0.0cm";
+            tbl.Format.SpaceAfter = "0.0cm";
+            tbl.Rows.Height = Unit.FromCentimeter(0.5);
+            tbl.Rows.VerticalAlignment = VerticalAlignment.Bottom;
+            tbl.KeepTogether = true;
+            tbl.BottomPadding = 0;
+            tbl.TopPadding = 0;
             Column col = tbl.AddColumn();
             col.Format.Alignment = ParagraphAlignment.Left;
             col = tbl.AddColumn();
             col.Format.Alignment = ParagraphAlignment.Left;
             Row row = tbl.AddRow();
-            row.Cells[0].AddParagraph("PLEASE REMIT TO:");
-            row.Cells[0].Column.Width = 150;
-            row.Cells[1].Column.Width = 300;
-            row.Cells[1].MergeDown = 3;
-            row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
-            Paragraph paragraph = row.Cells[1].AddParagraph();
+            Row row1 = tbl.AddRow();
+            row1.Cells[0].AddParagraph("PLEASE REMIT TO:");
+            row1.Cells[0].Column.Width = 150;
+            row1.Cells[1].Column.Width = 300;
+            row1.Cells[1].MergeDown = 2;
+            row1.Cells[1].VerticalAlignment = VerticalAlignment.Center;
+            Paragraph paragraph = row1.Cells[1].AddParagraph();
             paragraph.Format.Font.Size = 10;
             paragraph.AddFormattedText("Past due balances subject to 1.5% finance charge per month", TextFormat.Italic);
             paragraph.Format.Alignment = ParagraphAlignment.Center;
@@ -117,12 +136,21 @@ namespace HydrotestCentral.Models
             row3.Cells[0].AddParagraph("1048 Carlton Rd");
             Row row4 = tbl.AddRow();
             row4.Cells[0].AddParagraph("Broussard, LA 70518");
+            Paragraph paragraph1 = row4.Cells[1].AddParagraph();
+            paragraph1.Format.Font.Size = 8;
+            paragraph1.AddText("Page ");
+            paragraph1.AddPageField();
+            paragraph1.AddText(" of ");
+            paragraph1.AddNumPagesField();
+            paragraph1.Format.Alignment = ParagraphAlignment.Center;
 
-
-            //Paragraph paragraph = section.Footers.Primary.AddParagraph();
-            //paragraph.Format.Font.Size = 10;
-            //paragraph.AddFormattedText("Past due balances subject to 1.5% finance charge per month", TextFormat.Italic);
-            //paragraph.Format.Alignment = ParagraphAlignment.Center;
+            paragraph = section.Footers.Primary.AddParagraph();
+            paragraph.Format.Font.Size = 10;
+            paragraph.AddText("Page ");
+            paragraph.AddPageField();
+            paragraph.AddText(" of ");
+            paragraph.AddNumPagesField();
+            paragraph.Format.Alignment = ParagraphAlignment.Center;
             
             // Create the text frame for the address
             this.addressFrame = section.AddTextFrame();
@@ -286,13 +314,13 @@ namespace HydrotestCentral.Models
             row1.Cells[1].AddParagraph(ih.invno);
             Row row2 = table.AddRow();
             row2.Cells[0].AddParagraph("Invoice Date: ");
-            row2.Cells[1].AddParagraph(ih.invdate);
+            row2.Cells[1].AddParagraph(ih.invdate.ToShortDateString());
             Row row3 = table.AddRow();
             row3.Cells[0].AddParagraph("Terms: ");
             row3.Cells[1].AddParagraph(ih.terms);
             Row row4 = table.AddRow();
             row4.Cells[0].AddParagraph("Due Date: ");
-            row4.Cells[1].AddParagraph(ih.duedate);
+            row4.Cells[1].AddParagraph(ih.duedate.ToShortDateString());
             Row row5 = table.AddRow();
             row4.Cells[0].AddParagraph("PO: ");
             row4.Cells[1].AddParagraph(ih.po);

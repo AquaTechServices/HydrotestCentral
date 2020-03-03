@@ -24,6 +24,10 @@ using HydrotestCentral.Models;
 using QBFC13Lib;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using System.Collections.ObjectModel;
+using HydrotestCentral.Controls;
+using MahApps.Metro.SimpleChildWindow;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace HydrotestCentral
 {
@@ -38,16 +42,16 @@ namespace HydrotestCentral
         public SQLiteCommandBuilder head_builder, items_builder;
         public string jobno;
         public double proj_daily_total, proj_addn_chg, proj_job_total, est_days;
-        //public QuoteHeaderDataProvider quote_heads;
-        //public QuoteItemsDataProvider quote_items;
+
         private List<TabItem> _tabItems;
-        //private List<string> _tabNames;
-        //private TabItem _tabAdd;
+
         public string accounting_string;
 
         public static MainWindowViewModel main_vm;
-        //public static QuoteHeaderDataProvider main_Quoteheader;
+
         private QuoteHeader quoteHeaderBeingEdited;
+        private InvoiceItem invoiceItemBeingEdited;
+        private InvoiceItem invoiceItemToAdd;
 
         public MainWindow()
         {
@@ -241,14 +245,14 @@ namespace HydrotestCentral
             if (result == MessageBoxResult.Yes)
             {
 
-                main_vm.DeleteHeaderItem(jobno);
+                main_vm.DeleteQuoteHeaderItem(jobno);
                 main_vm.quote_headers = main_vm.LoadQuoteHeaderData();
             }
         }
 
         private void Btn_SaveQuoteHeader_Click(object sender, RoutedEventArgs e)
         {
-            main_vm.UpdateHeaderItem(jobno);
+            main_vm.UpdateQuoteHeaderItem(jobno);
         }
 
         private void QHeader_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -261,11 +265,119 @@ namespace HydrotestCentral
             if (quoteHeaderBeingEdited != null)
             {
                 //MessageBox.Show(quoteHeaderBeingEdited.jobno + " is now being updated in the database!");
-                main_vm.UpdateHeaderItem(quoteHeaderBeingEdited.jobno);
+                main_vm.UpdateQuoteHeaderItem(quoteHeaderBeingEdited.jobno);
                 quoteHeaderBeingEdited = null;
                 // MessageBox.Show("Quoted updated successfully!");
             }
         }
+
+        private void IItem_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Trace.WriteLine("IItem Cell Edit Ending");
+            if(!e.Row.IsNewItem)
+            {
+                invoiceItemBeingEdited = e.Row.Item as InvoiceItem;
+            }
+        }
+
+        private void IItem_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            Trace.WriteLine("IItem Row Edit Ending");
+            Trace.WriteLine(e.Row.Item.ToString());
+            try
+            {
+                if(e.Row.IsNewItem)
+                {
+                    Trace.WriteLine("Row IsNewItem");
+                    invoiceItemToAdd = e.Row.Item as InvoiceItem;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void IItem_CurrentCellChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (invoiceItemToAdd != null)
+                {
+                    invoiceItemToAdd.cust = main_vm.CurrentInvoiceHeader.cust;
+                    invoiceItemToAdd.jobno = main_vm.CurrentInvoiceHeader.jobno;
+                    invoiceItemToAdd.invno = main_vm.CurrentInvoiceHeader.invno;
+                    invoiceItemToAdd.invdate = main_vm.CurrentInvoiceHeader.invdate.ToString("MM/dd/yyyy");
+
+                    switch(invoiceItemToAdd.item)
+                    {
+                        case "Service":
+                            invoiceItemToAdd.type = "LABOR";
+                            break;
+                        case "Logistics":
+                            invoiceItemToAdd.type = "LOGISTICS";
+                            break;
+                        default:
+                            invoiceItemToAdd.type = "EQUIP";
+                            break;
+                    }
+
+                    invoiceItemToAdd.type = "EQUIP";
+                    // Calculate Line Totals
+                    if(invoiceItemToAdd.taxable)
+                    {
+                        invoiceItemToAdd.tax_total = invoiceItemToAdd.line_total * main_vm.CurrentInvoiceHeader.tax_rate;
+                    }
+                    else { invoiceItemToAdd.tax_total = 0.00; }
+                    
+                    invoiceItemToAdd.line_total = invoiceItemToAdd.qty * invoiceItemToAdd.rate;
+
+                    MessageBox.Show(invoiceItemToAdd.item + " | " + invoiceItemToAdd.descr + " | " + invoiceItemToAdd.jobno + " | " + invoiceItemToAdd.invno + " | " + invoiceItemToAdd.line_total.ToString());
+
+                    //MessageBox.Show(invoiceItemToAdd.item + " | " + invoiceItemToAdd.jobno + " | " + invoiceItemToAdd.invno + " | " + invoiceItemToAdd.line_total.ToString());
+                    
+                    // Add the new item to the database
+                    main_vm.InsertNewInvoiceItem(invoiceItemToAdd);
+
+                    invoiceItemToAdd = null;
+                }
+
+                //Trace.WriteLine("IItem_CurrentCellChanged ran");
+                if (invoiceItemBeingEdited != null && invoiceItemToAdd == null)
+                {
+                    // Update the database
+                    main_vm.UpdateInvoiceExpandedItems(invoiceItemBeingEdited.invno);
+                    // Update the view and viewmodal
+                    main_vm.CalculateTotals();
+                    invoiceItemBeingEdited = null;
+                }
+                
+
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void Btn_Collapse(object sender, RoutedEventArgs e)
+        {
+            if(main_vm.CurrentInvoiceHeader!=null)
+            {
+                main_vm.grouped_invoice_items = main_vm.GetCollapsedInvoiceItemsData(main_vm.CurrentInvoiceHeader.invno);
+                Invoice_DataGrid.ItemsSource = main_vm.grouped_invoice_items;
+                RateColumn.FontWeight = FontWeights.UltraBold;
+            }
+        }
+
+        private void Btn_Expand(object sender, RoutedEventArgs e)
+        {
+            Invoice_DataGrid.ItemsSource = main_vm.invoice_items;
+            RateColumn.FontWeight=FontWeights.Normal;
+        }
+
 
         public bool checkFilename(string sourceFolder, string filename)
         {
@@ -282,11 +394,28 @@ namespace HydrotestCentral
             NQ_Win.Show();
         }
 
+        private async void Btn_NewInvoice(object sender, RoutedEventArgs e)
+        {
+            var result = await this.ShowChildWindowAsync<bool>(new NewInvoiceWindow(main_vm));
+
+            if(result)
+            {
+                MessageBox.Show("Result: " + result.ToString());
+                loadInvoiceScreen();
+            }
+            else
+            {
+                MessageBox.Show("Result: " + result.ToString());
+                loadInvoiceScreen();
+            }
+        }
+
         public void loadInvoiceScreen()
         {
+            
             if (txtBx_InvoiceJobno.Text == "" && txtBx_Invno.Text == "")
             {
-
+                clearInvoiceScreen();
             }
             else if (txtBx_Invno.Text != main_vm.Invno)
             {
@@ -304,25 +433,55 @@ namespace HydrotestCentral
                         main_vm.Jobno = first_invItem.jobno;
                     }
                 }
-
             }
             else
             {
+                // Load all invoices assigned to that jobno
                 main_vm.invoice_headers = main_vm.LoadInvoiceHeaders(txtBx_InvoiceJobno.Text);
 
-                // Need to edit if there is more than one InvNo
-                Trace.WriteLine(main_vm.invoice_headers.ToString());
-
+                // Load first invoice from those headers
                 InvoiceHeader first = main_vm.invoice_headers.FirstOrDefault<InvoiceHeader>();
 
-                if (first != null)
+                if (first != null)  // There was at least 1 invoice for that jobno, load all invoice items for first
                 {
                     Trace.WriteLine("first:" + first.jobno);
                     main_vm.Invno = first.invno;
                     main_vm.invoice_items = main_vm.LoadInvoiceItemsData(main_vm.Invno);
+                    txtBx_Invno.Text = main_vm.Invno;
+                }
+                else  // This means that no invoices were found, clear the Invoice Screen
+                {
+                    clearInvoiceScreen();
+                }
+            }
+            if (Invoice_DataGrid.ItemsSource != main_vm.invoice_items)
+            {
+                Invoice_DataGrid.ItemsSource = main_vm.invoice_items;
+            }
+        }
+
+        private void clearInvoiceScreen()
+        {
+            main_vm.CurrentInvoiceHeader = null;
+            main_vm.Invno = null;
+            main_vm.invoice_items = null;
+        }
+
+        private void Btn_DeleteInvoiceItemRow(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = Invoice_DataGrid.SelectedItem;
+
+            if (selectedRow!=null)
+            {
+                InvoiceItem temp = (InvoiceItem)Invoice_DataGrid.SelectedItems[0];
+
+                if(temp.row_id>0)
+                {
+                    main_vm.DeleteInvoiceItemRow(temp.row_id);
                 }
 
-                txtBx_Invno.Text = main_vm.Invno;
+                ObservableCollection<InvoiceItem> new_items = (ObservableCollection<InvoiceItem>)Invoice_DataGrid.ItemsSource;
+                new_items.Remove(temp);
             }
         }
 
@@ -435,11 +594,14 @@ namespace HydrotestCentral
 
         private void Btn_AddInvoiceToQB(object sender, RoutedEventArgs e)
         {
+            GetQBCustomerJobLists();
+
             bool sessionBegun = false;
             bool connectionOpen = false;
             QBSessionManager sessionManager = null;
 
             Trace.WriteLine("Add Invoice func ran");
+            Trace.WriteLine("--------------------");
 
             try
             {
@@ -579,7 +741,7 @@ namespace HydrotestCentral
                 }
 
                 // Invoice Date
-                string invoiceDate = main_vm.CurrentInvoiceHeader.invdate;
+                string invoiceDate = main_vm.CurrentInvoiceHeader.invdate.ToShortDateString();
                 if (!invoiceDate.Equals(""))
                 {
                     invoiceAdd.TxnDate.SetValue(Convert.ToDateTime(invoiceDate));
@@ -590,6 +752,32 @@ namespace HydrotestCentral
                 if (!invoiceNumber.Equals(""))
                 {
                     invoiceAdd.RefNumber.SetValue(invoiceNumber);
+                }
+
+                // Sales Rep
+                string salesRep = "";
+
+                    if(main_vm.CurrentInvoiceHeader.salesman=="Candie Picou" || main_vm.CurrentInvoiceHeader.salesman == "CP")
+                    { salesRep = "CP"; }
+                    else if(main_vm.CurrentInvoiceHeader.salesman == "Marlon Haynes" || main_vm.CurrentInvoiceHeader.salesman == "MH")
+                    { salesRep = "MH"; }
+                    else if (main_vm.CurrentInvoiceHeader.salesman == "Rex Angelle" || main_vm.CurrentInvoiceHeader.salesman == "RA")
+                    { salesRep = "RA"; }
+                    else if (main_vm.CurrentInvoiceHeader.salesman == "Gwen Viator" || main_vm.CurrentInvoiceHeader.salesman == "GV")
+                    { salesRep = "GV"; }
+                    else { salesRep = "H"; }
+
+                if (!salesRep.Equals(""))
+                {
+                    invoiceAdd.SalesRepRef.FullName.SetValue(salesRep);
+                }
+
+                // Class
+                string qb_class = getQBClass(main_vm.CurrentInvoiceHeader.loc);
+
+                if (!qb_class.Equals(""))
+                {
+                    invoiceAdd.ClassRef.FullName.SetValue(qb_class);
                 }
 
                 // Bill Address
@@ -629,7 +817,7 @@ namespace HydrotestCentral
                 }
 
                 // Due Date
-                string dueDate = main_vm.CurrentInvoiceHeader.duedate;
+                string dueDate = main_vm.CurrentInvoiceHeader.duedate.ToShortDateString();
                 if (!dueDate.Equals(""))
                 {
                     invoiceAdd.DueDate.SetValue(Convert.ToDateTime(dueDate));
@@ -688,7 +876,7 @@ namespace HydrotestCentral
 
                     // Uncomment the following to view and save the request and response XML
                     string requestXML = requestMsgSet.ToXMLString();
-                    MessageBox.Show(requestXML);
+                    Trace.WriteLine(requestXML);
                     //SaveXML(requestXML);
                     // string responseXML = responseSet.ToXMLString();
                     // MessageBox.Show(responseXML);
@@ -698,7 +886,7 @@ namespace HydrotestCentral
                     int statusCode = response.StatusCode;
                      string statusMessage = response.StatusMessage;
                      string statusSeverity = response.StatusSeverity;
-                     MessageBox.Show("Status:\nCode = " + statusCode + "\nMessage = " + statusMessage + "\nSeverity = " + statusSeverity);
+                     Trace.WriteLine("Status:\nCode = " + statusCode + "\nMessage = " + statusMessage + "\nSeverity = " + statusSeverity);
 
                     if (statusCode == 0)
                     {
@@ -781,12 +969,13 @@ namespace HydrotestCentral
                             resString = resString + "Quantity: " + quantity + "\n";
                             resString = resString + "Amount: " + amount + "\n\n";
                         }
-                        MessageBox.Show(resString);
+                        Trace.WriteLine(resString);
+                        MessageBox.Show("The invoice has been added into Quickbooks successfully!");
                     } // if statusCode is zero
                 } // if all input is in
                 else
                 {
-                    MessageBox.Show("One or more required input is missing.\n\nPlease check and make sure all of the input have been entered.");
+                    //MessageBox.Show("One or more required input is missing.\n\nPlease check and make sure all of the input have been entered.");
                 }
             }
             catch (Exception ex)
@@ -807,6 +996,207 @@ namespace HydrotestCentral
             }
         }
 
+        private void Btn_GetQBCustomerJobLists(object sender, RoutedEventArgs e)
+        {
+            GetQBCustomerJobLists();
+        }
+
+        public void GetQBCustomerJobLists()
+        {
+            bool sessionBegun = false;
+            bool connectionOpen = false;
+            QBSessionManager sessionManager = null;
+
+            Trace.WriteLine("Getting Customer and Job Lists from Quickbooks");
+            Trace.WriteLine("--------------------");
+
+            try
+            {
+                // Create the session Manager object
+                sessionManager = new QBSessionManager();
+
+                //Create the message set request object to hold our request
+                IMsgSetRequest requestMsgSet = sessionManager.CreateMsgSetRequest("US", 8, 0);
+                requestMsgSet.Attributes.OnError = ENRqOnError.roeContinue;
+
+                ICustomerQuery customerQueryRq = requestMsgSet.AppendCustomerQueryRq();
+
+                //Connect to QuickBooks and begin a session
+                sessionManager.OpenConnection2("", "Hydrotest Central", ENConnectionType.ctLocalQBD);
+                connectionOpen = true;
+                sessionManager.BeginSession("", ENOpenMode.omDontCare);
+                sessionBegun = true;
+
+                //Send the request and get the response from QuickBooks
+                IMsgSetResponse responseMsgSet = sessionManager.DoRequests(requestMsgSet);
+                IResponse response = responseMsgSet.ResponseList.GetAt(0);
+                Trace.WriteLine(response.ToString());
+                ICustomerRetList customerRetList = (ICustomerRetList)response.Detail;
+
+                var qb_customers = new List<Customer>();
+
+                if (customerRetList != null)
+                {
+                    Trace.WriteLine("customerRetList is not null");
+                    for (int i = 0; i < customerRetList.Count; i++)
+                    {
+                        ICustomerRet customerRet = customerRetList.GetAt(i);
+
+                        //Trace.WriteLine(customerRet.ToString());
+
+                        var cust = new Customer
+                        {
+                            name = customerRet.Name.GetValue(),
+                            qb_id = customerRet.ListID.GetValue(),
+                            edit_sequence = customerRet.EditSequence.GetValue(),
+                            full_name = customerRet.FullName.GetValue(),
+                            //isActive = customerRet.IsActive.GetValue(),
+                            //terms = customerRet.TermsRef.FullName.GetValue()
+                            //parent = parent_str
+                        };
+
+                        qb_customers.Add(cust);
+                    }
+                }
+
+                //customers.Sort();
+                Trace.WriteLine("Quickbooks Customers: \n");
+                foreach (Customer c in qb_customers)
+                {
+                    Trace.WriteLine("Entity: " + c.name);
+                    Trace.WriteLine("Full Name: " + c.full_name);
+                    Trace.WriteLine("QB ID: " + c.qb_id);
+                    // Jobs contain ':'
+                    
+                    if(c.full_name.Contains(':'))
+                    {
+                        Trace.WriteLine("Job: "+ c.name);
+
+                        Job j = new Job
+                        {
+                            jobno = c.name,
+                            qb_id = c.qb_id,
+                        };
+                        //string[] parts = c.full_name.Split(':');
+                        //j.cust = parts[0].ToString();
+
+                        if (IsNewJob(j.jobno))
+                        {
+                            main_vm.jobs.Add(j);
+                        }
+                    }
+                    else
+                    {
+                        Trace.WriteLine("Customer: " + c.name);
+                        Customer cust = new Customer
+                        {
+                            name = c.name,
+                            qb_id = c.qb_id,
+                            edit_sequence = c.edit_sequence
+                        };
+
+                        if (IsNewCustomer(c.name))
+                        {
+                            main_vm.customers.Add(c);
+                        }
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+            finally
+            {
+                // End the session and close the connection to Quickbooks
+                if (sessionBegun)
+                {
+                    sessionManager.EndSession();
+                }
+                if (connectionOpen)
+                {
+                    sessionManager.CloseConnection();
+                }
+            }
+
+            main_vm.customers = new ObservableCollection<Customer>(main_vm.customers.OrderBy(l => l.name));
+            main_vm.jobs = new ObservableCollection<Job>(main_vm.jobs.OrderBy(j => j.jobno));
+
+            /*
+            Trace.WriteLine("\nCUSTOMERS");
+            Trace.WriteLine("--------");
+            foreach (Customer c in main_vm.customers)
+            {
+                Trace.WriteLine("\t" + c.name);
+            }
+
+            Trace.WriteLine("\nJOBS");
+            Trace.WriteLine("--------");
+            foreach(Job j in main_vm.jobs)
+            {
+                Trace.WriteLine("\t" + j.jobno);
+            }
+            */
+        }
+
+        private string getQBClass(string loc)
+        {
+            string[] parts = loc.Split(',');
+            string city = parts[0];
+            city = city.Trim();
+            string state = parts[1];
+            state = state.Trim();
+
+            if(city=="Odessa" || city=="odessa")
+            {
+                return "20 - Odessa";
+            }
+
+            switch(state)
+            {
+                case "LA":
+                    return "10 - LA";
+                case "KY":
+                    return "12- KY";
+                case "MS":
+                    return "13 - MS";
+                case "NM":
+                    return "15 - NM";
+                case "TN":
+                    return "18 - TN";
+                case "TX":
+                    return "25 - TX";
+            }
+
+            return "";
+        }
+
+        private bool IsNewJob(string jobno)
+        {
+            bool newJob = true;
+
+            for (int i = 0; i < main_vm.jobs.Count; i++)
+            {
+                if (main_vm.jobs[i].jobno == jobno) { newJob = false; }
+            }
+
+            return newJob;
+        }
+
+        private bool IsNewCustomer(string customerName)
+        {
+            bool newCustomer = true;
+
+            for (int i = 0; i < main_vm.customers.Count; i++)
+            {
+                if (main_vm.customers[i].name == customerName)
+                { newCustomer = false; }
+            }
+
+            return newCustomer;
+        }
+
         private bool isAllInputIn()
         {
             if ( main_vm.CurrentInvoiceHeader.cust.Equals("") ||
@@ -825,6 +1215,16 @@ namespace HydrotestCentral
                 MessageBox.Show("Not all fields necessary for Invoice are populated!");
                 return false;
             }
+            else if(IsNewCustomer(main_vm.CurrentInvoiceHeader.cust))
+            {
+                MessageBox.Show("Customer is not in Quickbooks! Please add Customer then retry...");
+                return false;
+            }
+            else if (IsNewJob(main_vm.CurrentInvoiceHeader.jobno))
+            {
+                MessageBox.Show("Job is not in Quickbooks! Please activate Job then retry...");
+                return false;
+            }          
             else
             {
                 return true;
@@ -858,120 +1258,6 @@ namespace HydrotestCentral
             {
                 MessageBox.Show(ex.ToString());
             }
-        }
-
-        private void Btn_print_Click(object sender, RoutedEventArgs e)
-        {
-            /* DataTable dt = new DataTable();
-             int days_count = 0;
-             int sheet_count = 0;
-
-             //dt = quote_heads.getQuoteHeaderTableByJob(jobno);
-             dt = new DataTable();
-
-             Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
-
-             var excelApp = new Excel.Application();
-             var excelWB = excelApp.ActiveWorkbook;
-             string xl_path = txt_path.Text;
-             string pdf_path = txt_path.Text;
-             string quote_form = string.Format("C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.7 Projects\\HydrotestCentral\\BlankQuoteFormV2.xlsx");
-
-             // Make the object visible
-             excelApp.Visible = false;
-
-             try
-             {
-                 excelWB = excelApp.Workbooks.Open(quote_form);
-                 // Get a Total Count of tabs in worksheet
-                 sheet_count = excelWB.Sheets.Count;
-                 Trace.WriteLine("Sheet Count: " + sheet_count.ToString());
-             }
-             catch (Exception ex)
-             {
-                 MessageBox.Show(ex.ToString());
-             }
-
-             // Get a Total Count of Days tabs in DataCentral
-             days_count = _tabItems.Count - 4;
-             Trace.WriteLine("Days Count: " + days_count.ToString());
-
-             // If there are more days in DataCentral than in the worksheet, clone the days tab that many times
-             int tabs_to_add = days_count - (sheet_count - 11);
-             Trace.WriteLine("Need to add " + tabs_to_add + " days...");
-
-             while (tabs_to_add > 0)
-             {
-                 Excel._Worksheet day1 = excelWB.Sheets["Day 1"];
-                 // Create new worksheet after day1
-                 Excel.Worksheet newWS;
-                 day1.Copy(Type.Missing, day1);
-                 newWS = excelWB.Sheets[day1.Index + 1];
-                 newWS.Name = "Test";
-
-                 tabs_to_add -= 1;
-             }
-
-             Excel._Worksheet coverWS = excelWB.Sheets["Cover"];
-             Excel._Worksheet contactWS = excelWB.Sheets["Contact"];
-             Excel._Worksheet totalWS = excelWB.Sheets["Total"];
-             Excel._Worksheet propWS = excelWB.Sheets["Prop. Accept."];
-
-             if (dt.IsInitialized & !dt.HasErrors)
-             {
-                 #region COVER SHEET
-                 coverWS.Cells[25, "A"] = dt.Rows[0]["cust"].ToString();
-                 coverWS.Cells[27, "A"] = dt.Rows[0]["jobtype"].ToString();
-                 coverWS.Cells[29, "A"] = string.Format("Proposal No: {0}", dt.Rows[0]["jobno"].ToString());
-                 coverWS.Cells[31, "A"] = string.Format("Proposal Date: {0}", dt.Rows[0]["qt_date"].ToString());
-                 #endregion
-                 #region CONTACT SHEET
-                 contactWS.Cells[8, "A"] = "Sales Representative:   " + dt.Rows[0]["salesman"].ToString();
-                 contactWS.Cells[11, "A"] = "Contact Number:   " + "(337) 999-1001";
-                 contactWS.Cells[14, "A"] = "Customer:   " + dt.Rows[0]["cust"].ToString();
-                 contactWS.Cells[17, "A"] = "Customer Contact:   " + dt.Rows[0]["cust_email"].ToString();
-                 contactWS.Cells[20, "A"] = "Contact Number:   " + dt.Rows[0]["cust_phone"].ToString();
-                 contactWS.Cells[23, "A"] = "Job Location:   " + dt.Rows[0]["loc"].ToString();
-
-                 //Generate Project Description
-                 string project = dt.Rows[0]["jobtype"].ToString() + " for " + dt.Rows[0]["endclient"].ToString();
-                 contactWS.Cells[26, "A"] = "Project:   " + dt.Rows[0]["jobtype"].ToString();
-
-                 #endregion
-                 #region TOTAL SHEET
-                 //totalWS.Cells[10, "A"] = dt.Rows[0]["jobtype"].ToString();
-                 #endregion
-
-                 #region PROPOSAL SHEET
-                 propWS.Cells[8, "A"] = string.Format("To Accept Proposal No. {0} please complete, sign, and return this page:", dt.Rows[0]["jobno"].ToString());
-                 #endregion
-             }
-
-             #region PrintFileToXL_and_PDF
-
-             if (checkFilename(xl_path, ".xlsx"))
-             {
-                 excelWB.SaveAs(xl_path + ".xlsx");
-                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
-             }
-
-             if (checkFilename(pdf_path, ".pdf"))
-             {
-                 excelWB.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdf_path + ".pdf", From: 1, To: (sheet_count - 3));
-                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
-             }
-
-             Boolean savechanges = false;
-
-             #endregion
-
-             excelWB.Close(savechanges, Type.Missing, Type.Missing);
-             //excelWB.Worksheets.Application.Quit();
-             excelWB = null;
-
-             excelApp.Quit();
-             excelApp = null;
-             GC.Collect();*/
         }
 
         private void Btn_Load(object sender, RoutedEventArgs e)
@@ -1011,7 +1297,7 @@ namespace HydrotestCentral
             }
         }
             
-        private void Btn_PrintInvoice(object sender, RoutedEventArgs e)
+        private async void Btn_PrintInvoice(object sender, RoutedEventArgs e)
         {
 
             /* FIRST TEST OF PDFSharp
@@ -1031,7 +1317,7 @@ namespace HydrotestCentral
                 // ...and start a viewer.
                 Process.Start(filename);
             */
-
+            /*
             PDFCreator pd = new PDFCreator();
 
             // Create a MigraDoc document
@@ -1050,11 +1336,44 @@ namespace HydrotestCentral
             renderer.PdfDocument.Save(filename);
             // ...and start a viewer.
             Process.Start(filename);
+            */
+
+            //PrintDialogBox pdb = new PrintDialogBox(main_vm);
+            await this.ShowChildWindowAsync(new PrintDialogBox(main_vm));
         }
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
+        }
+
+        public class CheckBoxConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                if (value != null && value is Int32)
+                {
+                    if (value.ToString() == "1")
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                    return false;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                if (value != null && value is bool)
+                {
+                    if ((bool)value == true)
+                        return "Yes";
+                    else
+                        return "No";
+                }
+                else
+                    return "No";
+            }
         }
 
         #region Deprecated Functions
@@ -1288,6 +1607,120 @@ namespace HydrotestCentral
             return tab;
         }
         */
+
+        private void Btn_print_Click(object sender, RoutedEventArgs e)
+        {
+            /* DataTable dt = new DataTable();
+             int days_count = 0;
+             int sheet_count = 0;
+
+             //dt = quote_heads.getQuoteHeaderTableByJob(jobno);
+             dt = new DataTable();
+
+             Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " DataTable Created...");
+
+             var excelApp = new Excel.Application();
+             var excelWB = excelApp.ActiveWorkbook;
+             string xl_path = txt_path.Text;
+             string pdf_path = txt_path.Text;
+             string quote_form = string.Format("C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.7 Projects\\HydrotestCentral\\BlankQuoteFormV2.xlsx");
+
+             // Make the object visible
+             excelApp.Visible = false;
+
+             try
+             {
+                 excelWB = excelApp.Workbooks.Open(quote_form);
+                 // Get a Total Count of tabs in worksheet
+                 sheet_count = excelWB.Sheets.Count;
+                 Trace.WriteLine("Sheet Count: " + sheet_count.ToString());
+             }
+             catch (Exception ex)
+             {
+                 MessageBox.Show(ex.ToString());
+             }
+
+             // Get a Total Count of Days tabs in DataCentral
+             days_count = _tabItems.Count - 4;
+             Trace.WriteLine("Days Count: " + days_count.ToString());
+
+             // If there are more days in DataCentral than in the worksheet, clone the days tab that many times
+             int tabs_to_add = days_count - (sheet_count - 11);
+             Trace.WriteLine("Need to add " + tabs_to_add + " days...");
+
+             while (tabs_to_add > 0)
+             {
+                 Excel._Worksheet day1 = excelWB.Sheets["Day 1"];
+                 // Create new worksheet after day1
+                 Excel.Worksheet newWS;
+                 day1.Copy(Type.Missing, day1);
+                 newWS = excelWB.Sheets[day1.Index + 1];
+                 newWS.Name = "Test";
+
+                 tabs_to_add -= 1;
+             }
+
+             Excel._Worksheet coverWS = excelWB.Sheets["Cover"];
+             Excel._Worksheet contactWS = excelWB.Sheets["Contact"];
+             Excel._Worksheet totalWS = excelWB.Sheets["Total"];
+             Excel._Worksheet propWS = excelWB.Sheets["Prop. Accept."];
+
+             if (dt.IsInitialized & !dt.HasErrors)
+             {
+                 #region COVER SHEET
+                 coverWS.Cells[25, "A"] = dt.Rows[0]["cust"].ToString();
+                 coverWS.Cells[27, "A"] = dt.Rows[0]["jobtype"].ToString();
+                 coverWS.Cells[29, "A"] = string.Format("Proposal No: {0}", dt.Rows[0]["jobno"].ToString());
+                 coverWS.Cells[31, "A"] = string.Format("Proposal Date: {0}", dt.Rows[0]["qt_date"].ToString());
+                 #endregion
+                 #region CONTACT SHEET
+                 contactWS.Cells[8, "A"] = "Sales Representative:   " + dt.Rows[0]["salesman"].ToString();
+                 contactWS.Cells[11, "A"] = "Contact Number:   " + "(337) 999-1001";
+                 contactWS.Cells[14, "A"] = "Customer:   " + dt.Rows[0]["cust"].ToString();
+                 contactWS.Cells[17, "A"] = "Customer Contact:   " + dt.Rows[0]["cust_email"].ToString();
+                 contactWS.Cells[20, "A"] = "Contact Number:   " + dt.Rows[0]["cust_phone"].ToString();
+                 contactWS.Cells[23, "A"] = "Job Location:   " + dt.Rows[0]["loc"].ToString();
+
+                 //Generate Project Description
+                 string project = dt.Rows[0]["jobtype"].ToString() + " for " + dt.Rows[0]["endclient"].ToString();
+                 contactWS.Cells[26, "A"] = "Project:   " + dt.Rows[0]["jobtype"].ToString();
+
+                 #endregion
+                 #region TOTAL SHEET
+                 //totalWS.Cells[10, "A"] = dt.Rows[0]["jobtype"].ToString();
+                 #endregion
+
+                 #region PROPOSAL SHEET
+                 propWS.Cells[8, "A"] = string.Format("To Accept Proposal No. {0} please complete, sign, and return this page:", dt.Rows[0]["jobno"].ToString());
+                 #endregion
+             }
+
+             #region PrintFileToXL_and_PDF
+
+             if (checkFilename(xl_path, ".xlsx"))
+             {
+                 excelWB.SaveAs(xl_path + ".xlsx");
+                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to Excel in path = " + xl_path + ".xlsx");
+             }
+
+             if (checkFilename(pdf_path, ".pdf"))
+             {
+                 excelWB.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdf_path + ".pdf", From: 1, To: (sheet_count - 3));
+                 Trace.WriteLine(dt.Rows[0]["jobno"].ToString() + " saved to PDF in path = " + pdf_path + ".pdf");
+             }
+
+             Boolean savechanges = false;
+
+             #endregion
+
+             excelWB.Close(savechanges, Type.Missing, Type.Missing);
+             //excelWB.Worksheets.Application.Quit();
+             excelWB = null;
+
+             excelApp.Quit();
+             excelApp = null;
+             GC.Collect();*/
+        }
 
         #endregion
 

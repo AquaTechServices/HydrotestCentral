@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.ComponentModel;
 using HydrotestCentral.ViewModels;
 using System.Windows;
 using System.Collections.ObjectModel;
+
 using System.Diagnostics;
 //using HydrotestCentral.DatasetTableAdapters;
 
@@ -70,8 +72,8 @@ namespace HydrotestCentral.Models
     {
         public string jobno { get; set; }
         public string invno { get; set; }
-        public string invdate { get; set; }
-        public string duedate { get; set; }
+        public DateTime invdate { get; set; }
+        public DateTime duedate { get; set; }
         public string terms { get; set; }
         public string cust { get; set; }
         public int cust_id { get; set; }
@@ -93,8 +95,12 @@ namespace HydrotestCentral.Models
 
     }
 
-    public class InvoiceItem
+    public class InvoiceItem:INotifyPropertyChanged
     {
+        private double _line_total;
+        private double _tax_total;
+
+        public int row_id { get; set; }
         public int qty { get; set; }
         public string item { get; set; }
         public double rate { get; set; }
@@ -105,26 +111,73 @@ namespace HydrotestCentral.Models
         public bool discountable { get; set; }
         public bool printable { get; set; }
         public string jobno { get; set; }
-        public double line_total { get; set; }
-        public double tax_total { get; set; }
+        public double line_total
+        {
+            get { return _line_total;}
+            set
+            {
+                if (value != _line_total)
+                {
+                    _line_total = value;
+                    OnPropertyChanged("line_total");
+                }
+            }
+        }
+        public double tax_total
+        {
+            get { return _tax_total; }
+            set
+            {
+                if (value != _tax_total)
+                {
+                    _tax_total = value;
+                    OnPropertyChanged("tax_total");
+                }
+            }
+        }
         public string cust {get; set;}
         public string invno {get; set;}
         public string invdate {get; set;}
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handle = PropertyChanged;
+            if (handle != null)
+            {
+                handle(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 
     public class Customer
     {
+        public int cust_id { get; set; }
         public string name { get; set; }
-        public string address { get; set; }
+        public string full_name { get; set; }
+        public string qb_id { get; set; }
+        public string address1 { get; set; }
+        public string address2 { get; set; }
+        public string address3 { get; set; }
         public string city { get; set; }
         public string state { get; set; }
         public string zip { get; set; }
         public string terms { get; set; }
         public bool active { get; set; }
-        public int cust_id { get; set; }
+        public string edit_sequence { get; set; }
     }
 
-
-
-
+    public class Job
+    {
+        public string jobno { get; set; }
+        public int cust_id { get; set; }
+        public string cust { get; set; }
+        public string status { get; set; }
+        public string qt_date { get; set; }
+        public string salesman { get; set; }
+        public string jobtype { get; set; }
+        public string qb_id { get; set; }
+    }
 }

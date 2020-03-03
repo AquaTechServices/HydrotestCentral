@@ -186,7 +186,19 @@
                         </Button>
                     </Grid>
                     <Grid x:Name="Dashboard_MainGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
                         <Label Content="Dashboard" HorizontalAlignment="Left" Foreground="SkyBlue" Margin="55,5,0,0" VerticalAlignment="Top" Width="120" Height="32" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                        <Button Content="Get Quickbooks Customers and Jobs" Click="Btn_GetQBCustomerJobLists" Width="250" Grid.Column="0" Grid.Row="0"/>
                     </Grid>
                     <Grid x:Name="Quote_MainGrid" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
@@ -698,6 +710,7 @@
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
@@ -709,17 +722,16 @@
                                 <TextBlock x:Name="txtBlk_PONumber" Text="{Binding CurrentInvoiceHeader.po}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Stretch"  MinHeight="30" FontSize="12" Margin="0,5,0,0" />
                                 <Label x:Name="lbl_Salesman" Content="Sales Rep:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" FontWeight="Bold" Foreground="Black" FontSize="12" MinHeight="30"/>
                                 <TextBlock x:Name="txtBlk_Salesman" Text="{Binding CurrentInvoiceHeader.salesman}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" MinHeight="30" FontSize="12" Margin="0,5,0,0"/>
-                                <Button x:Name="btn_DeleteInvoiceLine" Grid.Column="0" Grid.Row="2" Height="40" Width="40" Margin="20,0,0,0" Padding="0" BorderThickness="0" HorizontalAlignment="Left">
+                                <Button x:Name="btn_CreateNewInvoice" Content="Create New Invoice" Grid.Column="0" Grid.Row="2" Height="40" Width="150" Margin="10,0,0,0" Padding="10" BorderThickness="0" HorizontalAlignment="Left" Click="Btn_NewInvoice">
                                     <Button.ToolTip>
                                         <ToolTip>
                                             <TextBlock FontWeight="Bold">
-                                                Save Invoice
+                                                Create New Invoice
                                             </TextBlock>
                                         </ToolTip>
                                     </Button.ToolTip>
-                                    <materialDesign:PackIcon Kind="Delete" Height="20" RenderTransformOrigin="0.094,0.6" Width="20"/>
                                 </Button>
-                                <Button x:Name="btn_SaveInvoice" Grid.Column="0" Grid.Row="2" Height="40" Width="40" Padding="0" BorderThickness="0" HorizontalAlignment="Left" Margin="100,0,0,0">
+                                <Button x:Name="btn_SaveInvoice" Content="Save Invoice" Grid.Column="1" Grid.Row="2" Height="40" Width="150" Padding="10" BorderThickness="0" HorizontalAlignment="Left" Margin="10,0,0,0">
                                     <Button.ToolTip>
                                         <ToolTip>
                                             <TextBlock FontWeight="Bold">
@@ -727,11 +739,37 @@
                                             </TextBlock>
                                         </ToolTip>
                                     </Button.ToolTip>
-                                    <Path Data="M7.4590002,16.856308 C6.3770743,16.856308 5.5000001,17.733381 5.5000001,18.815308 L5.5000001,33.377308 C5.5000001,34.459232 6.3770743,35.336308 7.4590002,35.336308 L28.375,35.336308 C29.456926,35.336308 30.334,34.459232 30.334,33.377308 L30.334,18.815308 C30.334,17.733381 29.456926,16.856308 28.375,16.856308 z M18.584019,4.487381 L20.416071,4.487381 C20.772856,4.487381 21.062088,4.7766075 21.062088,5.1333857 L21.062088,10.508735 C21.062088,10.865514 20.772856,11.154741 20.416071,11.154741 L18.584019,11.154741 C18.227234,11.154741 17.938,10.865514 17.938,10.508735 L17.938,5.1333857 C17.938,4.7766075 18.227234,4.487381 18.584019,4.487381 z M6.2086731,3.5703743 C5.080876,3.5703743 4.1666165,4.4846158 4.166616,5.612391 L4.166616,10.041732 C4.1666165,11.169507 5.080876,12.083749 6.2086731,12.083749 L22.221121,12.083749 C23.348915,12.083749 24.263178,11.169507 24.263178,10.041732 L24.263178,5.612391 C24.263178,4.4846158 23.348915,3.5703743 22.221121,3.5703743 z M3.500099,0 L25.500877,0.15368047 35.584492,8.6954145 35.834,35.942581 C35.834,38.091366 34.266953,39.833309 32.333901,39.833309 L3.500099,39.833309 C1.5670471,39.833309 7.786133E-08,38.091366 0,35.942581 L0,3.8907325 C7.786133E-08,1.7419404 1.5670471,4.7684085E-07 3.500099,0 z" Fill="White" Stretch="Fill" Width="19.212" Height="21.358"/>
                                 </Button >
-                                <DataGrid x:Name="Invoice_DataGrid" ItemsSource="{Binding invoice_items, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="3" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All" AutoGenerateColumns="False" Foreground="#DD000000" Style="{StaticResource AzureDataGrid}" Margin="10,0" HorizontalAlignment="Stretch">
+                                <Button x:Name="btn_DeleteInvoiceLine" Content="Delete Invoice Line" Grid.Column="2" Grid.Row="2" Height="40" Width="150" Margin="10,0,0,0" Padding="10" BorderThickness="0" HorizontalAlignment="Left" Click="Btn_DeleteInvoiceItemRow">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                Delete Invoice Line
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <Button x:Name="btn_Expand" Content="Expand" Grid.Column="7" Grid.ColumnSpan="2" Grid.Row="2" Height="40" Width="150" Padding="10" BorderThickness="0" HorizontalAlignment="Right" Margin="0,0,10,0" Foreground="White" Click="Btn_Expand">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                    Expand
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <Button x:Name="btn_Collapse" Content="Collapse" Grid.Column="7" Grid.ColumnSpan="2" Grid.Row="2" Height="40" Width="150" Padding="10" BorderThickness="0" HorizontalAlignment="Right" Margin="0,0,170,0" Foreground="White" Click="Btn_Collapse">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock FontWeight="Bold">
+                                                    Collapse
+                                            </TextBlock>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <DataGrid x:Name="Invoice_DataGrid" ItemsSource="{Binding invoice_items, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.ColumnSpan="9" Grid.Row="3" AreRowDetailsFrozen="True" BorderBrush="#FF141415" Background="GhostWhite" GridLinesVisibility="All" AutoGenerateColumns="False" Foreground="#DD000000" Style="{StaticResource AzureDataGrid}" Margin="10,0" HorizontalAlignment="Stretch" CellEditEnding="IItem_CellEditEnding" RowEditEnding="IItem_RowEditEnding"  CurrentCellChanged="IItem_CurrentCellChanged">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Qty" Foreground="Black" Binding="{Binding qty}"  MinWidth="50">
+                                        <DataGridTextColumn Header="Qty" Foreground="Black" Binding="{Binding qty}"  MinWidth="50" Width="0.20*">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -761,7 +799,7 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Header="Rate" Foreground="Black" Binding="{Binding rate, StringFormat=c}"  MinWidth="100" Width="0.25*">
+                                        <DataGridTextColumn x:Name="RateColumn"  Header="Rate" Foreground="Black" Binding="{Binding rate, StringFormat=c}"  MinWidth="100" Width="0.25*">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -771,7 +809,17 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridTextColumn>
-                                        <DataGridCheckBoxColumn Header="Taxable" Binding="{Binding taxable}"  MinWidth="50">
+                                        <DataGridTextColumn Header="Grouping" Foreground="Black" Binding="{Binding grouping}"  MinWidth="100" Width="0.25*">
+                                            <DataGridColumn.HeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#FF3580BF"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Setter Property="FontSize" Value="16"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridColumn.HeaderStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridCheckBoxColumn Header="Taxable" Binding="{Binding taxable}"  MinWidth="50" Width="0.10*">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -781,7 +829,7 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridCheckBoxColumn>
-                                        <DataGridTextColumn Header="Tax_Total" Foreground="Black" Binding="{Binding tax_total, StringFormat=C}"  MinWidth="100" Width="0.25*">
+                                        <DataGridTextColumn Header="Tax_Total" Foreground="Black" Binding="{Binding tax_total, StringFormat=C, UpdateSourceTrigger=PropertyChanged}"  MinWidth="100" Width="0.25*">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -791,7 +839,7 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Header="Line_Total" Foreground="Black" Binding="{Binding line_total, StringFormat=C}"  MinWidth="100" Width="0.25*" FontWeight="SemiBold">
+                                        <DataGridTextColumn Header="Line_Total" Foreground="Black" Binding="{Binding line_total, StringFormat=C, UpdateSourceTrigger=PropertyChanged}"  MinWidth="100" Width="0.25*" FontWeight="SemiBold">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -801,7 +849,7 @@
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
                                         </DataGridTextColumn>
-                                        <DataGridCheckBoxColumn Header="Printable" Binding="{Binding printable, UpdateSourceTrigger=PropertyChanged}"  MinWidth="75">
+                                        <DataGridCheckBoxColumn Header="Printable" Binding="{Binding printable, UpdateSourceTrigger=PropertyChanged}"  MinWidth="50" Width="0.15*">
                                             <DataGridColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="Background" Value="#FF3580BF"/>
@@ -810,9 +858,6 @@
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                                 </Style>
                                             </DataGridColumn.HeaderStyle>
-                                            <DataGridCheckBoxColumn.ElementStyle>
-                                                <Style TargetType="CheckBox"/>
-                                            </DataGridCheckBoxColumn.ElementStyle>
                                         </DataGridCheckBoxColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -836,13 +881,13 @@
                                 <TextBlock x:Name="txtBlk_remitCompanyAddress2" Text="Broussard, LA 70518" Grid.Column="0" Grid.Row="3" FontWeight="Bold" FontSize="16" Margin="20,0,0,0"/>
                                 <Label Content="Past due balances subject to 1.5% finance charge per month" Grid.Column="1" Grid.Row="1" FontWeight="Bold" FontStyle="Italic" Foreground="Black"/>
                                 <Label Content="Subtotal:" Grid.Column="2" Grid.Row="0" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="18" Foreground="Black"/>
-                                <TextBlock x:Name="txtBlk_Subotal" Text="{Binding CurrentInvoiceHeader.sub_total, StringFormat=C}" Grid.Column="3" Grid.Row="0" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                                <TextBlock x:Name="txtBlk_Subotal" Text="{Binding CurrentInvoiceHeader.sub_total, StringFormat=C, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="3" Grid.Row="0" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
                                 <Label Grid.Column="2" Grid.Row="1" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="18" Foreground="Black">
                                     <Run Text="{Binding CurrentInvoiceHeader.tax_rate, StringFormat='Tax (\{0:0%\})'}"/>
                                 </Label>
-                                <TextBlock x:Name="txtBlk_TaxTotal" Text="{Binding CurrentInvoiceHeader.tax_total, StringFormat=C}" Grid.Column="3" Grid.Row="1" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                                <TextBlock x:Name="txtBlk_TaxTotal" Text="{Binding CurrentInvoiceHeader.tax_total, StringFormat=C, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="3" Grid.Row="1" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
                                 <Label Content="Invoice Total:" Grid.Column="2" Grid.Row="2" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="18" Foreground="Black"/>
-                                <TextBlock x:Name="txtBlk_InvoiceTotal" Text="{Binding CurrentInvoiceHeader.inv_total, StringFormat=C}" Grid.Column="3" Grid.Row="2" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                                <TextBlock x:Name="txtBlk_InvoiceTotal" Text="{Binding CurrentInvoiceHeader.inv_total, StringFormat=C, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="3" Grid.Row="2" Grid.RowSpan="1" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0"/>
                             </Grid>
                         </Grid>
 
