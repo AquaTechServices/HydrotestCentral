@@ -175,10 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\NewInvoiceWindow.xaml.cs">
+    <Compile Include="Views\NewInvoiceWindow.xaml.cs">
       <DependentUpon>NewInvoiceWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PrintDialogBox.xaml.cs">
+    <Compile Include="Views\PrintDialogBox.xaml.cs">
       <DependentUpon>PrintDialogBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\QuoteItemGrid.xaml.cs">
@@ -198,11 +198,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\NewInvoiceWindow.xaml">
+    <Page Include="Views\NewInvoiceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\PrintDialogBox.xaml">
+    <Page Include="Views\PrintDialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
